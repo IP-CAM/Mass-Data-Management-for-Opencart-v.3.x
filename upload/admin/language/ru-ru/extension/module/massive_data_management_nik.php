@@ -15,9 +15,12 @@ $_['text_percent']     = 'Процент';
 $_['text_plus']        = '+';
 $_['text_minus']       = '-';
 $_['text_equal']       = '=';
+$_['text_to_all']      = 'Всем';
+$_['text_to_unfilled'] = 'Незаполненным';
 
 // Entry
 $_['entry_products_list']= 'Список товаров';
+$_['entry_create_seo_url']= 'Создание SEO URL';
 $_['entry_status']     = 'Статус';
 
 // Buttons
