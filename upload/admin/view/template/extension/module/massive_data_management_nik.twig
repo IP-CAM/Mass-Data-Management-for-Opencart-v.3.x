@@ -22,8 +22,8 @@
   <div class="page-header">
     <div class="container-fluid">
       <div class="pull-right">
-        <button type="submit" form="form-module" data-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa fa-save"></i></button>
-        <a href="{{ cancel }}" data-toggle="tooltip" title="{{ button_cancel }}" class="btn btn-default"><i class="fa fa-reply"></i></a></div>
+{#        <button type="submit" form="form-module" data-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa fa-save"></i></button>#}
+        <a href="{{ cancel }}" data-toggle="tooltip" title="{{ button_back }}" class="btn btn-default"><i class="fa fa-reply"></i></a></div>
       <h1>{{ heading_title }}</h1>
       <ul class="breadcrumb">
         {% for breadcrumb in breadcrumbs %}
@@ -39,14 +39,198 @@
     </div>
     {% endif %}
     <div class="top-link-row">
-      <a {% if type == 'customers' %}class="active"{% endif %} href="{{ link_customers }}">{{ text_customers }}</a>
       <a {% if type == 'categories' %}class="active"{% endif %} href="{{ link_categories }}">{{ text_categories }}</a>
       <a {% if type == 'products' %}class="active"{% endif %} href="{{ link_products }}">{{ text_products }}</a>
     </div>
     <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-module" class="form-horizontal"></form>
-    {% if type == 'customers' %}
+    {% if type == 'categories' %}
 
-    {% elseif type == 'categories' %}
+      <div class="panel panel-default" style="margin-top: 20px;">
+        <div class="panel-body">
+          <ul class="nav nav-tabs">
+            <li class="active"><a href="#tab-data" data-toggle="tab">{{ tab_data }}</a></li>
+            <li><a href="#tab-seo" data-toggle="tab">{{ tab_seo }}</a></li>
+            <li><a href="#tab-design" data-toggle="tab">{{ tab_design }}</a></li>
+          </ul>
+          <div class="tab-content">
+            <div class="tab-pane active" id="tab-data">
+              <form action="{{ actionCategoryData }}" method="post" enctype="multipart/form-data" id="form-category-data" class="form-horizontal">
+                <div class="form-group" id="categories-row">
+                  <label class="col-sm-2 control-label" for="select-categories">{{ entry_products_list }}</label>
+                  <div class="col-sm-10">
+                    <select name="products_categories" id="select-categories" class="form-control">
+                      <option selected="selected" disabled="disabled">{{ text_categories }}</option>
+                      <option value="0">{{ text_all }}</option>
+                      {% for category in categories %}
+                        <option value="{{ category.category_id }}">{{ category.name }}</option>
+                      {% endfor %}
+                    </select>
+                    <div id="data-management-category" class="well well-sm" style="height: 150px; overflow: auto;">
+
+                    </div>
+                    <button class="btn btn-danger category-clear-btn" type="button">{{ button_clear }}</button>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-sm-2 control-label" for="input-parent">{{ entry_parent }}</label>
+                  <div class="col-sm-10">
+                    <input type="text" name="path" value="{{ path }}" placeholder="{{ entry_parent }}" id="input-parent" class="form-control" />
+                    <input type="hidden" name="parent_id" value="{{ parent_id }}" />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-sm-2 control-label" for="input-filter"><span data-toggle="tooltip" title="{{ help_filter }}">{{ entry_filter }}</span></label>
+                  <div class="col-sm-10">
+                    <input type="text" name="filter" value="" placeholder="{{ entry_filter }}" id="input-filter" class="form-control" />
+                    <div id="category-filter" class="well well-sm" style="height: 150px; overflow: auto;">
+                      {% for category_filter in category_filters %}
+                        <div id="category-filter{{ category_filter.filter_id }}"><i class="fa fa-minus-circle"></i> {{ category_filter.name }}
+                          <input type="hidden" name="category_filter[]" value="{{ category_filter.filter_id }}" />
+                        </div>
+                      {% endfor %}
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-sm-2 control-label">{{ entry_store }}</label>
+                  <div class="col-sm-10">
+                    <div class="well well-sm" style="height: 150px; overflow: auto;">
+                      {% for store in stores %}
+                        <div class="checkbox">
+                          <label>
+                            <input type="checkbox" name="category_store[]" value="{{ store.store_id }}" />
+                            {{ store.name }}
+                          </label>
+                        </div>
+                      {% endfor %}
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-sm-2 control-label">{{ entry_image }}</label>
+                  <div class="col-sm-10"><a href="" id="thumb-image" data-toggle="image" class="img-thumbnail"><img src="{{ thumb }}" alt="" title="" data-placeholder="{{ placeholder }}" /></a>
+                    <input type="hidden" name="image" value="{{ image }}" id="input-image" />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-sm-2 control-label" for="input-top"><span data-toggle="tooltip" title="{{ help_top }}">{{ entry_top }}</span></label>
+                  <div class="col-sm-10">
+                    <div class="checkbox">
+                      <label>
+                        <input type="checkbox" name="top" value="1" id="input-top" />
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-sm-2 control-label" for="input-column"><span data-toggle="tooltip" title="{{ help_column }}">{{ entry_column }}</span></label>
+                  <div class="col-sm-10">
+                    <input type="text" name="column" value="{{ column }}" placeholder="{{ entry_column }}" id="input-column" class="form-control" />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-sm-2 control-label" for="input-sort-order">{{ entry_sort_order }}</label>
+                  <div class="col-sm-10">
+                    <input type="text" name="sort_order" value="{{ sort_order }}" placeholder="{{ entry_sort_order }}" id="input-sort-order" class="form-control" />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-sm-2 control-label" for="input-status">{{ entry_status }}</label>
+                  <div class="col-sm-10">
+                    <select name="status" id="input-status" class="form-control">
+                      <option value="-1">{{ text_none }}</option>
+                      <option value="0">{{ text_disabled }}</option>
+                      <option value="1">{{ text_enabled }}</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="text-center">
+                  <button class="btn btn-primary" type="submit" form="form-category-data">{{ button_apply_changes }}</button>
+                </div>
+              </form>
+            </div>
+            <div class="tab-pane" id="tab-seo">
+              <form action="{{ actionCategorySeo }}" method="post" enctype="multipart/form-data" id="form-category-seo" class="form-horizontal">
+                <div class="form-group" id="categories-row">
+                  <label class="col-sm-2 control-label" for="select-categories3">{{ entry_products_list }}</label>
+                  <div class="col-sm-10">
+                    <select name="products_categories" id="select-categories3" class="form-control">
+                      <option selected="selected" disabled="disabled">{{ text_categories }}</option>
+                      <option value="0">{{ text_all }}</option>
+                      {% for category in categories %}
+                        <option value="{{ category.category_id }}">{{ category.name }}</option>
+                      {% endfor %}
+                    </select>
+                    <div id="data-management-category3" class="well well-sm" style="height: 150px; overflow: auto;">
+
+                    </div>
+                    <button class="btn btn-danger category-clear-btn3" type="button">{{ button_clear }}</button>
+                  </div>
+                </div>
+                <div class="form-group" id="categories-row">
+                  <label class="col-sm-2 control-label" for="select-products-seo">{{ entry_create_seo_url }}</label>
+                  <div class="col-sm-10">
+                    <select name="create-seo-url" id="select-products-seo" class="form-control">
+                      <option value="0">{{ text_to_all }}</option>
+                      <option value="1">{{ text_to_unfilled }}</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="text-center">
+                  <button class="btn btn-primary" type="submit" form="form-category-seo">{{ button_apply_changes }}</button>
+                </div>
+              </form>
+            </div>
+            <div class="tab-pane" id="tab-design">
+              <form action="{{ actionCategoryDesign }}" method="post" enctype="multipart/form-data" id="form-category-design" class="form-horizontal">
+                <div class="form-group" id="categories-row">
+                  <label class="col-sm-2 control-label" for="select-categories2">{{ entry_products_list }}</label>
+                  <div class="col-sm-10">
+                    <select name="products_categories" id="select-categories2" class="form-control">
+                      <option selected="selected" disabled="disabled">{{ text_categories }}</option>
+                      <option value="0">{{ text_all }}</option>
+                      {% for category in categories %}
+                        <option value="{{ category.category_id }}">{{ category.name }}</option>
+                      {% endfor %}
+                    </select>
+                    <div id="data-management-category2" class="well well-sm" style="height: 150px; overflow: auto;">
+
+                    </div>
+                    <button class="btn btn-danger category-clear-btn2" type="button">{{ button_clear }}</button>
+                  </div>
+                </div>
+                <div class="table-responsive">
+                  <table class="table table-bordered table-hover">
+                    <thead>
+                    <tr>
+                      <td class="text-left">{{ entry_store }}</td>
+                      <td class="text-left">{{ entry_layout }}</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    {% for store in stores %}
+                      <tr>
+                        <td class="text-left">{{ store.name }}</td>
+                        <td class="text-left"><select name="category_layout[{{ store.store_id }}]" class="form-control">
+                            <option value=""></option>
+                            {% for layout in layouts %}
+                              <option value="{{ layout.layout_id }}">{{ layout.name }}</option>
+                            {% endfor %}
+                          </select></td>
+                      </tr>
+                    {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+                <div class="text-center">
+                  <button class="btn btn-primary" type="submit" form="form-category-design">{{ button_apply_changes }}</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
 
     {% elseif type == 'products' %}
 
@@ -57,7 +241,6 @@
             <li><a href="#tab-links" data-toggle="tab">{{ tab_links }}</a></li>
             <li><a href="#tab-attribute" data-toggle="tab">{{ tab_attribute }}</a></li>
             <li><a href="#tab-option" data-toggle="tab">{{ tab_option }}</a></li>
-            <li><a href="#tab-recurring" data-toggle="tab">{{ tab_recurring }}</a></li>
             <li><a href="#tab-discount" data-toggle="tab">{{ tab_discount }}</a></li>
             <li><a href="#tab-special" data-toggle="tab">{{ tab_special }}</a></li>
             <li><a href="#tab-reward" data-toggle="tab">{{ tab_reward }}</a></li>
@@ -66,7 +249,7 @@
           </ul>
           <div class="tab-content">
             <div class="tab-pane active" id="tab-data">
-              <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-product-data" class="form-horizontal">
+              <form action="{{ actionProductData }}" method="post" enctype="multipart/form-data" id="form-product-data" class="form-horizontal">
                 <div class="form-group" id="categories-row">
                   <label class="col-sm-2 control-label" for="select-products-categories">{{ entry_products_list }}</label>
                   <div class="col-sm-10">
@@ -255,26 +438,26 @@
               </form>
             </div>
             <div class="tab-pane" id="tab-links">
-              <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-product-links" class="form-horizontal">
+              <form action="{{ actionProductLinks }}" method="post" enctype="multipart/form-data" id="form-product-links" class="form-horizontal">
                 <div class="form-group" id="categories-row">
                   <label class="col-sm-2 control-label" for="select-products-categories">{{ entry_products_list }}</label>
                   <div class="col-sm-10">
-                    <select name="products_categories" id="select-products-categories" class="form-control">
+                    <select name="products_categories" id="select-products-categories2" class="form-control">
                       <option selected="selected" disabled="disabled">{{ text_categories }}</option>
                       <option value="0">{{ text_all }}</option>
                       {% for category in categories %}
                         <option value="{{ category.category_id }}">{{ category.name }}</option>
                       {% endfor %}
                     </select>
-                    <div id="data-management-category" class="well well-sm" style="height: 150px; overflow: auto;">
+                    <div id="data-management-category2" class="well well-sm" style="height: 150px; overflow: auto;">
 
                     </div>
                     <br>
-                    <input type="text" name="product_name" value="" placeholder="{{ entry_products_list }}" id="input-product" class="form-control" />
-                    <div id="data-management-product" class="well well-sm" style="height: 150px; overflow: auto;">
+                    <input type="text" name="product_name2" value="" placeholder="{{ entry_products_list }}" id="input-product" class="form-control" />
+                    <div id="data-management-product2" class="well well-sm" style="height: 150px; overflow: auto;">
 
                     </div>
-                    <button class="btn btn-danger products-clear-btn" type="button">{{ button_clear }}</button>
+                    <button class="btn btn-danger products-clear-btn2" type="button">{{ button_clear }}</button>
                   </div>
                 </div>
                 <div class="form-group">
@@ -332,650 +515,663 @@
                       {% endfor %}</div>
                   </div>
                 </div>
-                <div class="form-group">
-                  <label class="col-sm-2 control-label" for="input-related"><span data-toggle="tooltip" title="{{ help_related }}">{{ entry_related }}</span></label>
-                  <div class="col-sm-10">
-                    <input type="text" name="related" value="" placeholder="{{ entry_related }}" id="input-related" class="form-control"/>
-                    <div id="product-related" class="well well-sm" style="height: 150px; overflow: auto;"> {% for product_related in product_relateds %}
-                        <div id="product-related{{ product_related.product_id }}"><i class="fa fa-minus-circle"></i> {{ product_related.name }}
-                          <input type="hidden" name="product_related[]" value="{{ product_related.product_id }}"/>
-                        </div>
-                      {% endfor %}</div>
-                  </div>
-                </div>
                 <div class="text-center">
                   <button class="btn btn-primary" type="submit" form="form-product-links">{{ button_apply_changes }}</button>
                 </div>
               </form>
             </div>
             <div class="tab-pane" id="tab-attribute">
-              <div class="table-responsive">
-                <table id="attribute" class="table table-striped table-bordered table-hover">
-                  <thead>
-                  <tr>
-                    <td class="text-left">{{ entry_attribute }}</td>
-                    <td class="text-left">{{ entry_text }}</td>
-                    <td></td>
-                  </tr>
-                  </thead>
-                  <tbody>
+              <form action="{{ actionProductAttr }}" method="post" enctype="multipart/form-data" id="form-product-attribute" class="form-horizontal">
+                <div class="form-group" id="categories-row">
+                  <label class="col-sm-2 control-label" for="select-products-categories">{{ entry_products_list }}</label>
+                  <div class="col-sm-10">
+                    <select name="products_categories" id="select-products-categories3" class="form-control">
+                      <option selected="selected" disabled="disabled">{{ text_categories }}</option>
+                      <option value="0">{{ text_all }}</option>
+                      {% for category in categories %}
+                        <option value="{{ category.category_id }}">{{ category.name }}</option>
+                      {% endfor %}
+                    </select>
+                    <div id="data-management-category3" class="well well-sm" style="height: 150px; overflow: auto;">
 
-                  {% set attribute_row = 0 %}
-                  {% for product_attribute in product_attributes %}
-                    <tr id="attribute-row{{ attribute_row }}">
-                      <td class="text-left" style="width: 40%;"><input type="text" name="product_attribute[{{ attribute_row }}][name]" value="{{ product_attribute.name }}" placeholder="{{ entry_attribute }}" class="form-control"/> <input type="hidden" name="product_attribute[{{ attribute_row }}][attribute_id]" value="{{ product_attribute.attribute_id }}"/></td>
-                      <td class="text-left">{% for language in languages %}
-                          <div class="input-group"><span class="input-group-addon"><img src="language/{{ language.code }}/{{ language.code }}.png" title="{{ language.name }}"/></span> <textarea name="product_attribute[{{ attribute_row }}][product_attribute_description][{{ language.language_id }}][text]" rows="5" placeholder="{{ entry_text }}" class="form-control">{{ product_attribute.product_attribute_description[language.language_id] ? product_attribute.product_attribute_description[language.language_id].text }}</textarea>
-                          </div>
-                        {% endfor %}</td>
-                      <td class="text-right"><button type="button" onclick="$('#attribute-row{{ attribute_row }}').remove();" data-toggle="tooltip" title="{{ button_remove }}" class="btn btn-danger"><i class="fa fa-minus-circle"></i></button></td>
+                    </div>
+                    <br>
+                    <input type="text" name="product_name3" value="" placeholder="{{ entry_products_list }}" id="input-product" class="form-control" />
+                    <div id="data-management-product3" class="well well-sm" style="height: 150px; overflow: auto;">
+
+                    </div>
+                    <button class="btn btn-danger products-clear-btn3" type="button">{{ button_clear }}</button>
+                  </div>
+                </div>
+                <div class="table-responsive">
+                  <table id="attribute" class="table table-striped table-bordered table-hover">
+                    <thead>
+                    <tr>
+                      <td class="text-left">{{ entry_attribute }}</td>
+                      <td class="text-left">{{ entry_text }}</td>
+                      <td></td>
                     </tr>
-                    {% set attribute_row = attribute_row + 1 %}
-                  {% endfor %}
-                  </tbody>
+                    </thead>
+                    <tbody>
 
-                  <tfoot>
-                  <tr>
-                    <td colspan="2"></td>
-                    <td class="text-right"><button type="button" onclick="addAttribute();" data-toggle="tooltip" title="{{ button_attribute_add }}" class="btn btn-primary"><i class="fa fa-plus-circle"></i></button></td>
-                  </tr>
-                  </tfoot>
-                </table>
-              </div>
+                    {% set attribute_row = 0 %}
+                    {% for product_attribute in product_attributes %}
+                      <tr id="attribute-row{{ attribute_row }}">
+                        <td class="text-left" style="width: 40%;"><input type="text" name="product_attribute[{{ attribute_row }}][name]" value="{{ product_attribute.name }}" placeholder="{{ entry_attribute }}" class="form-control"/> <input type="hidden" name="product_attribute[{{ attribute_row }}][attribute_id]" value="{{ product_attribute.attribute_id }}"/></td>
+                        <td class="text-left">{% for language in languages %}
+                            <div class="input-group"><span class="input-group-addon"><img src="language/{{ language.code }}/{{ language.code }}.png" title="{{ language.name }}"/></span> <textarea name="product_attribute[{{ attribute_row }}][product_attribute_description][{{ language.language_id }}][text]" rows="5" placeholder="{{ entry_text }}" class="form-control">{{ product_attribute.product_attribute_description[language.language_id] ? product_attribute.product_attribute_description[language.language_id].text }}</textarea>
+                            </div>
+                          {% endfor %}</td>
+                        <td class="text-right"><button type="button" onclick="$('#attribute-row{{ attribute_row }}').remove();" data-toggle="tooltip" title="{{ button_remove }}" class="btn btn-danger"><i class="fa fa-minus-circle"></i></button></td>
+                      </tr>
+                      {% set attribute_row = attribute_row + 1 %}
+                    {% endfor %}
+                    </tbody>
+
+                    <tfoot>
+                    <tr>
+                      <td colspan="2"></td>
+                      <td class="text-right"><button type="button" onclick="addAttribute();" data-toggle="tooltip" title="{{ button_attribute_add }}" class="btn btn-primary"><i class="fa fa-plus-circle"></i></button></td>
+                    </tr>
+                    </tfoot>
+                  </table>
+                </div>
+                <div class="text-center">
+                  <button class="btn btn-primary" type="submit" form="form-product-attribute">{{ button_apply_changes }}</button>
+                </div>
+              </form>
             </div>
             <div class="tab-pane" id="tab-option">
-              <div class="row">
-                <div class="col-sm-2">
-                  <ul class="nav nav-pills nav-stacked" id="option">
-                    {% set option_row = 0 %}
-                    {% for product_option in product_options %}
-                      <li><a href="#tab-option{{ option_row }}" data-toggle="tab"><i class="fa fa-minus-circle" onclick="$('a[href=\'#tab-option{{ option_row }}\']').parent().remove(); $('#tab-option{{ option_row }}').remove(); $('#option a:first').tab('show');"></i> {{ product_option.name }}</a></li>
-                      {% set option_row = option_row + 1 %}
-                    {% endfor %}
-                    <li>
-                      <input type="text" name="option" value="" placeholder="{{ entry_option }}" id="input-option" class="form-control"/>
-                    </li>
-                  </ul>
+              <form action="{{ actionProductOption }}" method="post" enctype="multipart/form-data" id="form-product-option" class="form-horizontal">
+                <div class="form-group" id="categories-row">
+                  <label class="col-sm-2 control-label" for="select-products-categories">{{ entry_products_list }}</label>
+                  <div class="col-sm-10">
+                    <select name="products_categories" id="select-products-categories4" class="form-control">
+                      <option selected="selected" disabled="disabled">{{ text_categories }}</option>
+                      <option value="0">{{ text_all }}</option>
+                      {% for category in categories %}
+                        <option value="{{ category.category_id }}">{{ category.name }}</option>
+                      {% endfor %}
+                    </select>
+                    <div id="data-management-category4" class="well well-sm" style="height: 150px; overflow: auto;">
+
+                    </div>
+                    <br>
+                    <input type="text" name="product_name4" value="" placeholder="{{ entry_products_list }}" id="input-product" class="form-control" />
+                    <div id="data-management-product4" class="well well-sm" style="height: 150px; overflow: auto;">
+
+                    </div>
+                    <button class="btn btn-danger products-clear-btn4" type="button">{{ button_clear }}</button>
+                  </div>
                 </div>
-                <div class="col-sm-10">
-                  <div class="tab-content"> {% set option_row = 0 %}
-                    {% set option_value_row = 0 %}
-                    {% for product_option in product_options %}
-                      <div class="tab-pane" id="tab-option{{ option_row }}">
-                        <input type="hidden" name="product_option[{{ option_row }}][product_option_id]" value="{{ product_option.product_option_id }}"/> <input type="hidden" name="product_option[{{ option_row }}][name]" value="{{ product_option.name }}"/> <input type="hidden" name="product_option[{{ option_row }}][option_id]" value="{{ product_option.option_id }}"/> <input type="hidden" name="product_option[{{ option_row }}][type]" value="{{ product_option.type }}"/>
-                        <div class="form-group">
-                          <label class="col-sm-2 control-label" for="input-required{{ option_row }}">{{ entry_required }}</label>
-                          <div class="col-sm-10">
-                            <select name="product_option[{{ option_row }}][required]" id="input-required{{ option_row }}" class="form-control">
+                <div class="row">
+                  <div class="col-sm-2">
+                    <ul class="nav nav-pills nav-stacked" id="option">
+                      {% set option_row = 0 %}
+                      {% for product_option in product_options %}
+                        <li><a href="#tab-option{{ option_row }}" data-toggle="tab"><i class="fa fa-minus-circle" onclick="$('a[href=\'#tab-option{{ option_row }}\']').parent().remove(); $('#tab-option{{ option_row }}').remove(); $('#option a:first').tab('show');"></i> {{ product_option.name }}</a></li>
+                        {% set option_row = option_row + 1 %}
+                      {% endfor %}
+                      <li>
+                        <input type="text" name="option" value="" placeholder="{{ entry_option }}" id="input-option" class="form-control"/>
+                      </li>
+                    </ul>
+                  </div>
+                  <div class="col-sm-10">
+                    <div class="tab-content"> {% set option_row = 0 %}
+                      {% set option_value_row = 0 %}
+                      {% for product_option in product_options %}
+                        <div class="tab-pane" id="tab-option{{ option_row }}">
+                          <input type="hidden" name="product_option[{{ option_row }}][product_option_id]" value="{{ product_option.product_option_id }}"/> <input type="hidden" name="product_option[{{ option_row }}][name]" value="{{ product_option.name }}"/> <input type="hidden" name="product_option[{{ option_row }}][option_id]" value="{{ product_option.option_id }}"/> <input type="hidden" name="product_option[{{ option_row }}][type]" value="{{ product_option.type }}"/>
+                          <div class="form-group">
+                            <label class="col-sm-2 control-label" for="input-required{{ option_row }}">{{ entry_required }}</label>
+                            <div class="col-sm-10">
+                              <select name="product_option[{{ option_row }}][required]" id="input-required{{ option_row }}" class="form-control">
 
+                                {% if product_option.required %}
 
-                              {% if product_option.required %}
+                                  <option value="1" selected="selected">{{ text_yes }}</option>
+                                  <option value="0">{{ text_no }}</option>
 
+                                {% else %}
 
-                                <option value="1" selected="selected">{{ text_yes }}</option>
-                                <option value="0">{{ text_no }}</option>
+                                  <option value="1">{{ text_yes }}</option>
+                                  <option value="0" selected="selected">{{ text_no }}</option>
 
+                                {% endif %}
+
+                              </select>
+                            </div>
+                          </div>
+                          {% if product_option.type == 'text' %}
+                            <div class="form-group">
+                              <label class="col-sm-2 control-label" for="input-value{{ option_row }}">{{ entry_option_value }}</label>
+                              <div class="col-sm-10">
+                                <input type="text" name="product_option[{{ option_row }}][value]" value="{{ product_option.value }}" placeholder="{{ entry_option_value }}" id="input-value{{ option_row }}" class="form-control"/>
+                              </div>
+                            </div>
+                          {% endif %}
+                          {% if product_option.type == 'textarea' %}
+                            <div class="form-group">
+                              <label class="col-sm-2 control-label" for="input-value{{ option_row }}">{{ entry_option_value }}</label>
+                              <div class="col-sm-10">
+                                <textarea name="product_option[{{ option_row }}][value]" rows="5" placeholder="{{ entry_option_value }}" id="input-value{{ option_row }}" class="form-control">{{ product_option.value }}</textarea>
+                              </div>
+                            </div>
+                          {% endif %}
+                          {% if product_option.type == 'file' %}
+                            <div class="form-group" style="display: none;">
+                              <label class="col-sm-2 control-label" for="input-value{{ option_row }}">{{ entry_option_value }}</label>
+                              <div class="col-sm-10">
+                                <input type="text" name="product_option[{{ option_row }}][value]" value="{{ product_option.value }}" placeholder="{{ entry_option_value }}" id="input-value{{ option_row }}" class="form-control"/>
+                              </div>
+                            </div>
+                          {% endif %}
+                          {% if product_option.type == 'date' %}
+                            <div class="form-group">
+                              <label class="col-sm-2 control-label" for="input-value{{ option_row }}">{{ entry_option_value }}</label>
+                              <div class="col-sm-3">
+                                <div class="input-group date">
+                                  <input type="text" name="product_option[{{ option_row }}][value]" value="{{ product_option.value }}" placeholder="{{ entry_option_value }}" data-date-format="YYYY-MM-DD" id="input-value{{ option_row }}" class="form-control"/> <span class="input-group-btn">
+                            <button class="btn btn-default" type="button"><i class="fa fa-calendar"></i></button>
+                            </span></div>
+                              </div>
+                            </div>
+                          {% endif %}
+                          {% if product_option.type == 'time' %}
+                            <div class="form-group">
+                              <label class="col-sm-2 control-label" for="input-value{{ option_row }}">{{ entry_option_value }}</label>
+                              <div class="col-sm-10">
+                                <div class="input-group time">
+                                  <input type="text" name="product_option[{{ option_row }}][value]" value="{{ product_option.value }}" placeholder="{{ entry_option_value }}" data-date-format="HH:mm" id="input-value{{ option_row }}" class="form-control"/> <span class="input-group-btn">
+                            <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
+                            </span></div>
+                              </div>
+                            </div>
+                          {% endif %}
+                          {% if product_option.type == 'datetime' %}
+                            <div class="form-group">
+                              <label class="col-sm-2 control-label" for="input-value{{ option_row }}">{{ entry_option_value }}</label>
+                              <div class="col-sm-10">
+                                <div class="input-group datetime">
+                                  <input type="text" name="product_option[{{ option_row }}][value]" value="{{ product_option.value }}" placeholder="{{ entry_option_value }}" data-date-format="YYYY-MM-DD HH:mm" id="input-value{{ option_row }}" class="form-control"/> <span class="input-group-btn">
+                            <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
+                            </span></div>
+                              </div>
+                            </div>
+                          {% endif %}
+                          {% if product_option.type == 'select' or product_option.type == 'radio' or product_option.type == 'checkbox' or product_option.type == 'image' %}
+                            <div class="table-responsive">
+                              <table id="option-value{{ option_row }}" class="table table-striped table-bordered table-hover">
+                                <thead>
+                                <tr>
+                                  <td class="text-left">{{ entry_option_value }}</td>
+                                  <td class="text-right">{{ entry_quantity }}</td>
+                                  <td class="text-left">{{ entry_subtract }}</td>
+                                  <td class="text-right">{{ entry_price }}</td>
+                                  <td class="text-right">{{ entry_option_points }}</td>
+                                  <td class="text-right">{{ entry_weight }}</td>
+                                  <td></td>
+                                </tr>
+                                </thead>
+                                <tbody>
+
+                                {% for product_option_value in product_option.product_option_value %}
+                                  <tr id="option-value-row{{ option_value_row }}">
+                                    <td class="text-left"><select name="product_option[{{ option_row }}][product_option_value][{{ option_value_row }}][option_value_id]" class="form-control">
+
+                                        {% if option_values[product_option.option_id] %}
+
+                                          {% for option_value in option_values[product_option.option_id] %}
+
+                                            {% if option_value.option_value_id == product_option_value.option_value_id %}
+
+                                              <option value="{{ option_value.option_value_id }}" selected="selected">{{ option_value.name }}</option>
+
+                                            {% else %}
+
+                                              <option value="{{ option_value.option_value_id }}">{{ option_value.name }}</option>
+
+                                            {% endif %}
+                                          {% endfor %}
+                                        {% endif %}
+
+                                      </select> <input type="hidden" name="product_option[{{ option_row }}][product_option_value][{{ option_value_row }}][product_option_value_id]" value="{{ product_option_value.product_option_value_id }}"/></td>
+                                    <td class="text-right"><input type="text" name="product_option[{{ option_row }}][product_option_value][{{ option_value_row }}][quantity]" value="{{ product_option_value.quantity }}" placeholder="{{ entry_quantity }}" class="form-control"/></td>
+                                    <td class="text-left"><select name="product_option[{{ option_row }}][product_option_value][{{ option_value_row }}][subtract]" class="form-control">
+
+                                        {% if product_option_value.subtract %}
+
+                                          <option value="1" selected="selected">{{ text_yes }}</option>
+                                          <option value="0">{{ text_no }}</option>
+
+                                        {% else %}
+
+                                          <option value="1">{{ text_yes }}</option>
+                                          <option value="0" selected="selected">{{ text_no }}</option>
+
+                                        {% endif %}
+
+                                      </select></td>
+                                    <td class="text-right"><select name="product_option[{{ option_row }}][product_option_value][{{ option_value_row }}][price_prefix]" class="form-control">
+
+                                        {% if product_option_value.price_prefix == '+' %}
+
+                                          <option value="+" selected="selected">+</option>
+
+                                        {% else %}
+
+                                          <option value="+">+</option>
+
+                                        {% endif %}
+                                        {% if product_option_value.price_prefix == '-' %}
+
+                                          <option value="-" selected="selected">-</option>
+
+                                        {% else %}
+
+                                          <option value="-">-</option>
+
+                                        {% endif %}
+
+                                      </select> <input type="text" name="product_option[{{ option_row }}][product_option_value][{{ option_value_row }}][price]" value="{{ product_option_value.price }}" placeholder="{{ entry_price }}" class="form-control"/></td>
+                                    <td class="text-right"><select name="product_option[{{ option_row }}][product_option_value][{{ option_value_row }}][points_prefix]" class="form-control">
+
+                                        {% if product_option_value.points_prefix == '+' %}
+
+                                          <option value="+" selected="selected">+</option>
+
+                                        {% else %}
+
+                                          <option value="+">+</option>
+
+                                        {% endif %}
+                                        {% if product_option_value.points_prefix == '-' %}
+
+                                          <option value="-" selected="selected">-</option>
+
+                                        {% else %}
+
+                                          <option value="-">-</option>
+
+                                        {% endif %}
+
+                                      </select> <input type="text" name="product_option[{{ option_row }}][product_option_value][{{ option_value_row }}][points]" value="{{ product_option_value.points }}" placeholder="{{ entry_points }}" class="form-control"/></td>
+                                    <td class="text-right"><select name="product_option[{{ option_row }}][product_option_value][{{ option_value_row }}][weight_prefix]" class="form-control">
+
+                                        {% if product_option_value.weight_prefix == '+' %}
+
+                                          <option value="+" selected="selected">+</option>
+
+                                        {% else %}
+
+                                          <option value="+">+</option>
+
+                                        {% endif %}
+                                        {% if product_option_value.weight_prefix == '-' %}
+
+                                          <option value="-" selected="selected">-</option>
+
+                                        {% else %}
+
+                                          <option value="-">-</option>
+
+                                        {% endif %}
+
+                                      </select> <input type="text" name="product_option[{{ option_row }}][product_option_value][{{ option_value_row }}][weight]" value="{{ product_option_value.weight }}" placeholder="{{ entry_weight }}" class="form-control"/></td>
+                                    <td class="text-right"><button type="button" onclick="$(this).tooltip('destroy');$('#option-value-row{{ option_value_row }}').remove();" data-toggle="tooltip" title="{{ button_remove }}" class="btn btn-danger"><i class="fa fa-minus-circle"></i></button></td>
+                                  </tr>
+                                  {% set option_value_row = option_value_row + 1 %}
+                                {% endfor %}
+                                </tbody>
+
+                                <tfoot>
+                                <tr>
+                                  <td colspan="6"></td>
+                                  <td class="text-left"><button type="button" onclick="addOptionValue('{{ option_row }}');" data-toggle="tooltip" title="{{ button_option_value_add }}" class="btn btn-primary"><i class="fa fa-plus-circle"></i></button></td>
+                                </tr>
+                                </tfoot>
+                              </table>
+                            </div>
+                            <select id="option-values{{ option_row }}" style="display: none;">
+
+                              {% if option_values[product_option.option_id] %}
+                                {% for option_value in option_values[product_option.option_id] %}
+
+                                  <option value="{{ option_value.option_value_id }}">{{ option_value.name }}</option>
+
+                                {% endfor %}
+                              {% endif %}
+
+                            </select>
+                          {% endif %} </div>
+                        {% set option_row = option_row + 1 %}
+                      {% endfor %} </div>
+                  </div>
+                </div>
+                <div class="text-center">
+                  <button class="btn btn-primary" type="submit" form="form-product-option">{{ button_apply_changes }}</button>
+                </div>
+              </form>
+            </div>
+            <div class="tab-pane" id="tab-discount">
+              <form action="{{ actionProductDiscount }}" method="post" enctype="multipart/form-data" id="form-product-discount" class="form-horizontal">
+                <div class="form-group" id="categories-row">
+                  <label class="col-sm-2 control-label" for="select-products-categories">{{ entry_products_list }}</label>
+                  <div class="col-sm-10">
+                    <select name="products_categories" id="select-products-categories5" class="form-control">
+                      <option selected="selected" disabled="disabled">{{ text_categories }}</option>
+                      <option value="0">{{ text_all }}</option>
+                      {% for category in categories %}
+                        <option value="{{ category.category_id }}">{{ category.name }}</option>
+                      {% endfor %}
+                    </select>
+                    <div id="data-management-category5" class="well well-sm" style="height: 150px; overflow: auto;">
+
+                    </div>
+                    <br>
+                    <input type="text" name="product_name5" value="" placeholder="{{ entry_products_list }}" id="input-product" class="form-control" />
+                    <div id="data-management-product5" class="well well-sm" style="height: 150px; overflow: auto;">
+
+                    </div>
+                    <button class="btn btn-danger products-clear-btn5" type="button">{{ button_clear }}</button>
+                  </div>
+                </div>
+                <div class="table-responsive">
+                  <table id="discount" class="table table-striped table-bordered table-hover">
+                    <thead>
+                    <tr>
+                      <td class="text-left">{{ entry_customer_group }}</td>
+                      <td class="text-right">{{ entry_quantity }}</td>
+                      <td class="text-right">{{ entry_priority }}</td>
+                      <td class="text-right">{{ entry_price }}</td>
+                      <td class="text-left">{{ entry_date_start }}</td>
+                      <td class="text-left">{{ entry_date_end }}</td>
+                      <td></td>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    {% set discount_row = 0 %}
+                    {% for product_discount in product_discounts %}
+                      <tr id="discount-row{{ discount_row }}">
+                        <td class="text-left"><select name="product_discount[{{ discount_row }}][customer_group_id]" class="form-control">
+                            {% for customer_group in customer_groups %}
+                              {% if customer_group.customer_group_id == product_discount.customer_group_id %}
+                                <option value="{{ customer_group.customer_group_id }}" selected="selected">{{ customer_group.name }}</option>
+                              {% else %}
+                                <option value="{{ customer_group.customer_group_id }}">{{ customer_group.name }}</option>
+                              {% endif %}
+                            {% endfor %}
+                          </select></td>
+                        <td class="text-right"><input type="text" name="product_discount[{{ discount_row }}][quantity]" value="{{ product_discount.quantity }}" placeholder="{{ entry_quantity }}" class="form-control"/></td>
+                        <td class="text-right"><input type="text" name="product_discount[{{ discount_row }}][priority]" value="{{ product_discount.priority }}" placeholder="{{ entry_priority }}" class="form-control"/></td>
+                        <td class="text-right"><input type="text" name="product_discount[{{ discount_row }}][price]" value="{{ product_discount.price }}" placeholder="{{ entry_price }}" class="form-control"/></td>
+                        <td class="text-left" style="width: 20%;">
+                          <div class="input-group date">
+                            <input type="text" name="product_discount[{{ discount_row }}][date_start]" value="{{ product_discount.date_start }}" placeholder="{{ entry_date_start }}" data-date-format="YYYY-MM-DD" class="form-control"/> <span class="input-group-btn">
+                        <button class="btn btn-default" type="button"><i class="fa fa-calendar"></i></button>
+                        </span></div>
+                        </td>
+                        <td class="text-left" style="width: 20%;">
+                          <div class="input-group date">
+                            <input type="text" name="product_discount[{{ discount_row }}][date_end]" value="{{ product_discount.date_end }}" placeholder="{{ entry_date_end }}" data-date-format="YYYY-MM-DD" class="form-control"/> <span class="input-group-btn">
+                        <button class="btn btn-default" type="button"><i class="fa fa-calendar"></i></button>
+                        </span></div>
+                        </td>
+                        <td class="text-left"><button type="button" onclick="$('#discount-row{{ discount_row }}').remove();" data-toggle="tooltip" title="{{ button_remove }}" class="btn btn-danger"><i class="fa fa-minus-circle"></i></button></td>
+                      </tr>
+                      {% set discount_row = discount_row + 1 %}
+                    {% endfor %}
+                    </tbody>
+
+                    <tfoot>
+                    <tr>
+                      <td colspan="6"></td>
+                      <td class="text-left"><button type="button" onclick="addDiscount();" data-toggle="tooltip" title="{{ button_discount_add }}" class="btn btn-primary"><i class="fa fa-plus-circle"></i></button></td>
+                    </tr>
+                    </tfoot>
+                  </table>
+                </div>
+                <div class="text-center">
+                  <button class="btn btn-primary" type="submit" form="form-product-discount">{{ button_apply_changes }}</button>
+                </div>
+              </form>
+            </div>
+            <div class="tab-pane" id="tab-special">
+              <form action="{{ actionProductSpecial }}" method="post" enctype="multipart/form-data" id="form-product-special" class="form-horizontal">
+                <div class="form-group" id="categories-row">
+                  <label class="col-sm-2 control-label" for="select-products-categories">{{ entry_products_list }}</label>
+                  <div class="col-sm-10">
+                    <select name="products_categories" id="select-products-categories6" class="form-control">
+                      <option selected="selected" disabled="disabled">{{ text_categories }}</option>
+                      <option value="0">{{ text_all }}</option>
+                      {% for category in categories %}
+                        <option value="{{ category.category_id }}">{{ category.name }}</option>
+                      {% endfor %}
+                    </select>
+                    <div id="data-management-category6" class="well well-sm" style="height: 150px; overflow: auto;">
+
+                    </div>
+                    <br>
+                    <input type="text" name="product_name6" value="" placeholder="{{ entry_products_list }}" id="input-product" class="form-control" />
+                    <div id="data-management-product6" class="well well-sm" style="height: 150px; overflow: auto;">
+
+                    </div>
+                    <button class="btn btn-danger products-clear-btn6" type="button">{{ button_clear }}</button>
+                  </div>
+                </div>
+                <div class="table-responsive">
+                  <table id="special" class="table table-striped table-bordered table-hover">
+                    <thead>
+                    <tr>
+                      <td class="text-left">{{ entry_customer_group }}</td>
+                      <td class="text-right">{{ entry_priority }}</td>
+                      <td class="text-right">{{ entry_price }}</td>
+                      <td class="text-left">{{ entry_date_start }}</td>
+                      <td class="text-left">{{ entry_date_end }}</td>
+                      <td></td>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    {% set special_row = 0 %}
+                    {% for product_special in product_specials %}
+                      <tr id="special-row{{ special_row }}">
+                        <td class="text-left"><select name="product_special[{{ special_row }}][customer_group_id]" class="form-control">
+
+                            {% for customer_group in customer_groups %}
+                              {% if customer_group.customer_group_id == product_special.customer_group_id %}
+
+                                <option value="{{ customer_group.customer_group_id }}" selected="selected">{{ customer_group.name }}</option>
 
                               {% else %}
 
-
-                                <option value="1">{{ text_yes }}</option>
-                                <option value="0" selected="selected">{{ text_no }}</option>
-
+                                <option value="{{ customer_group.customer_group_id }}">{{ customer_group.name }}</option>
 
                               {% endif %}
-
-
-                            </select>
-                          </div>
-                        </div>
-                        {% if product_option.type == 'text' %}
-                          <div class="form-group">
-                            <label class="col-sm-2 control-label" for="input-value{{ option_row }}">{{ entry_option_value }}</label>
-                            <div class="col-sm-10">
-                              <input type="text" name="product_option[{{ option_row }}][value]" value="{{ product_option.value }}" placeholder="{{ entry_option_value }}" id="input-value{{ option_row }}" class="form-control"/>
-                            </div>
-                          </div>
-                        {% endif %}
-                        {% if product_option.type == 'textarea' %}
-                          <div class="form-group">
-                            <label class="col-sm-2 control-label" for="input-value{{ option_row }}">{{ entry_option_value }}</label>
-                            <div class="col-sm-10">
-                              <textarea name="product_option[{{ option_row }}][value]" rows="5" placeholder="{{ entry_option_value }}" id="input-value{{ option_row }}" class="form-control">{{ product_option.value }}</textarea>
-                            </div>
-                          </div>
-                        {% endif %}
-                        {% if product_option.type == 'file' %}
-                          <div class="form-group" style="display: none;">
-                            <label class="col-sm-2 control-label" for="input-value{{ option_row }}">{{ entry_option_value }}</label>
-                            <div class="col-sm-10">
-                              <input type="text" name="product_option[{{ option_row }}][value]" value="{{ product_option.value }}" placeholder="{{ entry_option_value }}" id="input-value{{ option_row }}" class="form-control"/>
-                            </div>
-                          </div>
-                        {% endif %}
-                        {% if product_option.type == 'date' %}
-                          <div class="form-group">
-                            <label class="col-sm-2 control-label" for="input-value{{ option_row }}">{{ entry_option_value }}</label>
-                            <div class="col-sm-3">
-                              <div class="input-group date">
-                                <input type="text" name="product_option[{{ option_row }}][value]" value="{{ product_option.value }}" placeholder="{{ entry_option_value }}" data-date-format="YYYY-MM-DD" id="input-value{{ option_row }}" class="form-control"/> <span class="input-group-btn">
-                          <button class="btn btn-default" type="button"><i class="fa fa-calendar"></i></button>
-                          </span></div>
-                            </div>
-                          </div>
-                        {% endif %}
-                        {% if product_option.type == 'time' %}
-                          <div class="form-group">
-                            <label class="col-sm-2 control-label" for="input-value{{ option_row }}">{{ entry_option_value }}</label>
-                            <div class="col-sm-10">
-                              <div class="input-group time">
-                                <input type="text" name="product_option[{{ option_row }}][value]" value="{{ product_option.value }}" placeholder="{{ entry_option_value }}" data-date-format="HH:mm" id="input-value{{ option_row }}" class="form-control"/> <span class="input-group-btn">
-                          <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
-                          </span></div>
-                            </div>
-                          </div>
-                        {% endif %}
-                        {% if product_option.type == 'datetime' %}
-                          <div class="form-group">
-                            <label class="col-sm-2 control-label" for="input-value{{ option_row }}">{{ entry_option_value }}</label>
-                            <div class="col-sm-10">
-                              <div class="input-group datetime">
-                                <input type="text" name="product_option[{{ option_row }}][value]" value="{{ product_option.value }}" placeholder="{{ entry_option_value }}" data-date-format="YYYY-MM-DD HH:mm" id="input-value{{ option_row }}" class="form-control"/> <span class="input-group-btn">
-                          <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
-                          </span></div>
-                            </div>
-                          </div>
-                        {% endif %}
-                        {% if product_option.type == 'select' or product_option.type == 'radio' or product_option.type == 'checkbox' or product_option.type == 'image' %}
-                          <div class="table-responsive">
-                            <table id="option-value{{ option_row }}" class="table table-striped table-bordered table-hover">
-                              <thead>
-                              <tr>
-                                <td class="text-left">{{ entry_option_value }}</td>
-                                <td class="text-right">{{ entry_quantity }}</td>
-                                <td class="text-left">{{ entry_subtract }}</td>
-                                <td class="text-right">{{ entry_price }}</td>
-                                <td class="text-right">{{ entry_option_points }}</td>
-                                <td class="text-right">{{ entry_weight }}</td>
-                                <td></td>
-                              </tr>
-                              </thead>
-                              <tbody>
-
-                              {% for product_option_value in product_option.product_option_value %}
-                                <tr id="option-value-row{{ option_value_row }}">
-                                  <td class="text-left"><select name="product_option[{{ option_row }}][product_option_value][{{ option_value_row }}][option_value_id]" class="form-control">
-
-
-                                      {% if option_values[product_option.option_id] %}
-
-                                        {% for option_value in option_values[product_option.option_id] %}
-
-                                          {% if option_value.option_value_id == product_option_value.option_value_id %}
-
-
-                                            <option value="{{ option_value.option_value_id }}" selected="selected">{{ option_value.name }}</option>
-
-
-                                          {% else %}
-
-
-                                            <option value="{{ option_value.option_value_id }}">{{ option_value.name }}</option>
-
-
-                                          {% endif %}
-                                        {% endfor %}
-                                      {% endif %}
-
-
-                                    </select> <input type="hidden" name="product_option[{{ option_row }}][product_option_value][{{ option_value_row }}][product_option_value_id]" value="{{ product_option_value.product_option_value_id }}"/></td>
-                                  <td class="text-right"><input type="text" name="product_option[{{ option_row }}][product_option_value][{{ option_value_row }}][quantity]" value="{{ product_option_value.quantity }}" placeholder="{{ entry_quantity }}" class="form-control"/></td>
-                                  <td class="text-left"><select name="product_option[{{ option_row }}][product_option_value][{{ option_value_row }}][subtract]" class="form-control">
-
-
-                                      {% if product_option_value.subtract %}
-
-
-                                        <option value="1" selected="selected">{{ text_yes }}</option>
-                                        <option value="0">{{ text_no }}</option>
-
-
-                                      {% else %}
-
-
-                                        <option value="1">{{ text_yes }}</option>
-                                        <option value="0" selected="selected">{{ text_no }}</option>
-
-
-                                      {% endif %}
-
-
-                                    </select></td>
-                                  <td class="text-right"><select name="product_option[{{ option_row }}][product_option_value][{{ option_value_row }}][price_prefix]" class="form-control">
-
-
-                                      {% if product_option_value.price_prefix == '+' %}
-
-
-                                        <option value="+" selected="selected">+</option>
-
-
-                                      {% else %}
-
-
-                                        <option value="+">+</option>
-
-
-                                      {% endif %}
-                                      {% if product_option_value.price_prefix == '-' %}
-
-
-                                        <option value="-" selected="selected">-</option>
-
-
-                                      {% else %}
-
-
-                                        <option value="-">-</option>
-
-
-                                      {% endif %}
-
-
-                                    </select> <input type="text" name="product_option[{{ option_row }}][product_option_value][{{ option_value_row }}][price]" value="{{ product_option_value.price }}" placeholder="{{ entry_price }}" class="form-control"/></td>
-                                  <td class="text-right"><select name="product_option[{{ option_row }}][product_option_value][{{ option_value_row }}][points_prefix]" class="form-control">
-
-
-                                      {% if product_option_value.points_prefix == '+' %}
-
-
-                                        <option value="+" selected="selected">+</option>
-
-
-                                      {% else %}
-
-
-                                        <option value="+">+</option>
-
-
-                                      {% endif %}
-                                      {% if product_option_value.points_prefix == '-' %}
-
-
-                                        <option value="-" selected="selected">-</option>
-
-
-                                      {% else %}
-
-
-                                        <option value="-">-</option>
-
-
-                                      {% endif %}
-
-
-                                    </select> <input type="text" name="product_option[{{ option_row }}][product_option_value][{{ option_value_row }}][points]" value="{{ product_option_value.points }}" placeholder="{{ entry_points }}" class="form-control"/></td>
-                                  <td class="text-right"><select name="product_option[{{ option_row }}][product_option_value][{{ option_value_row }}][weight_prefix]" class="form-control">
-
-
-                                      {% if product_option_value.weight_prefix == '+' %}
-
-
-                                        <option value="+" selected="selected">+</option>
-
-
-                                      {% else %}
-
-
-                                        <option value="+">+</option>
-
-
-                                      {% endif %}
-                                      {% if product_option_value.weight_prefix == '-' %}
-
-
-                                        <option value="-" selected="selected">-</option>
-
-
-                                      {% else %}
-
-
-                                        <option value="-">-</option>
-
-
-                                      {% endif %}
-
-
-                                    </select> <input type="text" name="product_option[{{ option_row }}][product_option_value][{{ option_value_row }}][weight]" value="{{ product_option_value.weight }}" placeholder="{{ entry_weight }}" class="form-control"/></td>
-                                  <td class="text-right"><button type="button" onclick="$(this).tooltip('destroy');$('#option-value-row{{ option_value_row }}').remove();" data-toggle="tooltip" title="{{ button_remove }}" class="btn btn-danger"><i class="fa fa-minus-circle"></i></button></td>
-                                </tr>
-                                {% set option_value_row = option_value_row + 1 %}
-                              {% endfor %}
-                              </tbody>
-
-                              <tfoot>
-                              <tr>
-                                <td colspan="6"></td>
-                                <td class="text-left"><button type="button" onclick="addOptionValue('{{ option_row }}');" data-toggle="tooltip" title="{{ button_option_value_add }}" class="btn btn-primary"><i class="fa fa-plus-circle"></i></button></td>
-                              </tr>
-                              </tfoot>
-                            </table>
-                          </div>
-                          <select id="option-values{{ option_row }}" style="display: none;">
-
-
-                            {% if option_values[product_option.option_id] %}
-                              {% for option_value in option_values[product_option.option_id] %}
-
-
-                                <option value="{{ option_value.option_value_id }}">{{ option_value.name }}</option>
-
-
-                              {% endfor %}
-                            {% endif %}
-
-
-                          </select>
-                        {% endif %} </div>
-                      {% set option_row = option_row + 1 %}
-                    {% endfor %} </div>
+                            {% endfor %}
+
+                          </select></td>
+                        <td class="text-right"><input type="text" name="product_special[{{ special_row }}][priority]" value="{{ product_special.priority }}" placeholder="{{ entry_priority }}" class="form-control"/></td>
+                        <td class="text-right"><input type="text" name="product_special[{{ special_row }}][price]" value="{{ product_special.price }}" placeholder="{{ entry_price }}" class="form-control"/></td>
+                        <td class="text-left" style="width: 20%;">
+                          <div class="input-group date">
+                            <input type="text" name="product_special[{{ special_row }}][date_start]" value="{{ product_special.date_start }}" placeholder="{{ entry_date_start }}" data-date-format="YYYY-MM-DD" class="form-control"/> <span class="input-group-btn">
+                        <button class="btn btn-default" type="button"><i class="fa fa-calendar"></i></button>
+                        </span></div>
+                        </td>
+                        <td class="text-left" style="width: 20%;">
+                          <div class="input-group date">
+                            <input type="text" name="product_special[{{ special_row }}][date_end]" value="{{ product_special.date_end }}" placeholder="{{ entry_date_end }}" data-date-format="YYYY-MM-DD" class="form-control"/> <span class="input-group-btn">
+                        <button class="btn btn-default" type="button"><i class="fa fa-calendar"></i></button>
+                        </span></div>
+                        </td>
+                        <td class="text-left"><button type="button" onclick="$('#special-row{{ special_row }}').remove();" data-toggle="tooltip" title="{{ button_remove }}" class="btn btn-danger"><i class="fa fa-minus-circle"></i></button></td>
+                      </tr>
+                      {% set special_row = special_row + 1 %}
+                    {% endfor %}
+                    </tbody>
+
+                    <tfoot>
+                    <tr>
+                      <td colspan="5"></td>
+                      <td class="text-left"><button type="button" onclick="addSpecial();" data-toggle="tooltip" title="{{ button_special_add }}" class="btn btn-primary"><i class="fa fa-plus-circle"></i></button></td>
+                    </tr>
+                    </tfoot>
+                  </table>
                 </div>
-              </div>
-            </div>
-            <div class="tab-pane" id="tab-recurring">
-              <div class="table-responsive">
-                <table class="table table-striped table-bordered table-hover">
-                  <thead>
-                  <tr>
-                    <td class="text-left">{{ entry_recurring }}</td>
-                    <td class="text-left">{{ entry_customer_group }}</td>
-                    <td class="text-left"></td>
-                  </tr>
-                  </thead>
-                  <tbody>
-
-                  {% set recurring_row = 0 %}
-                  {% for product_recurring in product_recurrings %}
-                    <tr id="recurring-row{{ recurring_row }}">
-                      <td class="text-left"><select name="product_recurring[{{ recurring_row }}][recurring_id]" class="form-control">
-
-
-                          {% for recurring in recurrings %}
-                            {% if recurring.recurring_id == product_recurring.recurring_id %}
-
-
-                              <option value="{{ recurring.recurring_id }}" selected="selected">{{ recurring.name }}</option>
-
-
-                            {% else %}
-
-
-                              <option value="{{ recurring.recurring_id }}">{{ recurring.name }}</option>
-
-
-                            {% endif %}
-                          {% endfor %}
-
-
-                        </select></td>
-                      <td class="text-left"><select name="product_recurring[{{ recurring_row }}][customer_group_id]" class="form-control">
-
-
-                          {% for customer_group in customer_groups %}
-                            {% if customer_group.customer_group_id == product_recurring.customer_group_id %}
-
-
-                              <option value="{{ customer_group.customer_group_id }}" selected="selected">{{ customer_group.name }}</option>
-
-
-                            {% else %}
-
-
-                              <option value="{{ customer_group.customer_group_id }}">{{ customer_group.name }}</option>
-
-
-                            {% endif %}
-                          {% endfor %}
-
-
-                        </select></td>
-                      <td class="text-left"><button type="button" onclick="$('#recurring-row{{ recurring_row }}').remove()" data-toggle="tooltip" title="{{ button_remove }}" class="btn btn-danger"><i class="fa fa-minus-circle"></i></button></td>
-                    </tr>
-                    {% set recurring_row = recurring_row + 1 %}
-                  {% endfor %}
-                  </tbody>
-
-                  <tfoot>
-                  <tr>
-                    <td colspan="2"></td>
-                    <td class="text-left"><button type="button" onclick="addRecurring()" data-toggle="tooltip" title="{{ button_recurring_add }}" class="btn btn-primary"><i class="fa fa-plus-circle"></i></button></td>
-                  </tr>
-                  </tfoot>
-                </table>
-              </div>
-            </div>
-            <div class="tab-pane" id="tab-discount">
-              <div class="table-responsive">
-                <table id="discount" class="table table-striped table-bordered table-hover">
-                  <thead>
-                  <tr>
-                    <td class="text-left">{{ entry_customer_group }}</td>
-                    <td class="text-right">{{ entry_quantity }}</td>
-                    <td class="text-right">{{ entry_priority }}</td>
-                    <td class="text-right">{{ entry_price }}</td>
-                    <td class="text-left">{{ entry_date_start }}</td>
-                    <td class="text-left">{{ entry_date_end }}</td>
-                    <td></td>
-                  </tr>
-                  </thead>
-                  <tbody>
-
-                  {% set discount_row = 0 %}
-                  {% for product_discount in product_discounts %}
-                    <tr id="discount-row{{ discount_row }}">
-                      <td class="text-left"><select name="product_discount[{{ discount_row }}][customer_group_id]" class="form-control">
-                          {% for customer_group in customer_groups %}
-                            {% if customer_group.customer_group_id == product_discount.customer_group_id %}
-                              <option value="{{ customer_group.customer_group_id }}" selected="selected">{{ customer_group.name }}</option>
-                            {% else %}
-                              <option value="{{ customer_group.customer_group_id }}">{{ customer_group.name }}</option>
-                            {% endif %}
-                          {% endfor %}
-                        </select></td>
-                      <td class="text-right"><input type="text" name="product_discount[{{ discount_row }}][quantity]" value="{{ product_discount.quantity }}" placeholder="{{ entry_quantity }}" class="form-control"/></td>
-                      <td class="text-right"><input type="text" name="product_discount[{{ discount_row }}][priority]" value="{{ product_discount.priority }}" placeholder="{{ entry_priority }}" class="form-control"/></td>
-                      <td class="text-right"><input type="text" name="product_discount[{{ discount_row }}][price]" value="{{ product_discount.price }}" placeholder="{{ entry_price }}" class="form-control"/></td>
-                      <td class="text-left" style="width: 20%;">
-                        <div class="input-group date">
-                          <input type="text" name="product_discount[{{ discount_row }}][date_start]" value="{{ product_discount.date_start }}" placeholder="{{ entry_date_start }}" data-date-format="YYYY-MM-DD" class="form-control"/> <span class="input-group-btn">
-                      <button class="btn btn-default" type="button"><i class="fa fa-calendar"></i></button>
-                      </span></div>
-                      </td>
-                      <td class="text-left" style="width: 20%;">
-                        <div class="input-group date">
-                          <input type="text" name="product_discount[{{ discount_row }}][date_end]" value="{{ product_discount.date_end }}" placeholder="{{ entry_date_end }}" data-date-format="YYYY-MM-DD" class="form-control"/> <span class="input-group-btn">
-                      <button class="btn btn-default" type="button"><i class="fa fa-calendar"></i></button>
-                      </span></div>
-                      </td>
-                      <td class="text-left"><button type="button" onclick="$('#discount-row{{ discount_row }}').remove();" data-toggle="tooltip" title="{{ button_remove }}" class="btn btn-danger"><i class="fa fa-minus-circle"></i></button></td>
-                    </tr>
-                    {% set discount_row = discount_row + 1 %}
-                  {% endfor %}
-                  </tbody>
-
-                  <tfoot>
-                  <tr>
-                    <td colspan="6"></td>
-                    <td class="text-left"><button type="button" onclick="addDiscount();" data-toggle="tooltip" title="{{ button_discount_add }}" class="btn btn-primary"><i class="fa fa-plus-circle"></i></button></td>
-                  </tr>
-                  </tfoot>
-                </table>
-              </div>
-            </div>
-            <div class="tab-pane" id="tab-special">
-              <div class="table-responsive">
-                <table id="special" class="table table-striped table-bordered table-hover">
-                  <thead>
-                  <tr>
-                    <td class="text-left">{{ entry_customer_group }}</td>
-                    <td class="text-right">{{ entry_priority }}</td>
-                    <td class="text-right">{{ entry_price }}</td>
-                    <td class="text-left">{{ entry_date_start }}</td>
-                    <td class="text-left">{{ entry_date_end }}</td>
-                    <td></td>
-                  </tr>
-                  </thead>
-                  <tbody>
-
-                  {% set special_row = 0 %}
-                  {% for product_special in product_specials %}
-                    <tr id="special-row{{ special_row }}">
-                      <td class="text-left"><select name="product_special[{{ special_row }}][customer_group_id]" class="form-control">
-
-
-                          {% for customer_group in customer_groups %}
-                            {% if customer_group.customer_group_id == product_special.customer_group_id %}
-
-
-                              <option value="{{ customer_group.customer_group_id }}" selected="selected">{{ customer_group.name }}</option>
-
-
-                            {% else %}
-
-
-                              <option value="{{ customer_group.customer_group_id }}">{{ customer_group.name }}</option>
-
-
-                            {% endif %}
-                          {% endfor %}
-
-
-                        </select></td>
-                      <td class="text-right"><input type="text" name="product_special[{{ special_row }}][priority]" value="{{ product_special.priority }}" placeholder="{{ entry_priority }}" class="form-control"/></td>
-                      <td class="text-right"><input type="text" name="product_special[{{ special_row }}][price]" value="{{ product_special.price }}" placeholder="{{ entry_price }}" class="form-control"/></td>
-                      <td class="text-left" style="width: 20%;">
-                        <div class="input-group date">
-                          <input type="text" name="product_special[{{ special_row }}][date_start]" value="{{ product_special.date_start }}" placeholder="{{ entry_date_start }}" data-date-format="YYYY-MM-DD" class="form-control"/> <span class="input-group-btn">
-                      <button class="btn btn-default" type="button"><i class="fa fa-calendar"></i></button>
-                      </span></div>
-                      </td>
-                      <td class="text-left" style="width: 20%;">
-                        <div class="input-group date">
-                          <input type="text" name="product_special[{{ special_row }}][date_end]" value="{{ product_special.date_end }}" placeholder="{{ entry_date_end }}" data-date-format="YYYY-MM-DD" class="form-control"/> <span class="input-group-btn">
-                      <button class="btn btn-default" type="button"><i class="fa fa-calendar"></i></button>
-                      </span></div>
-                      </td>
-                      <td class="text-left"><button type="button" onclick="$('#special-row{{ special_row }}').remove();" data-toggle="tooltip" title="{{ button_remove }}" class="btn btn-danger"><i class="fa fa-minus-circle"></i></button></td>
-                    </tr>
-                    {% set special_row = special_row + 1 %}
-                  {% endfor %}
-                  </tbody>
-
-                  <tfoot>
-                  <tr>
-                    <td colspan="5"></td>
-                    <td class="text-left"><button type="button" onclick="addSpecial();" data-toggle="tooltip" title="{{ button_special_add }}" class="btn btn-primary"><i class="fa fa-plus-circle"></i></button></td>
-                  </tr>
-                  </tfoot>
-                </table>
-              </div>
+                <div class="text-center">
+                  <button class="btn btn-primary" type="submit" form="form-product-special">{{ button_apply_changes }}</button>
+                </div>
+              </form>
             </div>
             <div class="tab-pane" id="tab-reward">
-              <div class="form-group">
-                <label class="col-sm-2 control-label" for="input-points"><span data-toggle="tooltip" title="{{ help_points }}">{{ entry_points }}</span></label>
-                <div class="col-sm-10">
-                  <input type="text" name="points" value="{{ points }}" placeholder="{{ entry_points }}" id="input-points" class="form-control"/>
+              <form action="{{ actionProductReward }}" method="post" enctype="multipart/form-data" id="form-product-reward" class="form-horizontal">
+                <div class="form-group" id="categories-row">
+                  <label class="col-sm-2 control-label" for="select-products-categories">{{ entry_products_list }}</label>
+                  <div class="col-sm-10">
+                    <select name="products_categories" id="select-products-categories7" class="form-control">
+                      <option selected="selected" disabled="disabled">{{ text_categories }}</option>
+                      <option value="0">{{ text_all }}</option>
+                      {% for category in categories %}
+                        <option value="{{ category.category_id }}">{{ category.name }}</option>
+                      {% endfor %}
+                    </select>
+                    <div id="data-management-category7" class="well well-sm" style="height: 150px; overflow: auto;">
+
+                    </div>
+                    <br>
+                    <input type="text" name="product_name7" value="" placeholder="{{ entry_products_list }}" id="input-product" class="form-control" />
+                    <div id="data-management-product7" class="well well-sm" style="height: 150px; overflow: auto;">
+
+                    </div>
+                    <button class="btn btn-danger products-clear-btn7" type="button">{{ button_clear }}</button>
+                  </div>
                 </div>
-              </div>
-              <div class="table-responsive">
-                <table class="table table-bordered table-hover">
-                  <thead>
-                  <tr>
-                    <td class="text-left">{{ entry_customer_group }}</td>
-                    <td class="text-right">{{ entry_reward }}</td>
-                  </tr>
-                  </thead>
-                  <tbody>
-
-                  {% for customer_group in customer_groups %}
+                <div class="form-group">
+                  <label class="col-sm-2 control-label" for="input-points"><span data-toggle="tooltip" title="{{ help_points }}">{{ entry_points }}</span></label>
+                  <div class="col-sm-10">
+                    <input type="text" name="points" value="{{ points }}" placeholder="{{ entry_points }}" id="input-points" class="form-control"/>
+                  </div>
+                </div>
+                <div class="table-responsive">
+                  <table class="table table-bordered table-hover">
+                    <thead>
                     <tr>
-                      <td class="text-left">{{ customer_group.name }}</td>
-                      <td class="text-right"><input type="text" name="product_reward[{{ customer_group.customer_group_id }}][points]" value="{{ product_reward[customer_group.customer_group_id] ? product_reward[customer_group.customer_group_id].points }}" class="form-control"/></td>
+                      <td class="text-left">{{ entry_customer_group }}</td>
+                      <td class="text-right">{{ entry_reward }}</td>
                     </tr>
-                  {% endfor %}
-                  </tbody>
+                    </thead>
+                    <tbody>
 
-                </table>
-              </div>
+                    {% for customer_group in customer_groups %}
+                      <tr>
+                        <td class="text-left">{{ customer_group.name }}</td>
+                        <td class="text-right"><input type="text" name="product_reward[{{ customer_group.customer_group_id }}][points]" value="{{ product_reward[customer_group.customer_group_id] ? product_reward[customer_group.customer_group_id].points }}" class="form-control"/></td>
+                      </tr>
+                    {% endfor %}
+                    </tbody>
+
+                  </table>
+                </div>
+                <div class="text-center">
+                  <button class="btn btn-primary" type="submit" form="form-product-reward">{{ button_apply_changes }}</button>
+                </div>
+              </form>
             </div>
             <div class="tab-pane" id="tab-seo">
-              <div class="alert alert-info"><i class="fa fa-info-circle"></i> {{ text_keyword }}</div>
-              <div class="table-responsive">
-                <table class="table table-bordered table-hover">
-                  <thead>
-                  <tr>
-                    <td class="text-left">{{ entry_store }}</td>
-                    <td class="text-left">{{ entry_keyword }}</td>
-                  </tr>
-                  </thead>
-                  <tbody>
-                  {% for store in stores %}
-                    <tr>
-                      <td class="text-left">{{ store.name }}</td>
-                      <td class="text-left">{% for language in languages %}
-                          <div class="input-group"><span class="input-group-addon"><img src="language/{{ language.code }}/{{ language.code }}.png" title="{{ language.name }}"/></span> <input type="text" name="product_seo_url[{{ store.store_id }}][{{ language.language_id }}]" value="{% if product_seo_url[store.store_id][language.language_id] %}{{ product_seo_url[store.store_id][language.language_id] }}{% endif %}" placeholder="{{ entry_keyword }}" class="form-control"/>
-                          </div>
-                          {% if error_keyword[store.store_id][language.language_id] %}
-                            <div class="text-danger">{{ error_keyword[store.store_id][language.language_id] }}</div>
-                          {% endif %}
-                        {% endfor %}</td>
-                    </tr>
-                  {% endfor %}
-                  </tbody>
+              <form action="{{ actionProductSeo }}" method="post" enctype="multipart/form-data" id="form-product-seo" class="form-horizontal">
+                <div class="form-group" id="categories-row">
+                  <label class="col-sm-2 control-label" for="select-products-categories">{{ entry_products_list }}</label>
+                  <div class="col-sm-10">
+                    <select name="products_categories" id="select-products-categories9" class="form-control">
+                      <option selected="selected" disabled="disabled">{{ text_categories }}</option>
+                      <option value="0">{{ text_all }}</option>
+                      {% for category in categories %}
+                        <option value="{{ category.category_id }}">{{ category.name }}</option>
+                      {% endfor %}
+                    </select>
+                    <div id="data-management-category9" class="well well-sm" style="height: 150px; overflow: auto;">
 
-                </table>
-              </div>
+                    </div>
+                    <br>
+                    <input type="text" name="product_name9" value="" placeholder="{{ entry_products_list }}" id="input-product" class="form-control" />
+                    <div id="data-management-product9" class="well well-sm" style="height: 150px; overflow: auto;">
+
+                    </div>
+                    <button class="btn btn-danger products-clear-btn9" type="button">{{ button_clear }}</button>
+                  </div>
+                </div>
+                <div class="form-group" id="categories-row">
+                  <label class="col-sm-2 control-label" for="select-products-seo">{{ entry_create_seo_url }}</label>
+                  <div class="col-sm-10">
+                    <select name="create-seo-url" id="select-products-seo" class="form-control">
+                      <option value="0">{{ text_to_all }}</option>
+                      <option value="1">{{ text_to_unfilled }}</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="text-center">
+                  <button class="btn btn-primary" type="submit" form="form-product-seo">{{ button_apply_changes }}</button>
+                </div>
+              </form>
             </div>
             <div class="tab-pane" id="tab-design">
-              <div class="table-responsive">
-                <table class="table table-bordered table-hover">
-                  <thead>
-                  <tr>
-                    <td class="text-left">{{ entry_store }}</td>
-                    <td class="text-left">{{ entry_layout }}</td>
-                  </tr>
-                  </thead>
-                  <tbody>
-                  {% for store in stores %}
+              <form action="{{ actionProductDesign }}" method="post" enctype="multipart/form-data" id="form-product-design" class="form-horizontal">
+                <div class="form-group" id="categories-row">
+                  <label class="col-sm-2 control-label" for="select-products-categories">{{ entry_products_list }}</label>
+                  <div class="col-sm-10">
+                    <select name="products_categories" id="select-products-categories8" class="form-control">
+                      <option selected="selected" disabled="disabled">{{ text_categories }}</option>
+                      <option value="0">{{ text_all }}</option>
+                      {% for category in categories %}
+                        <option value="{{ category.category_id }}">{{ category.name }}</option>
+                      {% endfor %}
+                    </select>
+                    <div id="data-management-category8" class="well well-sm" style="height: 150px; overflow: auto;">
+
+                    </div>
+                    <br>
+                    <input type="text" name="product_name8" value="" placeholder="{{ entry_products_list }}" id="input-product" class="form-control" />
+                    <div id="data-management-product8" class="well well-sm" style="height: 150px; overflow: auto;">
+
+                    </div>
+                    <button class="btn btn-danger products-clear-btn8" type="button">{{ button_clear }}</button>
+                  </div>
+                </div>
+                <div class="table-responsive">
+                  <table class="table table-bordered table-hover">
+                    <thead>
                     <tr>
-                      <td class="text-left">{{ store.name }}</td>
-                      <td class="text-left"><select name="product_layout[{{ store.store_id }}]" class="form-control">
-                          <option value=""></option>
+                      <td class="text-left">{{ entry_store }}</td>
+                      <td class="text-left">{{ entry_layout }}</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for store in stores %}
+                      <tr>
+                        <td class="text-left">{{ store.name }}</td>
+                        <td class="text-left"><select name="product_layout[{{ store.store_id }}]" class="form-control">
+                            <option value=""></option>
 
-
-                          {% for layout in layouts %}
-                            {% if product_layout[store.store_id] and product_layout[store.store_id] == layout.layout_id %}
-
-
-                              <option value="{{ layout.layout_id }}" selected="selected">{{ layout.name }}</option>
-
-
-                            {% else %}
-
+                            {% for layout in layouts %}
 
                               <option value="{{ layout.layout_id }}">{{ layout.name }}</option>
 
+                            {% endfor %}
 
-                            {% endif %}
-                          {% endfor %}
-
-
-                        </select></td>
-                    </tr>
-                  {% endfor %}
-                  </tbody>
-                </table>
-              </div>
+                          </select>
+                        </td>
+                      </tr>
+                    {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+                <div class="text-center">
+                  <button class="btn btn-primary" type="submit" form="form-product-design">{{ button_apply_changes }}</button>
+                </div>
+              </form>
             </div>
           </div>
         </div>
@@ -1425,52 +1621,6 @@
 
 //--></script>
 <script type="text/javascript"><!--
-    var image_row = {{ image_row }};
-
-    function addImage() {
-        html = '<tr id="image-row' + image_row + '">';
-        html += '  <td class="text-left"><a href="" id="thumb-image' + image_row + '"data-toggle="image" class="img-thumbnail"><img src="{{ placeholder }}" alt="" title="" data-placeholder="{{ placeholder }}" /></a><input type="hidden" name="product_image[' + image_row + '][image]" value="" id="input-image' + image_row + '" /></td>';
-        html += '  <td class="text-right"><input type="text" name="product_image[' + image_row + '][sort_order]" value="" placeholder="{{ entry_sort_order }}" class="form-control" /></td>';
-        html += '  <td class="text-left"><button type="button" onclick="$(\'#image-row' + image_row + '\').remove();" data-toggle="tooltip" title="{{ button_remove }}" class="btn btn-danger"><i class="fa fa-minus-circle"></i></button></td>';
-        html += '</tr>';
-
-        $('#images tbody').append(html);
-
-        image_row++;
-    }
-
-//--></script>
-<script type="text/javascript"><!--
-    var recurring_row = {{ recurring_row }};
-
-    function addRecurring() {
-        html = '<tr id="recurring-row' + recurring_row + '">';
-        html += '  <td class="left">';
-        html += '    <select name="product_recurring[' + recurring_row + '][recurring_id]" class="form-control">>';
-      {% for recurring in recurrings %}
-        html += '      <option value="{{ recurring.recurring_id }}">{{ recurring.name }}</option>';
-      {% endfor %}
-        html += '    </select>';
-        html += '  </td>';
-        html += '  <td class="left">';
-        html += '    <select name="product_recurring[' + recurring_row + '][customer_group_id]" class="form-control">>';
-      {% for customer_group in customer_groups %}
-        html += '      <option value="{{ customer_group.customer_group_id }}">{{ customer_group.name }}</option>';
-      {% endfor %}
-        html += '    <select>';
-        html += '  </td>';
-        html += '  <td class="left">';
-        html += '    <a onclick="$(\'#recurring-row' + recurring_row + '\').remove()" data-toggle="tooltip" title="{{ button_remove }}" class="btn btn-danger"><i class="fa fa-minus-circle"></i></a>';
-        html += '  </td>';
-        html += '</tr>';
-
-        $('#tab-recurring table tbody').append(html);
-
-        recurring_row++;
-    }
-
-//--></script>
-<script type="text/javascript"><!--
     $('.date').datetimepicker({
         language: '{{ datepicker }}',
         pickTime: false
@@ -1529,8 +1679,10 @@
             url: 'index.php?route=extension/module/massive_data_management_nik/getProductsByCategory&user_token={{ user_token }}&category_id=' +  $(this).val(),
             dataType: 'json',
             success: function(json) {
-                $('#data-management-category' + categoryId).remove();
-                $('#data-management-category').append('<div id="data-management-category' + categoryId + '"><i class="fa fa-minus-circle"></i> ' + categoryName + '<input type="hidden" name="category[]" value="' + categoryId + '" /></div>');
+                if(categoryId !== '0') {
+                    $('#data-management-category' + categoryId).remove();
+                    $('#data-management-category').append('<div id="data-management-category' + categoryId + '"><i class="fa fa-minus-circle"></i> ' + categoryName + '<input type="hidden" name="category[]" value="' + categoryId + '" /></div>');
+                }
 
                 let array = $.map(json, function(item) {
                     return {
@@ -1560,6 +1712,802 @@
             $(item).remove()
         })
         $('#select-products-categories option:first').prop('selected', true);
+    }
+</script>
+<script>
+    $('input[name=\'product_name2\']').autocomplete({
+        source: function(request, response) {
+            $.ajax({
+                url: 'index.php?route=catalog/product/autocomplete&user_token={{ user_token }}&filter_name=' +  encodeURIComponent(request),
+                dataType: 'json',
+                success: function(json) {
+                    response($.map(json, function(item) {
+                        return {
+                            label: item['name'],
+                            value: item['product_id']
+                        }
+                    }));
+                }
+            });
+        },
+        select: function(item) {
+            $('input[name=\'product_name2\']').val('');
+
+            $('#data-management-product2' + item['value']).remove();
+
+            $('#data-management-product2').append('<div id="data-management-product2' + item['value'] + '"><i class="fa fa-minus-circle"></i> ' + item['label'] + '<input type="hidden" name="product[]" value="' + item['value'] + '" /></div>');
+        }
+    });
+
+    $('#data-management-category2').delegate('.fa-minus-circle', 'click', function() {
+        let categoryId = $(this).next().val()
+        $('#data-management-product2').find('div[data-category-id="' + categoryId + '"]').remove()
+        $(this).parent().remove();
+    });
+
+    $('#data-management-product2').delegate('.fa-minus-circle', 'click', function() {
+        $(this).parent().remove();
+    });
+
+    $('#select-products-categories2').on('change', function() {
+        let categoryName = $(this).find('option:selected').text()
+        let categoryId   = $(this).val()
+        $.ajax({
+            url: 'index.php?route=extension/module/massive_data_management_nik/getProductsByCategory&user_token={{ user_token }}&category_id=' +  $(this).val(),
+            dataType: 'json',
+            success: function(json) {
+                if(categoryId !== '0') {
+                    $('#data-management-category2' + categoryId).remove();
+                    $('#data-management-category2').append('<div id="data-management-category2' + categoryId + '"><i class="fa fa-minus-circle"></i> ' + categoryName + '<input type="hidden" name="category[]" value="' + categoryId + '" /></div>');
+                }
+
+                let array = $.map(json, function(item) {
+                    return {
+                        label: item['name'],
+                        value: item['product_id'],
+                        category_id: item['category_id']
+                    }
+                })
+                for (let item in array) {
+                    if(array.hasOwnProperty(item)) {
+                        $('#data-management-product2' + array[item]['value']).remove();
+                        $('#data-management-product2').append('<div id="data-management-product2' + array[item]['value'] + '" data-category-id="' + array[item]['category_id'] + '"><i class="fa fa-minus-circle"></i> ' + array[item]['label'] + '<input type="hidden" name="product[]" value="' + array[item]['value'] + '" /></div>');
+                    }
+                }
+            }
+        });
+    })
+
+    $('.products-clear-btn2').on('click', function () {
+        clearProductsList2()
+    })
+    function clearProductsList2() {
+        $('#data-management-category2 div').each(function (i, item) {
+            $(item).remove()
+        })
+        $('#data-management-product2 div').each(function (i, item) {
+            $(item).remove()
+        })
+        $('#select-products-categories2 option:first').prop('selected', true);
+    }
+</script>
+<script>
+    $('input[name=\'product_name3\']').autocomplete({
+        source: function(request, response) {
+            $.ajax({
+                url: 'index.php?route=catalog/product/autocomplete&user_token={{ user_token }}&filter_name=' +  encodeURIComponent(request),
+                dataType: 'json',
+                success: function(json) {
+                    response($.map(json, function(item) {
+                        return {
+                            label: item['name'],
+                            value: item['product_id']
+                        }
+                    }));
+                }
+            });
+        },
+        select: function(item) {
+            $('input[name=\'product_name3\']').val('');
+
+            $('#data-management-product3' + item['value']).remove();
+
+            $('#data-management-product3').append('<div id="data-management-product3' + item['value'] + '"><i class="fa fa-minus-circle"></i> ' + item['label'] + '<input type="hidden" name="product[]" value="' + item['value'] + '" /></div>');
+        }
+    });
+
+    $('#data-management-category3').delegate('.fa-minus-circle', 'click', function() {
+        let categoryId = $(this).next().val()
+        $('#data-management-product3').find('div[data-category-id="' + categoryId + '"]').remove()
+        $(this).parent().remove();
+    });
+
+    $('#data-management-product3').delegate('.fa-minus-circle', 'click', function() {
+        $(this).parent().remove();
+    });
+
+    $('#select-products-categories3').on('change', function() {
+        let categoryName = $(this).find('option:selected').text()
+        let categoryId   = $(this).val()
+        $.ajax({
+            url: 'index.php?route=extension/module/massive_data_management_nik/getProductsByCategory&user_token={{ user_token }}&category_id=' +  $(this).val(),
+            dataType: 'json',
+            success: function(json) {
+                if(categoryId !== '0') {
+                    $('#data-management-category3' + categoryId).remove();
+                    $('#data-management-category3').append('<div id="data-management-category3' + categoryId + '"><i class="fa fa-minus-circle"></i> ' + categoryName + '<input type="hidden" name="category[]" value="' + categoryId + '" /></div>');
+                }
+
+                let array = $.map(json, function(item) {
+                    return {
+                        label: item['name'],
+                        value: item['product_id'],
+                        category_id: item['category_id']
+                    }
+                })
+                for (let item in array) {
+                    if(array.hasOwnProperty(item)) {
+                        $('#data-management-product3' + array[item]['value']).remove();
+                        $('#data-management-product3').append('<div id="data-management-product3' + array[item]['value'] + '" data-category-id="' + array[item]['category_id'] + '"><i class="fa fa-minus-circle"></i> ' + array[item]['label'] + '<input type="hidden" name="product[]" value="' + array[item]['value'] + '" /></div>');
+                    }
+                }
+            }
+        });
+    })
+
+    $('.products-clear-btn3').on('click', function () {
+        clearProductsList3()
+    })
+    function clearProductsList3() {
+        $('#data-management-category3 div').each(function (i, item) {
+            $(item).remove()
+        })
+        $('#data-management-product3 div').each(function (i, item) {
+            $(item).remove()
+        })
+        $('#select-products-categories3 option:first').prop('selected', true);
+    }
+</script>
+<script>
+    $('input[name=\'product_name4\']').autocomplete({
+        source: function(request, response) {
+            $.ajax({
+                url: 'index.php?route=catalog/product/autocomplete&user_token={{ user_token }}&filter_name=' +  encodeURIComponent(request),
+                dataType: 'json',
+                success: function(json) {
+                    response($.map(json, function(item) {
+                        return {
+                            label: item['name'],
+                            value: item['product_id']
+                        }
+                    }));
+                }
+            });
+        },
+        select: function(item) {
+            $('input[name=\'product_name4\']').val('');
+
+            $('#data-management-product4' + item['value']).remove();
+
+            $('#data-management-product4').append('<div id="data-management-product4' + item['value'] + '"><i class="fa fa-minus-circle"></i> ' + item['label'] + '<input type="hidden" name="product[]" value="' + item['value'] + '" /></div>');
+        }
+    });
+
+    $('#data-management-category4').delegate('.fa-minus-circle', 'click', function() {
+        let categoryId = $(this).next().val()
+        $('#data-management-product4').find('div[data-category-id="' + categoryId + '"]').remove()
+        $(this).parent().remove();
+    });
+
+    $('#data-management-product4').delegate('.fa-minus-circle', 'click', function() {
+        $(this).parent().remove();
+    });
+
+    $('#select-products-categories4').on('change', function() {
+        let categoryName = $(this).find('option:selected').text()
+        let categoryId   = $(this).val()
+        $.ajax({
+            url: 'index.php?route=extension/module/massive_data_management_nik/getProductsByCategory&user_token={{ user_token }}&category_id=' +  $(this).val(),
+            dataType: 'json',
+            success: function(json) {
+                if(categoryId !== '0') {
+                    $('#data-management-category4' + categoryId).remove();
+                    $('#data-management-category4').append('<div id="data-management-category4' + categoryId + '"><i class="fa fa-minus-circle"></i> ' + categoryName + '<input type="hidden" name="category[]" value="' + categoryId + '" /></div>');
+                }
+
+                let array = $.map(json, function(item) {
+                    return {
+                        label: item['name'],
+                        value: item['product_id'],
+                        category_id: item['category_id']
+                    }
+                })
+                for (let item in array) {
+                    if(array.hasOwnProperty(item)) {
+                        $('#data-management-product4' + array[item]['value']).remove();
+                        $('#data-management-product4').append('<div id="data-management-product4' + array[item]['value'] + '" data-category-id="' + array[item]['category_id'] + '"><i class="fa fa-minus-circle"></i> ' + array[item]['label'] + '<input type="hidden" name="product[]" value="' + array[item]['value'] + '" /></div>');
+                    }
+                }
+            }
+        });
+    })
+
+    $('.products-clear-btn4').on('click', function () {
+        clearProductsList4()
+    })
+    function clearProductsList4() {
+        $('#data-management-category4 div').each(function (i, item) {
+            $(item).remove()
+        })
+        $('#data-management-product4 div').each(function (i, item) {
+            $(item).remove()
+        })
+        $('#select-products-categories4 option:first').prop('selected', true);
+    }
+</script>
+<script>
+    $('input[name=\'product_name5\']').autocomplete({
+        source: function(request, response) {
+            $.ajax({
+                url: 'index.php?route=catalog/product/autocomplete&user_token={{ user_token }}&filter_name=' +  encodeURIComponent(request),
+                dataType: 'json',
+                success: function(json) {
+                    response($.map(json, function(item) {
+                        return {
+                            label: item['name'],
+                            value: item['product_id']
+                        }
+                    }));
+                }
+            });
+        },
+        select: function(item) {
+            $('input[name=\'product_name5\']').val('');
+
+            $('#data-management-product5' + item['value']).remove();
+
+            $('#data-management-product5').append('<div id="data-management-product5' + item['value'] + '"><i class="fa fa-minus-circle"></i> ' + item['label'] + '<input type="hidden" name="product[]" value="' + item['value'] + '" /></div>');
+        }
+    });
+
+    $('#data-management-category5').delegate('.fa-minus-circle', 'click', function() {
+        let categoryId = $(this).next().val()
+        $('#data-management-product5').find('div[data-category-id="' + categoryId + '"]').remove()
+        $(this).parent().remove();
+    });
+
+    $('#data-management-product5').delegate('.fa-minus-circle', 'click', function() {
+        $(this).parent().remove();
+    });
+
+    $('#select-products-categories5').on('change', function() {
+        let categoryName = $(this).find('option:selected').text()
+        let categoryId   = $(this).val()
+        $.ajax({
+            url: 'index.php?route=extension/module/massive_data_management_nik/getProductsByCategory&user_token={{ user_token }}&category_id=' +  $(this).val(),
+            dataType: 'json',
+            success: function(json) {
+                if(categoryId !== '0') {
+                    $('#data-management-category5' + categoryId).remove();
+                    $('#data-management-category5').append('<div id="data-management-category5' + categoryId + '"><i class="fa fa-minus-circle"></i> ' + categoryName + '<input type="hidden" name="category[]" value="' + categoryId + '" /></div>');
+                }
+
+                let array = $.map(json, function(item) {
+                    return {
+                        label: item['name'],
+                        value: item['product_id'],
+                        category_id: item['category_id']
+                    }
+                })
+                for (let item in array) {
+                    if(array.hasOwnProperty(item)) {
+                        $('#data-management-product5' + array[item]['value']).remove();
+                        $('#data-management-product5').append('<div id="data-management-product5' + array[item]['value'] + '" data-category-id="' + array[item]['category_id'] + '"><i class="fa fa-minus-circle"></i> ' + array[item]['label'] + '<input type="hidden" name="product[]" value="' + array[item]['value'] + '" /></div>');
+                    }
+                }
+            }
+        });
+    })
+
+    $('.products-clear-btn5').on('click', function () {
+        clearProductsList5()
+    })
+    function clearProductsList5() {
+        $('#data-management-category5 div').each(function (i, item) {
+            $(item).remove()
+        })
+        $('#data-management-product5 div').each(function (i, item) {
+            $(item).remove()
+        })
+        $('#select-products-categories5 option:first').prop('selected', true);
+    }
+</script>
+<script>
+    $('input[name=\'product_name6\']').autocomplete({
+        source: function(request, response) {
+            $.ajax({
+                url: 'index.php?route=catalog/product/autocomplete&user_token={{ user_token }}&filter_name=' +  encodeURIComponent(request),
+                dataType: 'json',
+                success: function(json) {
+                    response($.map(json, function(item) {
+                        return {
+                            label: item['name'],
+                            value: item['product_id']
+                        }
+                    }));
+                }
+            });
+        },
+        select: function(item) {
+            $('input[name=\'product_name6\']').val('');
+
+            $('#data-management-product6' + item['value']).remove();
+
+            $('#data-management-product6').append('<div id="data-management-product6' + item['value'] + '"><i class="fa fa-minus-circle"></i> ' + item['label'] + '<input type="hidden" name="product[]" value="' + item['value'] + '" /></div>');
+        }
+    });
+
+    $('#data-management-category6').delegate('.fa-minus-circle', 'click', function() {
+        let categoryId = $(this).next().val()
+        $('#data-management-product6').find('div[data-category-id="' + categoryId + '"]').remove()
+        $(this).parent().remove();
+    });
+
+    $('#data-management-product6').delegate('.fa-minus-circle', 'click', function() {
+        $(this).parent().remove();
+    });
+
+    $('#select-products-categories6').on('change', function() {
+        let categoryName = $(this).find('option:selected').text()
+        let categoryId   = $(this).val()
+        $.ajax({
+            url: 'index.php?route=extension/module/massive_data_management_nik/getProductsByCategory&user_token={{ user_token }}&category_id=' +  $(this).val(),
+            dataType: 'json',
+            success: function(json) {
+                if(categoryId !== '0') {
+                    $('#data-management-category6' + categoryId).remove();
+                    $('#data-management-category6').append('<div id="data-management-category6' + categoryId + '"><i class="fa fa-minus-circle"></i> ' + categoryName + '<input type="hidden" name="category[]" value="' + categoryId + '" /></div>');
+                }
+
+                let array = $.map(json, function(item) {
+                    return {
+                        label: item['name'],
+                        value: item['product_id'],
+                        category_id: item['category_id']
+                    }
+                })
+                for (let item in array) {
+                    if(array.hasOwnProperty(item)) {
+                        $('#data-management-product6' + array[item]['value']).remove();
+                        $('#data-management-product6').append('<div id="data-management-product6' + array[item]['value'] + '" data-category-id="' + array[item]['category_id'] + '"><i class="fa fa-minus-circle"></i> ' + array[item]['label'] + '<input type="hidden" name="product[]" value="' + array[item]['value'] + '" /></div>');
+                    }
+                }
+            }
+        });
+    })
+
+    $('.products-clear-btn6').on('click', function () {
+        clearProductsList6()
+    })
+    function clearProductsList6() {
+        $('#data-management-category6 div').each(function (i, item) {
+            $(item).remove()
+        })
+        $('#data-management-product6 div').each(function (i, item) {
+            $(item).remove()
+        })
+        $('#select-products-categories6 option:first').prop('selected', true);
+    }
+</script>
+<script>
+    $('input[name=\'product_name7\']').autocomplete({
+        source: function(request, response) {
+            $.ajax({
+                url: 'index.php?route=catalog/product/autocomplete&user_token={{ user_token }}&filter_name=' +  encodeURIComponent(request),
+                dataType: 'json',
+                success: function(json) {
+                    response($.map(json, function(item) {
+                        return {
+                            label: item['name'],
+                            value: item['product_id']
+                        }
+                    }));
+                }
+            });
+        },
+        select: function(item) {
+            $('input[name=\'product_name7\']').val('');
+
+            $('#data-management-product7' + item['value']).remove();
+
+            $('#data-management-product7').append('<div id="data-management-product7' + item['value'] + '"><i class="fa fa-minus-circle"></i> ' + item['label'] + '<input type="hidden" name="product[]" value="' + item['value'] + '" /></div>');
+        }
+    });
+
+    $('#data-management-category7').delegate('.fa-minus-circle', 'click', function() {
+        let categoryId = $(this).next().val()
+        $('#data-management-product7').find('div[data-category-id="' + categoryId + '"]').remove()
+        $(this).parent().remove();
+    });
+
+    $('#data-management-product7').delegate('.fa-minus-circle', 'click', function() {
+        $(this).parent().remove();
+    });
+
+    $('#select-products-categories7').on('change', function() {
+        let categoryName = $(this).find('option:selected').text()
+        let categoryId   = $(this).val()
+        $.ajax({
+            url: 'index.php?route=extension/module/massive_data_management_nik/getProductsByCategory&user_token={{ user_token }}&category_id=' +  $(this).val(),
+            dataType: 'json',
+            success: function(json) {
+                if(categoryId !== '0') {
+                    $('#data-management-category7' + categoryId).remove();
+                    $('#data-management-category7').append('<div id="data-management-category7' + categoryId + '"><i class="fa fa-minus-circle"></i> ' + categoryName + '<input type="hidden" name="category[]" value="' + categoryId + '" /></div>');
+                }
+
+                let array = $.map(json, function(item) {
+                    return {
+                        label: item['name'],
+                        value: item['product_id'],
+                        category_id: item['category_id']
+                    }
+                })
+                for (let item in array) {
+                    if(array.hasOwnProperty(item)) {
+                        $('#data-management-product7' + array[item]['value']).remove();
+                        $('#data-management-product7').append('<div id="data-management-product7' + array[item]['value'] + '" data-category-id="' + array[item]['category_id'] + '"><i class="fa fa-minus-circle"></i> ' + array[item]['label'] + '<input type="hidden" name="product[]" value="' + array[item]['value'] + '" /></div>');
+                    }
+                }
+            }
+        });
+    })
+
+    $('.products-clear-btn7').on('click', function () {
+        clearProductsList7()
+    })
+    function clearProductsList7() {
+        $('#data-management-category7 div').each(function (i, item) {
+            $(item).remove()
+        })
+        $('#data-management-product7 div').each(function (i, item) {
+            $(item).remove()
+        })
+        $('#select-products-categories7 option:first').prop('selected', true);
+    }
+</script>
+<script>
+    $('input[name=\'product_name8\']').autocomplete({
+        source: function(request, response) {
+            $.ajax({
+                url: 'index.php?route=catalog/product/autocomplete&user_token={{ user_token }}&filter_name=' +  encodeURIComponent(request),
+                dataType: 'json',
+                success: function(json) {
+                    response($.map(json, function(item) {
+                        return {
+                            label: item['name'],
+                            value: item['product_id']
+                        }
+                    }));
+                }
+            });
+        },
+        select: function(item) {
+            $('input[name=\'product_name8\']').val('');
+
+            $('#data-management-product8' + item['value']).remove();
+
+            $('#data-management-product8').append('<div id="data-management-product8' + item['value'] + '"><i class="fa fa-minus-circle"></i> ' + item['label'] + '<input type="hidden" name="product[]" value="' + item['value'] + '" /></div>');
+        }
+    });
+
+    $('#data-management-category8').delegate('.fa-minus-circle', 'click', function() {
+        let categoryId = $(this).next().val()
+        $('#data-management-product8').find('div[data-category-id="' + categoryId + '"]').remove()
+        $(this).parent().remove();
+    });
+
+    $('#data-management-product8').delegate('.fa-minus-circle', 'click', function() {
+        $(this).parent().remove();
+    });
+
+    $('#select-products-categories8').on('change', function() {
+        let categoryName = $(this).find('option:selected').text()
+        let categoryId   = $(this).val()
+        $.ajax({
+            url: 'index.php?route=extension/module/massive_data_management_nik/getProductsByCategory&user_token={{ user_token }}&category_id=' +  $(this).val(),
+            dataType: 'json',
+            success: function(json) {
+                if(categoryId !== '0') {
+                    $('#data-management-category8' + categoryId).remove();
+                    $('#data-management-category8').append('<div id="data-management-category8' + categoryId + '"><i class="fa fa-minus-circle"></i> ' + categoryName + '<input type="hidden" name="category[]" value="' + categoryId + '" /></div>');
+                }
+
+                let array = $.map(json, function(item) {
+                    return {
+                        label: item['name'],
+                        value: item['product_id'],
+                        category_id: item['category_id']
+                    }
+                })
+                for (let item in array) {
+                    if(array.hasOwnProperty(item)) {
+                        $('#data-management-product8' + array[item]['value']).remove();
+                        $('#data-management-product8').append('<div id="data-management-product8' + array[item]['value'] + '" data-category-id="' + array[item]['category_id'] + '"><i class="fa fa-minus-circle"></i> ' + array[item]['label'] + '<input type="hidden" name="product[]" value="' + array[item]['value'] + '" /></div>');
+                    }
+                }
+            }
+        });
+    })
+
+    $('.products-clear-btn8').on('click', function () {
+        clearProductsList8()
+    })
+    function clearProductsList8() {
+        $('#data-management-category8 div').each(function (i, item) {
+            $(item).remove()
+        })
+        $('#data-management-product8 div').each(function (i, item) {
+            $(item).remove()
+        })
+        $('#select-products-categories8 option:first').prop('selected', true);
+    }
+</script>
+<script>
+    $('input[name=\'product_name9\']').autocomplete({
+        source: function(request, response) {
+            $.ajax({
+                url: 'index.php?route=catalog/product/autocomplete&user_token={{ user_token }}&filter_name=' +  encodeURIComponent(request),
+                dataType: 'json',
+                success: function(json) {
+                    response($.map(json, function(item) {
+                        return {
+                            label: item['name'],
+                            value: item['product_id']
+                        }
+                    }));
+                }
+            });
+        },
+        select: function(item) {
+            $('input[name=\'product_name9\']').val('');
+
+            $('#data-management-product9' + item['value']).remove();
+
+            $('#data-management-product9').append('<div id="data-management-product9' + item['value'] + '"><i class="fa fa-minus-circle"></i> ' + item['label'] + '<input type="hidden" name="product[]" value="' + item['value'] + '" /></div>');
+        }
+    });
+
+    $('#data-management-category9').delegate('.fa-minus-circle', 'click', function() {
+        let categoryId = $(this).next().val()
+        $('#data-management-product9').find('div[data-category-id="' + categoryId + '"]').remove()
+        $(this).parent().remove();
+    });
+
+    $('#data-management-product9').delegate('.fa-minus-circle', 'click', function() {
+        $(this).parent().remove();
+    });
+
+    $('#select-products-categories9').on('change', function() {
+        let categoryName = $(this).find('option:selected').text()
+        let categoryId   = $(this).val()
+        $.ajax({
+            url: 'index.php?route=extension/module/massive_data_management_nik/getProductsByCategory&user_token={{ user_token }}&category_id=' +  $(this).val(),
+            dataType: 'json',
+            success: function(json) {
+                if(categoryId !== '0') {
+                    $('#data-management-category9' + categoryId).remove();
+                    $('#data-management-category9').append('<div id="data-management-category9' + categoryId + '"><i class="fa fa-minus-circle"></i> ' + categoryName + '<input type="hidden" name="category[]" value="' + categoryId + '" /></div>');
+                }
+
+                let array = $.map(json, function(item) {
+                    return {
+                        label: item['name'],
+                        value: item['product_id'],
+                        category_id: item['category_id']
+                    }
+                })
+                for (let item in array) {
+                    if(array.hasOwnProperty(item)) {
+                        $('#data-management-product9' + array[item]['value']).remove();
+                        $('#data-management-product9').append('<div id="data-management-product9' + array[item]['value'] + '" data-category-id="' + array[item]['category_id'] + '"><i class="fa fa-minus-circle"></i> ' + array[item]['label'] + '<input type="hidden" name="product[]" value="' + array[item]['value'] + '" /></div>');
+                    }
+                }
+            }
+        });
+    })
+
+    $('.products-clear-btn9').on('click', function () {
+        clearProductsList9()
+    })
+    function clearProductsList9() {
+        $('#data-management-category9 div').each(function (i, item) {
+            $(item).remove()
+        })
+        $('#data-management-product9 div').each(function (i, item) {
+            $(item).remove()
+        })
+        $('#select-products-categories9 option:first').prop('selected', true);
+    }
+</script>
+
+<script type="text/javascript"><!--
+    $('input[name=\'path\']').autocomplete({
+        'source': function(request, response) {
+            $.ajax({
+                url: 'index.php?route=catalog/category/autocomplete&user_token={{ user_token }}&filter_name=' +  encodeURIComponent(request),
+                dataType: 'json',
+                success: function(json) {
+                    json.unshift({
+                        category_id: 0,
+                        name: '{{ text_none }}'
+                    });
+
+                    response($.map(json, function(item) {
+                        return {
+                            label: item['name'],
+                            value: item['category_id']
+                        }
+                    }));
+                }
+            });
+        },
+        'select': function(item) {
+            $('input[name=\'path\']').val(item['label']);
+            $('input[name=\'parent_id\']').val(item['value']);
+        }
+    });
+//--></script>
+<script type="text/javascript"><!--
+    $('input[name=\'filter\']').autocomplete({
+        'source': function(request, response) {
+            $.ajax({
+                url: 'index.php?route=catalog/filter/autocomplete&user_token={{ user_token }}&filter_name=' +  encodeURIComponent(request),
+                dataType: 'json',
+                success: function(json) {
+                    response($.map(json, function(item) {
+                        return {
+                            label: item['name'],
+                            value: item['filter_id']
+                        }
+                    }));
+                }
+            });
+        },
+        'select': function(item) {
+            $('input[name=\'filter\']').val('');
+
+            $('#category-filter' + item['value']).remove();
+
+            $('#category-filter').append('<div id="category-filter' + item['value'] + '"><i class="fa fa-minus-circle"></i> ' + item['label'] + '<input type="hidden" name="category_filter[]" value="' + item['value'] + '" /></div>');
+        }
+    });
+
+    $('#category-filter').delegate('.fa-minus-circle', 'click', function() {
+        $(this).parent().remove();
+    });
+//--></script>
+<script>
+    $('#data-management-category').delegate('.fa-minus-circle', 'click', function() {
+        let categoryId = $(this).next().val()
+        $('#data-management-product').find('div[data-category-id="' + categoryId + '"]').remove()
+        $(this).parent().remove();
+    });
+
+    $('#select-categories').on('change', function() {
+        let categoryName = $(this).find('option:selected').text()
+        let categoryId   = $(this).val()
+        $.ajax({
+            url: 'index.php?route=extension/module/massive_data_management_nik/getCategoryByCategory&user_token={{ user_token }}&category_id=' +  $(this).val(),
+            dataType: 'json',
+            success: function(json) {
+                console.log(json)
+                let array = $.map(json, function(item) {
+                    return {
+                        label: item['name'],
+                        value: item['category_id']
+                    }
+                })
+                for (let item in array) {
+                    if(array.hasOwnProperty(item)) {
+                        $('#data-management-category' + array[item]['value']).remove();
+                        $('#data-management-category').append('<div id="data-management-category' + array[item]['value'] + '"><i class="fa fa-minus-circle"></i> ' + array[item]['label'] + '<input type="hidden" name="category[]" value="' + array[item]['value'] + '" /></div>');
+                    }
+                }
+            }
+        });
+    })
+
+    $('.category-clear-btn').on('click', function () {
+        clearProductsList()
+    })
+    function clearProductsList() {
+        $('#data-management-category div').each(function (i, item) {
+            $(item).remove()
+        })
+        $('#select-categories option:first').prop('selected', true);
+    }
+</script>
+<script>
+    $('#data-management-category2').delegate('.fa-minus-circle', 'click', function() {
+        let categoryId = $(this).next().val()
+        $('#data-management-product2').find('div[data-category-id="' + categoryId + '"]').remove()
+        $(this).parent().remove();
+    });
+
+    $('#select-categories2').on('change', function() {
+        let categoryName = $(this).find('option:selected').text()
+        let categoryId   = $(this).val()
+        $.ajax({
+            url: 'index.php?route=extension/module/massive_data_management_nik/getCategoryByCategory&user_token={{ user_token }}&category_id=' +  $(this).val(),
+            dataType: 'json',
+            success: function(json) {
+                console.log(json)
+                let array = $.map(json, function(item) {
+                    return {
+                        label: item['name'],
+                        value: item['category_id']
+                    }
+                })
+                for (let item in array) {
+                    if(array.hasOwnProperty(item)) {
+                        $('#data-management-category2' + array[item]['value']).remove();
+                        $('#data-management-category2').append('<div id="data-management-category2' + array[item]['value'] + '"><i class="fa fa-minus-circle"></i> ' + array[item]['label'] + '<input type="hidden" name="category[]" value="' + array[item]['value'] + '" /></div>');
+                    }
+                }
+            }
+        });
+    })
+
+    $('.category-clear-btn2').on('click', function () {
+        clearProductsList2()
+    })
+    function clearProductsList2() {
+        $('#data-management-category2 div').each(function (i, item) {
+            $(item).remove()
+        })
+        $('#select-categories2 option:first').prop('selected', true);
+    }
+</script>
+<script>
+    $('#data-management-category3').delegate('.fa-minus-circle', 'click', function() {
+        let categoryId = $(this).next().val()
+        $('#data-management-product3').find('div[data-category-id="' + categoryId + '"]').remove()
+        $(this).parent().remove();
+    });
+
+    $('#select-categories3').on('change', function() {
+        let categoryName = $(this).find('option:selected').text()
+        let categoryId   = $(this).val()
+        $.ajax({
+            url: 'index.php?route=extension/module/massive_data_management_nik/getCategoryByCategory&user_token={{ user_token }}&category_id=' +  $(this).val(),
+            dataType: 'json',
+            success: function(json) {
+                console.log(json)
+                let array = $.map(json, function(item) {
+                    return {
+                        label: item['name'],
+                        value: item['category_id']
+                    }
+                })
+                for (let item in array) {
+                    if(array.hasOwnProperty(item)) {
+                        $('#data-management-category3' + array[item]['value']).remove();
+                        $('#data-management-category3').append('<div id="data-management-category3' + array[item]['value'] + '"><i class="fa fa-minus-circle"></i> ' + array[item]['label'] + '<input type="hidden" name="category[]" value="' + array[item]['value'] + '" /></div>');
+                    }
+                }
+            }
+        });
+    })
+
+    $('.category-clear-btn3').on('click', function () {
+        clearProductsList3()
+    })
+    function clearProductsList3() {
+        $('#data-management-category3 div').each(function (i, item) {
+            $(item).remove()
+        })
+        $('#select-categories3 option:first').prop('selected', true);
     }
 </script>
 <script type="text/javascript"><!--
