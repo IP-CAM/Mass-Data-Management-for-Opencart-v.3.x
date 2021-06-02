@@ -38,9 +38,15 @@
       <button type="button" class="close" data-dismiss="alert">&times;</button>
     </div>
     {% endif %}
+    {% if success %}
+      <div class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i> {{ success }}
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+      </div>
+    {% endif %}
     <div class="top-link-row">
       <a {% if type == 'categories' %}class="active"{% endif %} href="{{ link_categories }}">{{ text_categories }}</a>
       <a {% if type == 'products' %}class="active"{% endif %} href="{{ link_products }}">{{ text_products }}</a>
+      <a {% if type == 'information' %}class="active"{% endif %} href="{{ link_information }}">{{ text_information }}</a>
     </div>
     <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-module" class="form-horizontal"></form>
     {% if type == 'categories' %}
@@ -56,7 +62,7 @@
             <div class="tab-pane active" id="tab-data">
               <form action="{{ actionCategoryData }}" method="post" enctype="multipart/form-data" id="form-category-data" class="form-horizontal">
                 <div class="form-group" id="categories-row">
-                  <label class="col-sm-2 control-label" for="select-categories">{{ entry_products_list }}</label>
+                  <label class="col-sm-2 control-label" for="select-categories">{{ entry_category_list }}</label>
                   <div class="col-sm-10">
                     <select name="products_categories" id="select-categories" class="form-control">
                       <option selected="selected" disabled="disabled">{{ text_categories }}</option>
@@ -152,7 +158,7 @@
             <div class="tab-pane" id="tab-seo">
               <form action="{{ actionCategorySeo }}" method="post" enctype="multipart/form-data" id="form-category-seo" class="form-horizontal">
                 <div class="form-group" id="categories-row">
-                  <label class="col-sm-2 control-label" for="select-categories3">{{ entry_products_list }}</label>
+                  <label class="col-sm-2 control-label" for="select-categories3">{{ entry_category_list }}</label>
                   <div class="col-sm-10">
                     <select name="products_categories" id="select-categories3" class="form-control">
                       <option selected="selected" disabled="disabled">{{ text_categories }}</option>
@@ -184,7 +190,7 @@
             <div class="tab-pane" id="tab-design">
               <form action="{{ actionCategoryDesign }}" method="post" enctype="multipart/form-data" id="form-category-design" class="form-horizontal">
                 <div class="form-group" id="categories-row">
-                  <label class="col-sm-2 control-label" for="select-categories2">{{ entry_products_list }}</label>
+                  <label class="col-sm-2 control-label" for="select-categories2">{{ entry_category_list }}</label>
                   <div class="col-sm-10">
                     <select name="products_categories" id="select-categories2" class="form-control">
                       <option selected="selected" disabled="disabled">{{ text_categories }}</option>
@@ -1177,6 +1183,142 @@
         </div>
       </div>
 
+    {% elseif type == 'information' %}
+
+      <div class="panel panel-default" style="margin-top: 20px;">
+        <div class="panel-body">
+          <ul class="nav nav-tabs">
+            <li class="active"><a href="#tab-data" data-toggle="tab">{{ tab_data }}</a></li>
+            <li><a href="#tab-seo" data-toggle="tab">{{ tab_seo }}</a></li>
+            <li><a href="#tab-design" data-toggle="tab">{{ tab_design }}</a></li>
+          </ul>
+          <div class="tab-content">
+            <div class="tab-pane active" id="tab-data">
+              <form action="{{ actionInformationData }}" method="post" enctype="multipart/form-data" id="form-information-data" class="form-horizontal">
+                <div class="form-group" id="information-row">
+                  <label class="col-sm-2 control-label" for="input-information">{{ entry_information_list }}</label>
+                  <div class="col-sm-10">
+                    <input type="text" name="information_name" value="" placeholder="{{ entry_information_list }}" id="input-information" class="form-control" />
+                    <div id="data-management-information" class="well well-sm" style="height: 150px; overflow: auto;">
+
+                    </div>
+                    <button class="btn btn-success information-add-all-btn" type="button">{{ button_add_all }}</button>
+                    <button class="btn btn-danger information-clear-btn" type="button">{{ button_clear }}</button>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-sm-2 control-label">{{ entry_store }}</label>
+                  <div class="col-sm-10">
+                    <div class="well well-sm" style="height: 150px; overflow: auto;">
+                      {% for store in stores %}
+                        <div class="checkbox">
+                          <label>
+                            <input type="checkbox" name="information_store[]" value="{{ store.store_id }}" />
+                            {{ store.name }}
+                          </label>
+                        </div>
+                      {% endfor %}
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-sm-2 control-label" for="input-bottom"><span data-toggle="tooltip" title="{{ help_bottom }}">{{ entry_bottom }}</span></label>
+                  <div class="col-sm-10">
+                    <select name="bottom" id="input-bottom" class="form-control">
+                      <option value="-1">{{ text_none }}</option>
+                      <option value="0">{{ text_no }}</option>
+                      <option value="1">{{ text_yes }}</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-sm-2 control-label" for="input-status">{{ entry_status }}</label>
+                  <div class="col-sm-10">
+                    <select name="status" id="input-status" class="form-control">
+                      <option value="-1">{{ text_none }}</option>
+                      <option value="0">{{ text_disabled }}</option>
+                      <option value="1">{{ text_enabled }}</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="text-center">
+                  <button class="btn btn-primary" type="submit" form="form-information-data">{{ button_apply_changes }}</button>
+                </div>
+              </form>
+            </div>
+            <div class="tab-pane" id="tab-seo">
+              <form action="{{ actionInformationSeo }}" method="post" enctype="multipart/form-data" id="form-information-seo" class="form-horizontal">
+                <div class="form-group" id="information-row">
+                  <label class="col-sm-2 control-label" for="input-information">{{ entry_information_list }}</label>
+                  <div class="col-sm-10">
+                    <input type="text" name="information_name2" value="" placeholder="{{ entry_information_list }}" id="input-information" class="form-control" />
+                    <div id="data-management-information2" class="well well-sm" style="height: 150px; overflow: auto;">
+
+                    </div>
+                    <button class="btn btn-success information-add-all-btn2" type="button">{{ button_add_all }}</button>
+                    <button class="btn btn-danger information-clear-btn2" type="button">{{ button_clear }}</button>
+                  </div>
+                </div>
+                <div class="form-group" id="information-row">
+                  <label class="col-sm-2 control-label" for="select-information-seo">{{ entry_create_seo_url }}</label>
+                  <div class="col-sm-10">
+                    <select name="create-seo-url" id="select-information-seo" class="form-control">
+                      <option value="0">{{ text_to_all }}</option>
+                      <option value="1">{{ text_to_unfilled }}</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="text-center">
+                  <button class="btn btn-primary" type="submit" form="form-information-seo">{{ button_apply_changes }}</button>
+                </div>
+              </form>
+            </div>
+            <div class="tab-pane" id="tab-design">
+              <form action="{{ actionInformationDesign }}" method="post" enctype="multipart/form-data" id="form-information-design" class="form-horizontal">
+                <div class="form-group" id="information-row">
+                  <label class="col-sm-2 control-label" for="input-information">{{ entry_information_list }}</label>
+                  <div class="col-sm-10">
+                    <input type="text" name="information_name3" value="" placeholder="{{ entry_information_list }}" id="input-information" class="form-control" />
+                    <div id="data-management-information3" class="well well-sm" style="height: 150px; overflow: auto;">
+
+                    </div>
+                    <button class="btn btn-success information-add-all-btn3" type="button">{{ button_add_all }}</button>
+                    <button class="btn btn-danger information-clear-btn3" type="button">{{ button_clear }}</button>
+                  </div>
+                </div>
+                <div class="table-responsive">
+                  <table class="table table-bordered table-hover">
+                    <thead>
+                    <tr>
+                      <td class="text-left">{{ entry_store }}</td>
+                      <td class="text-left">{{ entry_layout }}</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    {% for store in stores %}
+                      <tr>
+                        <td class="text-left">{{ store.name }}</td>
+                        <td class="text-left"><select name="information_layout[{{ store.store_id }}]" class="form-control">
+                            <option value=""></option>
+                            {% for layout in layouts %}
+                              <option value="{{ layout.layout_id }}">{{ layout.name }}</option>
+                            {% endfor %}
+                          </select></td>
+                      </tr>
+                    {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+                <div class="text-center">
+                  <button class="btn btn-primary" type="submit" form="form-information-design">{{ button_apply_changes }}</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
     {% endif %}
   </div>
 </div>
@@ -1701,18 +1843,18 @@
         });
     })
 
-    $('.products-clear-btn').on('click', function () {
-        clearProductsList()
-    })
     function clearProductsList() {
         $('#data-management-category div').each(function (i, item) {
             $(item).remove()
-        })
+        });
         $('#data-management-product div').each(function (i, item) {
             $(item).remove()
-        })
+        });
         $('#select-products-categories option:first').prop('selected', true);
     }
+    $('.products-clear-btn').on('click', function () {
+        clearProductsList()
+    })
 </script>
 <script>
     $('input[name=\'product_name2\']').autocomplete({
@@ -2419,9 +2561,9 @@
     })
 
     $('.category-clear-btn').on('click', function () {
-        clearProductsList()
+        clearCategoryList()
     })
-    function clearProductsList() {
+    function clearCategoryList() {
         $('#data-management-category div').each(function (i, item) {
             $(item).remove()
         })
@@ -2460,9 +2602,9 @@
     })
 
     $('.category-clear-btn2').on('click', function () {
-        clearProductsList2()
+        clearCategoryList2()
     })
-    function clearProductsList2() {
+    function clearCategoryList2() {
         $('#data-management-category2 div').each(function (i, item) {
             $(item).remove()
         })
@@ -2501,14 +2643,168 @@
     })
 
     $('.category-clear-btn3').on('click', function () {
-        clearProductsList3()
+        clearCategoryList3()
     })
-    function clearProductsList3() {
+    function clearCategoryList3() {
         $('#data-management-category3 div').each(function (i, item) {
             $(item).remove()
         })
         $('#select-categories3 option:first').prop('selected', true);
     }
+</script>
+
+<script>
+    $('input[name=\'information_name\']').autocomplete({
+        source: function(request, response) {
+            $.ajax({
+                url: 'index.php?route=extension/module/massive_data_management_nik/autocompleteInformation&user_token={{ user_token }}&filter_name=' +  encodeURIComponent(request),
+                dataType: 'json',
+                success: function(json) {
+                    response($.map(json, function(item) {
+                        return {
+                            label: item['title'],
+                            value: item['information_id']
+                        }
+                    }));
+                }
+            });
+        },
+        select: function(item) {
+            $('input[name=\'information_name\']').val('');
+
+            $('#data-management-information' + item['value']).remove();
+
+            $('#data-management-information').append('<div id="data-management-information' + item['value'] + '"><i class="fa fa-minus-circle"></i> ' + item['label'] + '<input type="hidden" name="information[]" value="' + item['value'] + '" /></div>');
+        }
+    });
+
+    $('#data-management-information').delegate('.fa-minus-circle', 'click', function() {
+        $(this).parent().remove();
+    });
+
+    $('.information-clear-btn').on('click', function () {
+        $('#data-management-information div').each(function (i, item) {
+            $(item).remove()
+        })
+    })
+
+    $('.information-add-all-btn').on('click', function () {
+        $.ajax({
+            url: 'index.php?route=extension/module/massive_data_management_nik/getAllInformation&user_token={{ user_token }}',
+            dataType: 'json',
+            success: function(json) {
+                $.map(json, function(item) {
+                    $('input[name=\'information_name\']').val('');
+
+                    $('#data-management-information' + item['information_id']).remove();
+
+                    $('#data-management-information').append('<div id="data-management-information' + item['information_id'] + '"><i class="fa fa-minus-circle"></i> ' + item['title'] + '<input type="hidden" name="information[]" value="' + item['information_id'] + '" /></div>');
+                });
+            }
+        });
+    })
+</script>
+<script>
+    $('input[name=\'information_name2\']').autocomplete({
+        source: function(request, response) {
+            $.ajax({
+                url: 'index.php?route=extension/module/massive_data_management_nik/autocompleteInformation&user_token={{ user_token }}&filter_name=' +  encodeURIComponent(request),
+                dataType: 'json',
+                success: function(json) {
+                    response($.map(json, function(item) {
+                        return {
+                            label: item['title'],
+                            value: item['information_id']
+                        }
+                    }));
+                }
+            });
+        },
+        select: function(item) {
+            $('input[name=\'information_name2\']').val('');
+
+            $('#data-management-information2' + item['value']).remove();
+
+            $('#data-management-information2').append('<div id="data-management-information2' + item['value'] + '"><i class="fa fa-minus-circle"></i> ' + item['label'] + '<input type="hidden" name="information[]" value="' + item['value'] + '" /></div>');
+        }
+    });
+
+    $('#data-management-information2').delegate('.fa-minus-circle', 'click', function() {
+        $(this).parent().remove();
+    });
+
+    $('.information-clear-btn2').on('click', function () {
+        $('#data-management-information2 div').each(function (i, item) {
+            $(item).remove()
+        })
+    })
+
+    $('.information-add-all-btn2').on('click', function () {
+        $.ajax({
+            url: 'index.php?route=extension/module/massive_data_management_nik/getAllInformation&user_token={{ user_token }}',
+            dataType: 'json',
+            success: function(json) {
+                $.map(json, function(item) {
+                    $('input[name=\'information_name2\']').val('');
+
+                    $('#data-management-information2' + item['information_id']).remove();
+
+                    $('#data-management-information2').append('<div id="data-management-information2' + item['information_id'] + '"><i class="fa fa-minus-circle"></i> ' + item['title'] + '<input type="hidden" name="information[]" value="' + item['information_id'] + '" /></div>');
+                });
+            }
+        });
+    })
+</script>
+<script>
+    $('input[name=\'information_name3\']').autocomplete({
+        source: function(request, response) {
+            $.ajax({
+                url: 'index.php?route=extension/module/massive_data_management_nik/autocompleteInformation&user_token={{ user_token }}&filter_name=' +  encodeURIComponent(request),
+                dataType: 'json',
+                success: function(json) {
+                    response($.map(json, function(item) {
+                        return {
+                            label: item['title'],
+                            value: item['information_id']
+                        }
+                    }));
+                }
+            });
+        },
+        select: function(item) {
+            $('input[name=\'information_name3\']').val('');
+
+            $('#data-management-information3' + item['value']).remove();
+
+            $('#data-management-information3').append('<div id="data-management-information3' + item['value'] + '"><i class="fa fa-minus-circle"></i> ' + item['label'] + '<input type="hidden" name="information[]" value="' + item['value'] + '" /></div>');
+        }
+    });
+
+    $('#data-management-information3').delegate('.fa-minus-circle', 'click', function() {
+        $(this).parent().remove();
+    });
+
+    $('.information-clear-btn3').on('click', function () {
+        $('#data-management-information3 div').each(function (i, item) {
+            $(item).remove()
+        })
+    })
+
+    $('.information-add-all-btn3').on('click', function () {
+        $.ajax({
+            url: 'index.php?route=extension/module/massive_data_management_nik/getAllInformation&user_token={{ user_token }}',
+            dataType: 'json',
+            success: function(json) {
+                $.map(json, function(item) {
+                    $('input[name=\'information_name3\']').val('');
+
+                    $('#data-management-information3' + item['information_id']).remove();
+
+                    $('#data-management-information3').append('<div id="data-management-information3' + item['information_id'] + '"><i class="fa fa-minus-circle"></i> ' + item['title'] + '<input type="hidden" name="information[]" value="' + item['information_id'] + '" /></div>');
+                });
+            }
+        });
+    })
 </script>
 <script type="text/javascript"><!--
     $('#language a:first').tab('show');
