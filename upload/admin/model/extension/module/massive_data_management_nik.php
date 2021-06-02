@@ -200,13 +200,21 @@ class ModelExtensionModuleMassiveDataManagementNik extends Model {
 
         $this->db->query("DELETE FROM " . DB_PREFIX . "seo_url WHERE query = 'product_id=" . (int)$product_id . "'");
 
-        foreach ($languages_data as $language_data) {
-            $this->db->query("INSERT INTO " . DB_PREFIX . "seo_url SET store_id = '" . (int)0 . "', language_id = '" . (int)$language_data['language_id'] . "', query = 'product_id=" . (int)$product_id . "', keyword = '" . $this->db->escape($seo_product_name) . "'");
+        foreach ($languages_data as $language_code => $language_data) {
+            if ($language_code == 'ru-ru') {
+                $this->db->query("INSERT INTO " . DB_PREFIX . "seo_url SET store_id = '" . (int)0 . "', language_id = '" . (int)$language_data['language_id'] . "', query = 'product_id=" . (int)$product_id . "', keyword = '" . $this->db->escape($seo_product_name) . "'");
+            } else {
+                $this->db->query("INSERT INTO " . DB_PREFIX . "seo_url SET store_id = '" . (int)0 . "', language_id = '" . (int)$language_data['language_id'] . "', query = 'product_id=" . (int)$product_id . "', keyword = '" . $this->db->escape($seo_product_name . '-' . $language_code) . "'");
+            }
         }
 
         foreach ($stores_data as $store_data) {
-            foreach ($languages_data as $language_data) {
-                $this->db->query("INSERT INTO " . DB_PREFIX . "seo_url SET store_id = '" . (int)$store_data['store_id'] . "', language_id = '" . (int)$language_data['language_id'] . "', query = 'product_id=" . (int)$product_id . "', keyword = '" . $this->db->escape($seo_product_name) . "'");
+            foreach ($languages_data as $language_code => $language_data) {
+                if ($language_code == 'ru-ru') {
+                    $this->db->query("INSERT INTO " . DB_PREFIX . "seo_url SET store_id = '" . (int)$store_data['store_id'] . "', language_id = '" . (int)$language_data['language_id'] . "', query = 'product_id=" . (int)$product_id . "', keyword = '" . $this->db->escape($seo_product_name) . "'");
+                } else {
+                    $this->db->query("INSERT INTO " . DB_PREFIX . "seo_url SET store_id = '" . (int)$store_data['store_id'] . "', language_id = '" . (int)$language_data['language_id'] . "', query = 'product_id=" . (int)$product_id . "', keyword = '" . $this->db->escape($seo_product_name . '-' . $language_code) . "'");
+                }
             }
         }
     }
@@ -220,18 +228,26 @@ class ModelExtensionModuleMassiveDataManagementNik extends Model {
         $stores_data = $this->getStores();
         $languages_data = $this->getLanguages();
 
-        foreach ($languages_data as $language_data) {
+        foreach ($languages_data as $language_code => $language_data) {
             $query = $this->db->query("SELECT keyword FROM " . DB_PREFIX . "seo_url WHERE store_id = '" . (int)0 . "' AND language_id = '" . (int)$language_data['language_id'] . "' AND query = 'product_id=" . (int)$product_id . "'");
             if (empty($query->row)) {
-                $this->db->query("INSERT INTO " . DB_PREFIX . "seo_url SET store_id = '" . (int)0 . "', language_id = '" . (int)$language_data['language_id'] . "', query = 'product_id=" . (int)$product_id . "', keyword = '" . $this->db->escape($seo_product_name) . "'");
+                if ($language_code == 'ru-ru') {
+                    $this->db->query("INSERT INTO " . DB_PREFIX . "seo_url SET store_id = '" . (int)0 . "', language_id = '" . (int)$language_data['language_id'] . "', query = 'product_id=" . (int)$product_id . "', keyword = '" . $this->db->escape($seo_product_name) . "'");
+                } else {
+                    $this->db->query("INSERT INTO " . DB_PREFIX . "seo_url SET store_id = '" . (int)0 . "', language_id = '" . (int)$language_data['language_id'] . "', query = 'product_id=" . (int)$product_id . "', keyword = '" . $this->db->escape($seo_product_name . '-' . $language_code) . "'");
+                }
             }
         }
 
         foreach ($stores_data as $store_data) {
-            foreach ($languages_data as $language_data) {
+            foreach ($languages_data as $language_code => $language_data) {
                 $query = $this->db->query("SELECT keyword FROM " . DB_PREFIX . "seo_url WHERE store_id = '" . (int)$store_data['store_id'] . "' AND language_id = '" . (int)$language_data['language_id'] . "' AND query = 'product_id=" . (int)$product_id . "'");
                 if (empty($query->row)) {
-                    $this->db->query("INSERT INTO " . DB_PREFIX . "seo_url SET store_id = '" . (int)$store_data['store_id'] . "', language_id = '" . (int)$language_data['language_id'] . "', query = 'product_id=" . (int)$product_id . "', keyword = '" . $this->db->escape($seo_product_name) . "'");
+                    if ($language_code == 'ru-ru') {
+                        $this->db->query("INSERT INTO " . DB_PREFIX . "seo_url SET store_id = '" . (int)$store_data['store_id'] . "', language_id = '" . (int)$language_data['language_id'] . "', query = 'product_id=" . (int)$product_id . "', keyword = '" . $this->db->escape($seo_product_name) . "'");
+                    } else {
+                        $this->db->query("INSERT INTO " . DB_PREFIX . "seo_url SET store_id = '" . (int)$store_data['store_id'] . "', language_id = '" . (int)$language_data['language_id'] . "', query = 'product_id=" . (int)$product_id . "', keyword = '" . $this->db->escape($seo_product_name . '-' . $language_code) . "'");
+                    }
                 }
             }
         }
@@ -335,7 +351,6 @@ class ModelExtensionModuleMassiveDataManagementNik extends Model {
 
         return $value;
     }
-
 
     public function editProductDesign($product_id, $data) {
         if (isset($data['product_layout']) && !empty($data['product_layout'])) {
@@ -470,13 +485,21 @@ class ModelExtensionModuleMassiveDataManagementNik extends Model {
 
         $this->db->query("DELETE FROM `" . DB_PREFIX . "seo_url` WHERE query = 'category_id=" . (int)$category_id . "'");
 
-        foreach ($languages_data as $language_data) {
-            $this->db->query("INSERT INTO " . DB_PREFIX . "seo_url SET store_id = '" . (int)0 . "', language_id = '" . (int)$language_data['language_id'] . "', query = 'category_id=" . (int)$category_id . "', keyword = '" . $this->db->escape($seo_category_name) . "'");
+        foreach ($languages_data as $language_code => $language_data) {
+            if ($language_code == 'ru-ru') {
+                $this->db->query("INSERT INTO " . DB_PREFIX . "seo_url SET store_id = '" . (int)0 . "', language_id = '" . (int)$language_data['language_id'] . "', query = 'category_id=" . (int)$category_id . "', keyword = '" . $this->db->escape($seo_category_name) . "'");
+            } else {
+                $this->db->query("INSERT INTO " . DB_PREFIX . "seo_url SET store_id = '" . (int)0 . "', language_id = '" . (int)$language_data['language_id'] . "', query = 'category_id=" . (int)$category_id . "', keyword = '" . $this->db->escape($seo_category_name . '-' . $language_code) . "'");
+            }
         }
 
         foreach ($stores_data as $store_data) {
-            foreach ($languages_data as $language_data) {
-                $this->db->query("INSERT INTO " . DB_PREFIX . "seo_url SET store_id = '" . (int)$store_data['store_id'] . "', language_id = '" . (int)$language_data['language_id'] . "', query = 'category_id=" . (int)$category_id . "', keyword = '" . $this->db->escape($seo_category_name) . "'");
+            foreach ($languages_data as $language_code => $language_data) {
+                if ($language_code == 'ru-ru') {
+                    $this->db->query("INSERT INTO " . DB_PREFIX . "seo_url SET store_id = '" . (int)$store_data['store_id'] . "', language_id = '" . (int)$language_data['language_id'] . "', query = 'category_id=" . (int)$category_id . "', keyword = '" . $this->db->escape($seo_category_name) . "'");
+                } else {
+                    $this->db->query("INSERT INTO " . DB_PREFIX . "seo_url SET store_id = '" . (int)$store_data['store_id'] . "', language_id = '" . (int)$language_data['language_id'] . "', query = 'category_id=" . (int)$category_id . "', keyword = '" . $this->db->escape($seo_category_name . '-' . $language_code) . "'");
+                }
             }
         }
     }
@@ -491,18 +514,26 @@ class ModelExtensionModuleMassiveDataManagementNik extends Model {
         $stores_data = $this->getStores();
         $languages_data = $this->getLanguages();
 
-        foreach ($languages_data as $language_data) {
+        foreach ($languages_data as $language_code => $language_data) {
             $query = $this->db->query("SELECT keyword FROM " . DB_PREFIX . "seo_url WHERE store_id = '" . (int)0 . "' AND language_id = '" . (int)$language_data['language_id'] . "' AND query = 'category_id=" . (int)$category_id . "'");
             if (empty($query->row)) {
-                $this->db->query("INSERT INTO " . DB_PREFIX . "seo_url SET store_id = '" . (int)0 . "', language_id = '" . (int)$language_data['language_id'] . "', query = 'category_id=" . (int)$category_id . "', keyword = '" . $this->db->escape($seo_category_name) . "'");
+                if ($language_code == 'ru-ru') {
+                    $this->db->query("INSERT INTO " . DB_PREFIX . "seo_url SET store_id = '" . (int)0 . "', language_id = '" . (int)$language_data['language_id'] . "', query = 'category_id=" . (int)$category_id . "', keyword = '" . $this->db->escape($seo_category_name) . "'");
+                } else {
+                    $this->db->query("INSERT INTO " . DB_PREFIX . "seo_url SET store_id = '" . (int)0 . "', language_id = '" . (int)$language_data['language_id'] . "', query = 'category_id=" . (int)$category_id . "', keyword = '" . $this->db->escape($seo_category_name . '-' . $language_code) . "'");
+                }
             }
         }
 
         foreach ($stores_data as $store_data) {
-            foreach ($languages_data as $language_data) {
+            foreach ($languages_data as $language_code => $language_data) {
                 $query = $this->db->query("SELECT keyword FROM " . DB_PREFIX . "seo_url WHERE store_id = '" . (int)$store_data['store_id'] . "' AND language_id = '" . (int)$language_data['language_id'] . "' AND query = 'category_id=" . (int)$category_id . "'");
                 if (empty($query->row)) {
-                    $this->db->query("INSERT INTO " . DB_PREFIX . "seo_url SET store_id = '" . (int)$store_data['store_id'] . "', language_id = '" . (int)$language_data['language_id'] . "', query = 'category_id=" . (int)$category_id . "', keyword = '" . $this->db->escape($seo_category_name) . "'");
+                    if ($language_code == 'ru-ru') {
+                        $this->db->query("INSERT INTO " . DB_PREFIX . "seo_url SET store_id = '" . (int)$store_data['store_id'] . "', language_id = '" . (int)$language_data['language_id'] . "', query = 'category_id=" . (int)$category_id . "', keyword = '" . $this->db->escape($seo_category_name) . "'");
+                    } else {
+                        $this->db->query("INSERT INTO " . DB_PREFIX . "seo_url SET store_id = '" . (int)$store_data['store_id'] . "', language_id = '" . (int)$language_data['language_id'] . "', query = 'category_id=" . (int)$category_id . "', keyword = '" . $this->db->escape($seo_category_name . '-' . $language_code) . "'");
+                    }
                 }
             }
         }
@@ -561,4 +592,157 @@ class ModelExtensionModuleMassiveDataManagementNik extends Model {
         return $query->rows;
     }
 
+    public function editInformationData($information_id, $data) {
+
+        if ( (isset($data['bottom']) && $data['bottom'] != NULL && $data['bottom'] != '-1') || (isset($data['status']) && $data['status'] != NULL && $data['status'] != '-1') ) {
+            $sql = "UPDATE " . DB_PREFIX . "information SET";
+
+            if (isset($data['bottom']) && $data['bottom'] != NULL && $data['bottom'] != '-1') {
+                $sql .= " bottom = '" . (int)$data['bottom'] . "'";
+            }
+
+            if ( (isset($data['bottom']) && $data['bottom'] != NULL && $data['bottom'] != '-1') && (isset($data['status']) && $data['status'] != NULL && $data['status'] != '-1') ) {
+                $sql .= ",";
+            }
+
+            if (isset($data['status']) && $data['status'] != NULL && $data['status'] != '-1') {
+                $sql .= " status = '" . (int)$data['status'] . "'";
+            }
+
+            $sql .= " WHERE information_id = '" . (int)$information_id . "'";
+
+            $this->db->query($sql);
+        }
+
+        if (isset($data['information_store'])) {
+            $this->db->query("DELETE FROM " . DB_PREFIX . "information_to_store WHERE information_id = '" . (int)$information_id . "'");
+
+            foreach ($data['information_store'] as $store_id) {
+                $this->db->query("INSERT INTO " . DB_PREFIX . "information_to_store SET information_id = '" . (int)$information_id . "', store_id = '" . (int)$store_id . "'");
+            }
+        }
+    }
+
+    public function editInformationSeo($information_id) {
+        $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "information_description WHERE information_id = '" . (int)$information_id . "' AND language_id = '" . (int)$this->config->get('config_language_id') . "'");
+
+        $information_title = $query->row['title'];
+
+        $seo_information_title = $this->path_translit($information_title);
+
+        $stores_data = $this->getStores();
+        $languages_data = $this->getLanguages();
+
+        $this->db->query("DELETE FROM " . DB_PREFIX . "seo_url WHERE query = 'information_id=" . (int)$information_id . "'");
+
+        foreach ($languages_data as $language_code => $language_data) {
+            if ($language_code == 'ru-ru') {
+                $this->db->query("INSERT INTO " . DB_PREFIX . "seo_url SET store_id = '" . (int)0 . "', language_id = '" . (int)$language_data['language_id'] . "', query = 'information_id=" . (int)$information_id . "', keyword = '" . $this->db->escape($seo_information_title) . "'");
+            } else {
+                $this->db->query("INSERT INTO " . DB_PREFIX . "seo_url SET store_id = '" . (int)0 . "', language_id = '" . (int)$language_data['language_id'] . "', query = 'information_id=" . (int)$information_id . "', keyword = '" . $this->db->escape($seo_information_title . '-' . $language_code) . "'");
+            }
+        }
+
+        foreach ($stores_data as $store_data) {
+            foreach ($languages_data as $language_code => $language_data) {
+                if ($language_code == 'ru-ru') {
+                    $this->db->query("INSERT INTO " . DB_PREFIX . "seo_url SET store_id = '" . (int)$store_data['store_id'] . "', language_id = '" . (int)$language_data['language_id'] . "', query = 'information_id=" . (int)$information_id . "', keyword = '" . $this->db->escape($seo_information_title) . "'");
+                } else {
+                    $this->db->query("INSERT INTO " . DB_PREFIX . "seo_url SET store_id = '" . (int)$store_data['store_id'] . "', language_id = '" . (int)$language_data['language_id'] . "', query = 'information_id=" . (int)$information_id . "', keyword = '" . $this->db->escape($seo_information_title . '-' . $language_code) . "'");
+                }
+            }
+        }
+    }
+
+    public function editInformationUnfilledSeo($information_id) {
+        $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "information_description WHERE information_id = '" . (int)$information_id . "' AND language_id = '" . (int)$this->config->get('config_language_id') . "'");
+
+        $information_title = $query->row['title'];
+
+        $seo_information_title = $this->path_translit($information_title);
+
+        $stores_data = $this->getStores();
+        $languages_data = $this->getLanguages();
+
+        foreach ($languages_data as $language_code => $language_data) {
+            $query = $this->db->query("SELECT keyword FROM " . DB_PREFIX . "seo_url WHERE store_id = '" . (int)0 . "' AND language_id = '" . (int)$language_data['language_id'] . "' AND query = 'information_id=" . (int)$information_id . "'");
+            if (empty($query->row)) {
+                if ($language_code == 'ru-ru') {
+                    $this->db->query("INSERT INTO " . DB_PREFIX . "seo_url SET store_id = '" . (int)0 . "', language_id = '" . (int)$language_data['language_id'] . "', query = 'information_id=" . (int)$information_id . "', keyword = '" . $this->db->escape($seo_information_title) . "'");
+                } else {
+                    $this->db->query("INSERT INTO " . DB_PREFIX . "seo_url SET store_id = '" . (int)0 . "', language_id = '" . (int)$language_data['language_id'] . "', query = 'information_id=" . (int)$information_id . "', keyword = '" . $this->db->escape($seo_information_title . '-' . $language_code) . "'");
+                }
+            }
+        }
+
+        foreach ($stores_data as $store_data) {
+            foreach ($languages_data as $language_code => $language_data) {
+                $query = $this->db->query("SELECT keyword FROM " . DB_PREFIX . "seo_url WHERE store_id = '" . (int)$store_data['store_id'] . "' AND language_id = '" . (int)$language_data['language_id'] . "' AND query = 'information_id=" . (int)$information_id . "'");
+                if (empty($query->row)) {
+                    if ($language_code == 'ru-ru') {
+                        $this->db->query("INSERT INTO " . DB_PREFIX . "seo_url SET store_id = '" . (int)$store_data['store_id'] . "', language_id = '" . (int)$language_data['language_id'] . "', query = 'information_id=" . (int)$information_id . "', keyword = '" . $this->db->escape($seo_information_title) . "'");
+                    } else {
+                        $this->db->query("INSERT INTO " . DB_PREFIX . "seo_url SET store_id = '" . (int)$store_data['store_id'] . "', language_id = '" . (int)$language_data['language_id'] . "', query = 'information_id=" . (int)$information_id . "', keyword = '" . $this->db->escape($seo_information_title . '-' . $language_code) . "'");
+                    }
+                }
+            }
+        }
+    }
+
+    public function editInformationDesign($information_id, $data) {
+        if (isset($data['information_layout'])) {
+            $this->db->query("DELETE FROM `" . DB_PREFIX . "information_to_layout` WHERE information_id = '" . (int)$information_id . "'");
+
+            foreach ($data['information_layout'] as $store_id => $layout_id) {
+                $this->db->query("INSERT INTO " . DB_PREFIX . "information_to_layout SET information_id = '" . (int)$information_id . "', store_id = '" . (int)$store_id . "', layout_id = '" . (int)$layout_id . "'");
+            }
+        }
+    }
+
+    public function getInformations($data = array()) {
+        $sql = "SELECT * FROM " . DB_PREFIX . "information i LEFT JOIN " . DB_PREFIX . "information_description id ON (i.information_id = id.information_id) WHERE id.language_id = '" . (int)$this->config->get('config_language_id') . "'";
+
+        if (!empty($data['filter_name'])) {
+            $sql .= " AND id.title LIKE '" . $this->db->escape($data['filter_name']) . "%'";
+        }
+
+        $sort_data = array(
+            'id.title',
+            'i.sort_order'
+        );
+
+        if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
+            $sql .= " ORDER BY " . $data['sort'];
+        } else {
+            $sql .= " ORDER BY id.title";
+        }
+
+        if (isset($data['order']) && ($data['order'] == 'DESC')) {
+            $sql .= " DESC";
+        } else {
+            $sql .= " ASC";
+        }
+
+        if (isset($data['start']) || isset($data['limit'])) {
+            if ($data['start'] < 0) {
+                $data['start'] = 0;
+            }
+
+            if ($data['limit'] < 1) {
+                $data['limit'] = 20;
+            }
+
+            $sql .= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
+        }
+
+        $query = $this->db->query($sql);
+
+        return $query->rows;
+    }
+
+    public function getAllInformationsDescription() {
+        $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "information_description WHERE language_id = '" . (int)$this->config->get('config_language_id') . "'");
+
+        return $query->rows;
+    }
 }
