@@ -38,6 +38,21 @@
       <button type="button" class="close" data-dismiss="alert">&times;</button>
     </div>
     {% endif %}
+    {% if error_empty_products %}
+      <div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ error_empty_products }}
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+      </div>
+    {% endif %}
+    {% if error_empty_categories %}
+      <div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ error_empty_categories }}
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+      </div>
+    {% endif %}
+    {% if error_empty_information %}
+      <div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ error_empty_information  }}
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+      </div>
+    {% endif %}
     {% if success %}
       <div class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i> {{ success }}
         <button type="button" class="close" data-dismiss="alert">&times;</button>
@@ -80,14 +95,19 @@
                 <div class="form-group">
                   <label class="col-sm-2 control-label" for="input-parent">{{ entry_parent }}</label>
                   <div class="col-sm-10">
-                    <input type="text" name="path" value="{{ path }}" placeholder="{{ entry_parent }}" id="input-parent" class="form-control" />
-                    <input type="hidden" name="parent_id" value="{{ parent_id }}" />
+                    <select name="parent_id" id="select-parent-category" class="form-control">
+                      <option selected="selected" disabled="disabled">{{ entry_parent }}</option>
+                      <option value="0">{{ text_none }}</option>
+                      {% for category in categories %}
+                        <option value="{{ category.category_id }}">{{ category.name }}</option>
+                      {% endfor %}
+                    </select>
                   </div>
                 </div>
                 <div class="form-group">
                   <label class="col-sm-2 control-label" for="input-filter"><span data-toggle="tooltip" title="{{ help_filter }}">{{ entry_filter }}</span></label>
                   <div class="col-sm-10">
-                    <input type="text" name="filter" value="" placeholder="{{ entry_filter }}" id="input-filter" class="form-control" />
+                    <input type="text" name="filter" value="" placeholder="{{ entry_filter }}" id="input-category-filter" class="form-control" />
                     <div id="category-filter" class="well well-sm" style="height: 150px; overflow: auto;">
                       {% for category_filter in category_filters %}
                         <div id="category-filter{{ category_filter.filter_id }}"><i class="fa fa-minus-circle"></i> {{ category_filter.name }}
@@ -486,7 +506,7 @@
                 <div class="form-group">
                   <label class="col-sm-2 control-label" for="input-filter"><span data-toggle="tooltip" title="{{ help_filter }}">{{ entry_filter }}</span></label>
                   <div class="col-sm-10">
-                    <input type="text" name="filter" value="" placeholder="{{ entry_filter }}" id="input-filter" class="form-control"/>
+                    <input type="text" name="filter" value="" placeholder="{{ entry_filter }}" id="input-product-filter" class="form-control"/>
                     <div id="product-filter" class="well well-sm" style="height: 150px; overflow: auto;"> {% for product_filter in product_filters %}
                         <div id="product-filter{{ product_filter.filter_id }}"><i class="fa fa-minus-circle"></i> {{ product_filter.name }}
                           <input type="hidden" name="product_filter[]" value="{{ product_filter.filter_id }}"/>
@@ -1389,7 +1409,7 @@
     });
 
     // Filter
-    $('input[name=\'filter\']').autocomplete({
+    $('#input-product-filter').autocomplete({
         'source': function(request, response) {
             $.ajax({
                 url: 'index.php?route=catalog/filter/autocomplete&user_token={{ user_token }}&filter_name=' + encodeURIComponent(request),
@@ -1405,7 +1425,7 @@
             });
         },
         'select': function(item) {
-            $('input[name=\'filter\']').val('');
+            $('#input-product-filter').val('');
 
             $('#product-filter' + item['value']).remove();
 
@@ -1806,7 +1826,22 @@
 
     $('#data-management-category').delegate('.fa-minus-circle', 'click', function() {
         let categoryId = $(this).next().val()
-        $('#data-management-product').find('div[data-category-id="' + categoryId + '"]').remove()
+
+        let products_elems = $('#data-management-product').find('div')
+
+        for (let i = 0; i < products_elems.length; i++) {
+            let el_data = $(products_elems[i]).data('categoryId')
+            let index = el_data.indexOf(parseInt(categoryId));
+            if (index > -1) {
+                el_data.splice(index, 1);
+            }
+            if (el_data.length === 0) {
+                $(products_elems[i]).remove()
+            } else {
+                $(products_elems[i]).attr('data-category-id', '[' + el_data + ']')
+            }
+        }
+
         $(this).parent().remove();
     });
 
@@ -1824,19 +1859,55 @@
                 if(categoryId !== '0') {
                     $('#data-management-category' + categoryId).remove();
                     $('#data-management-category').append('<div id="data-management-category' + categoryId + '"><i class="fa fa-minus-circle"></i> ' + categoryName + '<input type="hidden" name="category[]" value="' + categoryId + '" /></div>');
+                } else {
+                    $.ajax({
+                        url: 'index.php?route=extension/module/massive_data_management_nik/getAllCategories&user_token={{ user_token }}',
+                        dataType: 'json',
+                        success: function(json) {
+                            let array = $.map(json, function(item) {
+                                return {
+                                    label: item['name'],
+                                    value: item['category_id'],
+                                }
+                            })
+
+                            for (let item in array) {
+                                if(array.hasOwnProperty(item)) {
+                                    $('#data-management-category' + array[item]['value']).remove();
+                                    $('#data-management-category').append('<div id="data-management-category' + array[item]['value'] + '"><i class="fa fa-minus-circle"></i> ' + array[item]['label'] + '<input type="hidden" name="category[]" value="' + array[item]['value'] + '" /></div>');
+                                }
+                            }
+                        }
+                    });
                 }
 
                 let array = $.map(json, function(item) {
                     return {
-                        label: item['name'],
-                        value: item['product_id'],
-                        category_id: item['category_id']
+                        label:          item['name'],
+                        value:          item['product_id'],
+                        categories_id:  item['categories_id'],
+                        category_id:    item['category_id']
                     }
                 })
                 for (let item in array) {
                     if(array.hasOwnProperty(item)) {
                         $('#data-management-product' + array[item]['value']).remove();
-                        $('#data-management-product').append('<div id="data-management-product' + array[item]['value'] + '" data-category-id="' + array[item]['category_id'] + '"><i class="fa fa-minus-circle"></i> ' + array[item]['label'] + '<input type="hidden" name="product[]" value="' + array[item]['value'] + '" /></div>');
+                        let product_el = '<div id="data-management-product' + array[item]['value'] + '" data-category-id="[';
+
+                        if(array[item]['category_id'] === '') {
+                            for (let i = 0; i < array[item]['categories_id'].length; i++) {
+                                if (i < array[item]['categories_id'].length - 1) {
+                                    product_el += array[item]['categories_id'][i] + ','
+                                } else {
+                                    product_el += array[item]['categories_id'][i]
+                                }
+                            }
+                        } else {
+                            product_el += array[item]['category_id']
+                        }
+
+                            product_el += ']"><i class="fa fa-minus-circle"></i> ' + array[item]['label'] + '<input type="hidden" name="product[]" value="' + array[item]['value'] + '" /></div>';
+                        $('#data-management-product').append(product_el);
                     }
                 }
             }
@@ -1883,7 +1954,22 @@
 
     $('#data-management-category2').delegate('.fa-minus-circle', 'click', function() {
         let categoryId = $(this).next().val()
-        $('#data-management-product2').find('div[data-category-id="' + categoryId + '"]').remove()
+
+        let products_elems = $('#data-management-product2').find('div')
+
+        for (let i = 0; i < products_elems.length; i++) {
+            let el_data = $(products_elems[i]).data('categoryId')
+            let index = el_data.indexOf(parseInt(categoryId));
+            if (index > -1) {
+                el_data.splice(index, 1);
+            }
+            if (el_data.length === 0) {
+                $(products_elems[i]).remove()
+            } else {
+                $(products_elems[i]).attr('data-category-id', '[' + el_data + ']')
+            }
+        }
+
         $(this).parent().remove();
     });
 
@@ -1900,38 +1986,74 @@
             success: function(json) {
                 if(categoryId !== '0') {
                     $('#data-management-category2' + categoryId).remove();
-                    $('#data-management-category2').append('<div id="data-management-category2' + categoryId + '"><i class="fa fa-minus-circle"></i> ' + categoryName + '<input type="hidden" name="category[]" value="' + categoryId + '" /></div>');
+                    $('#data-management-category2').append('<div id="data-management-category' + categoryId + '"><i class="fa fa-minus-circle"></i> ' + categoryName + '<input type="hidden" name="category[]" value="' + categoryId + '" /></div>');
+                } else {
+                    $.ajax({
+                        url: 'index.php?route=extension/module/massive_data_management_nik/getAllCategories&user_token={{ user_token }}',
+                        dataType: 'json',
+                        success: function(json) {
+                            let array = $.map(json, function(item) {
+                                return {
+                                    label: item['name'],
+                                    value: item['category_id'],
+                                }
+                            })
+
+                            for (let item in array) {
+                                if(array.hasOwnProperty(item)) {
+                                    $('#data-management-category2' + array[item]['value']).remove();
+                                    $('#data-management-category2').append('<div id="data-management-category2' + array[item]['value'] + '"><i class="fa fa-minus-circle"></i> ' + array[item]['label'] + '<input type="hidden" name="category[]" value="' + array[item]['value'] + '" /></div>');
+                                }
+                            }
+                        }
+                    });
                 }
 
                 let array = $.map(json, function(item) {
                     return {
-                        label: item['name'],
-                        value: item['product_id'],
-                        category_id: item['category_id']
+                        label:          item['name'],
+                        value:          item['product_id'],
+                        categories_id:  item['categories_id'],
+                        category_id:    item['category_id']
                     }
                 })
                 for (let item in array) {
                     if(array.hasOwnProperty(item)) {
                         $('#data-management-product2' + array[item]['value']).remove();
-                        $('#data-management-product2').append('<div id="data-management-product2' + array[item]['value'] + '" data-category-id="' + array[item]['category_id'] + '"><i class="fa fa-minus-circle"></i> ' + array[item]['label'] + '<input type="hidden" name="product[]" value="' + array[item]['value'] + '" /></div>');
+                        let product_el = '<div id="data-management-product2' + array[item]['value'] + '" data-category-id="[';
+
+                        if(array[item]['category_id'] === '') {
+                            for (let i = 0; i < array[item]['categories_id'].length; i++) {
+                                if (i < array[item]['categories_id'].length - 1) {
+                                    product_el += array[item]['categories_id'][i] + ','
+                                } else {
+                                    product_el += array[item]['categories_id'][i]
+                                }
+                            }
+                        } else {
+                            product_el += array[item]['category_id']
+                        }
+
+                        product_el += ']"><i class="fa fa-minus-circle"></i> ' + array[item]['label'] + '<input type="hidden" name="product[]" value="' + array[item]['value'] + '" /></div>';
+                        $('#data-management-product2').append(product_el);
                     }
                 }
             }
         });
     })
 
-    $('.products-clear-btn2').on('click', function () {
-        clearProductsList2()
-    })
     function clearProductsList2() {
         $('#data-management-category2 div').each(function (i, item) {
             $(item).remove()
-        })
+        });
         $('#data-management-product2 div').each(function (i, item) {
             $(item).remove()
-        })
+        });
         $('#select-products-categories2 option:first').prop('selected', true);
     }
+    $('.products-clear-btn2').on('click', function () {
+        clearProductsList2()
+    })
 </script>
 <script>
     $('input[name=\'product_name3\']').autocomplete({
@@ -1960,7 +2082,22 @@
 
     $('#data-management-category3').delegate('.fa-minus-circle', 'click', function() {
         let categoryId = $(this).next().val()
-        $('#data-management-product3').find('div[data-category-id="' + categoryId + '"]').remove()
+
+        let products_elems = $('#data-management-product3').find('div')
+
+        for (let i = 0; i < products_elems.length; i++) {
+            let el_data = $(products_elems[i]).data('categoryId')
+            let index = el_data.indexOf(parseInt(categoryId));
+            if (index > -1) {
+                el_data.splice(index, 1);
+            }
+            if (el_data.length === 0) {
+                $(products_elems[i]).remove()
+            } else {
+                $(products_elems[i]).attr('data-category-id', '[' + el_data + ']')
+            }
+        }
+
         $(this).parent().remove();
     });
 
@@ -1978,37 +2115,73 @@
                 if(categoryId !== '0') {
                     $('#data-management-category3' + categoryId).remove();
                     $('#data-management-category3').append('<div id="data-management-category3' + categoryId + '"><i class="fa fa-minus-circle"></i> ' + categoryName + '<input type="hidden" name="category[]" value="' + categoryId + '" /></div>');
+                } else {
+                    $.ajax({
+                        url: 'index.php?route=extension/module/massive_data_management_nik/getAllCategories&user_token={{ user_token }}',
+                        dataType: 'json',
+                        success: function(json) {
+                            let array = $.map(json, function(item) {
+                                return {
+                                    label: item['name'],
+                                    value: item['category_id'],
+                                }
+                            })
+
+                            for (let item in array) {
+                                if(array.hasOwnProperty(item)) {
+                                    $('#data-management-category3' + array[item]['value']).remove();
+                                    $('#data-management-category3').append('<div id="data-management-category3' + array[item]['value'] + '"><i class="fa fa-minus-circle"></i> ' + array[item]['label'] + '<input type="hidden" name="category[]" value="' + array[item]['value'] + '" /></div>');
+                                }
+                            }
+                        }
+                    });
                 }
 
                 let array = $.map(json, function(item) {
                     return {
-                        label: item['name'],
-                        value: item['product_id'],
-                        category_id: item['category_id']
+                        label:          item['name'],
+                        value:          item['product_id'],
+                        categories_id:  item['categories_id'],
+                        category_id:    item['category_id']
                     }
                 })
                 for (let item in array) {
                     if(array.hasOwnProperty(item)) {
                         $('#data-management-product3' + array[item]['value']).remove();
-                        $('#data-management-product3').append('<div id="data-management-product3' + array[item]['value'] + '" data-category-id="' + array[item]['category_id'] + '"><i class="fa fa-minus-circle"></i> ' + array[item]['label'] + '<input type="hidden" name="product[]" value="' + array[item]['value'] + '" /></div>');
+                        let product_el = '<div id="data-management-product3' + array[item]['value'] + '" data-category-id="[';
+
+                        if(array[item]['category_id'] === '') {
+                            for (let i = 0; i < array[item]['categories_id'].length; i++) {
+                                if (i < array[item]['categories_id'].length - 1) {
+                                    product_el += array[item]['categories_id'][i] + ','
+                                } else {
+                                    product_el += array[item]['categories_id'][i]
+                                }
+                            }
+                        } else {
+                            product_el += array[item]['category_id']
+                        }
+
+                        product_el += ']"><i class="fa fa-minus-circle"></i> ' + array[item]['label'] + '<input type="hidden" name="product[]" value="' + array[item]['value'] + '" /></div>';
+                        $('#data-management-product3').append(product_el);
                     }
                 }
             }
         });
     })
 
-    $('.products-clear-btn3').on('click', function () {
-        clearProductsList3()
-    })
     function clearProductsList3() {
         $('#data-management-category3 div').each(function (i, item) {
             $(item).remove()
-        })
+        });
         $('#data-management-product3 div').each(function (i, item) {
             $(item).remove()
-        })
+        });
         $('#select-products-categories3 option:first').prop('selected', true);
     }
+    $('.products-clear-btn3').on('click', function () {
+        clearProductsList3()
+    })
 </script>
 <script>
     $('input[name=\'product_name4\']').autocomplete({
@@ -2037,7 +2210,22 @@
 
     $('#data-management-category4').delegate('.fa-minus-circle', 'click', function() {
         let categoryId = $(this).next().val()
-        $('#data-management-product4').find('div[data-category-id="' + categoryId + '"]').remove()
+
+        let products_elems = $('#data-management-product4').find('div')
+
+        for (let i = 0; i < products_elems.length; i++) {
+            let el_data = $(products_elems[i]).data('categoryId')
+            let index = el_data.indexOf(parseInt(categoryId));
+            if (index > -1) {
+                el_data.splice(index, 1);
+            }
+            if (el_data.length === 0) {
+                $(products_elems[i]).remove()
+            } else {
+                $(products_elems[i]).attr('data-category-id', '[' + el_data + ']')
+            }
+        }
+
         $(this).parent().remove();
     });
 
@@ -2055,37 +2243,73 @@
                 if(categoryId !== '0') {
                     $('#data-management-category4' + categoryId).remove();
                     $('#data-management-category4').append('<div id="data-management-category4' + categoryId + '"><i class="fa fa-minus-circle"></i> ' + categoryName + '<input type="hidden" name="category[]" value="' + categoryId + '" /></div>');
+                } else {
+                    $.ajax({
+                        url: 'index.php?route=extension/module/massive_data_management_nik/getAllCategories&user_token={{ user_token }}',
+                        dataType: 'json',
+                        success: function(json) {
+                            let array = $.map(json, function(item) {
+                                return {
+                                    label: item['name'],
+                                    value: item['category_id'],
+                                }
+                            })
+
+                            for (let item in array) {
+                                if(array.hasOwnProperty(item)) {
+                                    $('#data-management-category4' + array[item]['value']).remove();
+                                    $('#data-management-category4').append('<div id="data-management-category4' + array[item]['value'] + '"><i class="fa fa-minus-circle"></i> ' + array[item]['label'] + '<input type="hidden" name="category[]" value="' + array[item]['value'] + '" /></div>');
+                                }
+                            }
+                        }
+                    });
                 }
 
                 let array = $.map(json, function(item) {
                     return {
-                        label: item['name'],
-                        value: item['product_id'],
-                        category_id: item['category_id']
+                        label:          item['name'],
+                        value:          item['product_id'],
+                        categories_id:  item['categories_id'],
+                        category_id:    item['category_id']
                     }
                 })
                 for (let item in array) {
                     if(array.hasOwnProperty(item)) {
                         $('#data-management-product4' + array[item]['value']).remove();
-                        $('#data-management-product4').append('<div id="data-management-product4' + array[item]['value'] + '" data-category-id="' + array[item]['category_id'] + '"><i class="fa fa-minus-circle"></i> ' + array[item]['label'] + '<input type="hidden" name="product[]" value="' + array[item]['value'] + '" /></div>');
+                        let product_el = '<div id="data-management-product4' + array[item]['value'] + '" data-category-id="[';
+
+                        if(array[item]['category_id'] === '') {
+                            for (let i = 0; i < array[item]['categories_id'].length; i++) {
+                                if (i < array[item]['categories_id'].length - 1) {
+                                    product_el += array[item]['categories_id'][i] + ','
+                                } else {
+                                    product_el += array[item]['categories_id'][i]
+                                }
+                            }
+                        } else {
+                            product_el += array[item]['category_id']
+                        }
+
+                        product_el += ']"><i class="fa fa-minus-circle"></i> ' + array[item]['label'] + '<input type="hidden" name="product[]" value="' + array[item]['value'] + '" /></div>';
+                        $('#data-management-product4').append(product_el);
                     }
                 }
             }
         });
     })
 
-    $('.products-clear-btn4').on('click', function () {
-        clearProductsList4()
-    })
     function clearProductsList4() {
         $('#data-management-category4 div').each(function (i, item) {
             $(item).remove()
-        })
+        });
         $('#data-management-product4 div').each(function (i, item) {
             $(item).remove()
-        })
+        });
         $('#select-products-categories4 option:first').prop('selected', true);
     }
+    $('.products-clear-btn4').on('click', function () {
+        clearProductsList4()
+    })
 </script>
 <script>
     $('input[name=\'product_name5\']').autocomplete({
@@ -2114,7 +2338,22 @@
 
     $('#data-management-category5').delegate('.fa-minus-circle', 'click', function() {
         let categoryId = $(this).next().val()
-        $('#data-management-product5').find('div[data-category-id="' + categoryId + '"]').remove()
+
+        let products_elems = $('#data-management-product5').find('div')
+
+        for (let i = 0; i < products_elems.length; i++) {
+            let el_data = $(products_elems[i]).data('categoryId')
+            let index = el_data.indexOf(parseInt(categoryId));
+            if (index > -1) {
+                el_data.splice(index, 1);
+            }
+            if (el_data.length === 0) {
+                $(products_elems[i]).remove()
+            } else {
+                $(products_elems[i]).attr('data-category-id', '[' + el_data + ']')
+            }
+        }
+
         $(this).parent().remove();
     });
 
@@ -2132,37 +2371,73 @@
                 if(categoryId !== '0') {
                     $('#data-management-category5' + categoryId).remove();
                     $('#data-management-category5').append('<div id="data-management-category5' + categoryId + '"><i class="fa fa-minus-circle"></i> ' + categoryName + '<input type="hidden" name="category[]" value="' + categoryId + '" /></div>');
+                } else {
+                    $.ajax({
+                        url: 'index.php?route=extension/module/massive_data_management_nik/getAllCategories&user_token={{ user_token }}',
+                        dataType: 'json',
+                        success: function(json) {
+                            let array = $.map(json, function(item) {
+                                return {
+                                    label: item['name'],
+                                    value: item['category_id'],
+                                }
+                            })
+
+                            for (let item in array) {
+                                if(array.hasOwnProperty(item)) {
+                                    $('#data-management-category5' + array[item]['value']).remove();
+                                    $('#data-management-category5').append('<div id="data-management-category5' + array[item]['value'] + '"><i class="fa fa-minus-circle"></i> ' + array[item]['label'] + '<input type="hidden" name="category[]" value="' + array[item]['value'] + '" /></div>');
+                                }
+                            }
+                        }
+                    });
                 }
 
                 let array = $.map(json, function(item) {
                     return {
-                        label: item['name'],
-                        value: item['product_id'],
-                        category_id: item['category_id']
+                        label:          item['name'],
+                        value:          item['product_id'],
+                        categories_id:  item['categories_id'],
+                        category_id:    item['category_id']
                     }
                 })
                 for (let item in array) {
                     if(array.hasOwnProperty(item)) {
                         $('#data-management-product5' + array[item]['value']).remove();
-                        $('#data-management-product5').append('<div id="data-management-product5' + array[item]['value'] + '" data-category-id="' + array[item]['category_id'] + '"><i class="fa fa-minus-circle"></i> ' + array[item]['label'] + '<input type="hidden" name="product[]" value="' + array[item]['value'] + '" /></div>');
+                        let product_el = '<div id="data-management-product5' + array[item]['value'] + '" data-category-id="[';
+
+                        if(array[item]['category_id'] === '') {
+                            for (let i = 0; i < array[item]['categories_id'].length; i++) {
+                                if (i < array[item]['categories_id'].length - 1) {
+                                    product_el += array[item]['categories_id'][i] + ','
+                                } else {
+                                    product_el += array[item]['categories_id'][i]
+                                }
+                            }
+                        } else {
+                            product_el += array[item]['category_id']
+                        }
+
+                        product_el += ']"><i class="fa fa-minus-circle"></i> ' + array[item]['label'] + '<input type="hidden" name="product[]" value="' + array[item]['value'] + '" /></div>';
+                        $('#data-management-product5').append(product_el);
                     }
                 }
             }
         });
     })
 
-    $('.products-clear-btn5').on('click', function () {
-        clearProductsList5()
-    })
     function clearProductsList5() {
         $('#data-management-category5 div').each(function (i, item) {
             $(item).remove()
-        })
+        });
         $('#data-management-product5 div').each(function (i, item) {
             $(item).remove()
-        })
+        });
         $('#select-products-categories5 option:first').prop('selected', true);
     }
+    $('.products-clear-btn5').on('click', function () {
+        clearProductsList5()
+    })
 </script>
 <script>
     $('input[name=\'product_name6\']').autocomplete({
@@ -2191,7 +2466,22 @@
 
     $('#data-management-category6').delegate('.fa-minus-circle', 'click', function() {
         let categoryId = $(this).next().val()
-        $('#data-management-product6').find('div[data-category-id="' + categoryId + '"]').remove()
+
+        let products_elems = $('#data-management-product6').find('div')
+
+        for (let i = 0; i < products_elems.length; i++) {
+            let el_data = $(products_elems[i]).data('categoryId')
+            let index = el_data.indexOf(parseInt(categoryId));
+            if (index > -1) {
+                el_data.splice(index, 1);
+            }
+            if (el_data.length === 0) {
+                $(products_elems[i]).remove()
+            } else {
+                $(products_elems[i]).attr('data-category-id', '[' + el_data + ']')
+            }
+        }
+
         $(this).parent().remove();
     });
 
@@ -2209,37 +2499,73 @@
                 if(categoryId !== '0') {
                     $('#data-management-category6' + categoryId).remove();
                     $('#data-management-category6').append('<div id="data-management-category6' + categoryId + '"><i class="fa fa-minus-circle"></i> ' + categoryName + '<input type="hidden" name="category[]" value="' + categoryId + '" /></div>');
+                } else {
+                    $.ajax({
+                        url: 'index.php?route=extension/module/massive_data_management_nik/getAllCategories&user_token={{ user_token }}',
+                        dataType: 'json',
+                        success: function(json) {
+                            let array = $.map(json, function(item) {
+                                return {
+                                    label: item['name'],
+                                    value: item['category_id'],
+                                }
+                            })
+
+                            for (let item in array) {
+                                if(array.hasOwnProperty(item)) {
+                                    $('#data-management-category6' + array[item]['value']).remove();
+                                    $('#data-management-category6').append('<div id="data-management-category6' + array[item]['value'] + '"><i class="fa fa-minus-circle"></i> ' + array[item]['label'] + '<input type="hidden" name="category[]" value="' + array[item]['value'] + '" /></div>');
+                                }
+                            }
+                        }
+                    });
                 }
 
                 let array = $.map(json, function(item) {
                     return {
-                        label: item['name'],
-                        value: item['product_id'],
-                        category_id: item['category_id']
+                        label:          item['name'],
+                        value:          item['product_id'],
+                        categories_id:  item['categories_id'],
+                        category_id:    item['category_id']
                     }
                 })
                 for (let item in array) {
                     if(array.hasOwnProperty(item)) {
                         $('#data-management-product6' + array[item]['value']).remove();
-                        $('#data-management-product6').append('<div id="data-management-product6' + array[item]['value'] + '" data-category-id="' + array[item]['category_id'] + '"><i class="fa fa-minus-circle"></i> ' + array[item]['label'] + '<input type="hidden" name="product[]" value="' + array[item]['value'] + '" /></div>');
+                        let product_el = '<div id="data-management-product6' + array[item]['value'] + '" data-category-id="[';
+
+                        if(array[item]['category_id'] === '') {
+                            for (let i = 0; i < array[item]['categories_id'].length; i++) {
+                                if (i < array[item]['categories_id'].length - 1) {
+                                    product_el += array[item]['categories_id'][i] + ','
+                                } else {
+                                    product_el += array[item]['categories_id'][i]
+                                }
+                            }
+                        } else {
+                            product_el += array[item]['category_id']
+                        }
+
+                        product_el += ']"><i class="fa fa-minus-circle"></i> ' + array[item]['label'] + '<input type="hidden" name="product[]" value="' + array[item]['value'] + '" /></div>';
+                        $('#data-management-product6').append(product_el);
                     }
                 }
             }
         });
     })
 
-    $('.products-clear-btn6').on('click', function () {
-        clearProductsList6()
-    })
     function clearProductsList6() {
         $('#data-management-category6 div').each(function (i, item) {
             $(item).remove()
-        })
+        });
         $('#data-management-product6 div').each(function (i, item) {
             $(item).remove()
-        })
+        });
         $('#select-products-categories6 option:first').prop('selected', true);
     }
+    $('.products-clear-btn6').on('click', function () {
+        clearProductsList6()
+    })
 </script>
 <script>
     $('input[name=\'product_name7\']').autocomplete({
@@ -2268,7 +2594,22 @@
 
     $('#data-management-category7').delegate('.fa-minus-circle', 'click', function() {
         let categoryId = $(this).next().val()
-        $('#data-management-product7').find('div[data-category-id="' + categoryId + '"]').remove()
+
+        let products_elems = $('#data-management-product7').find('div')
+
+        for (let i = 0; i < products_elems.length; i++) {
+            let el_data = $(products_elems[i]).data('categoryId')
+            let index = el_data.indexOf(parseInt(categoryId));
+            if (index > -1) {
+                el_data.splice(index, 1);
+            }
+            if (el_data.length === 0) {
+                $(products_elems[i]).remove()
+            } else {
+                $(products_elems[i]).attr('data-category-id', '[' + el_data + ']')
+            }
+        }
+
         $(this).parent().remove();
     });
 
@@ -2286,37 +2627,73 @@
                 if(categoryId !== '0') {
                     $('#data-management-category7' + categoryId).remove();
                     $('#data-management-category7').append('<div id="data-management-category7' + categoryId + '"><i class="fa fa-minus-circle"></i> ' + categoryName + '<input type="hidden" name="category[]" value="' + categoryId + '" /></div>');
+                } else {
+                    $.ajax({
+                        url: 'index.php?route=extension/module/massive_data_management_nik/getAllCategories&user_token={{ user_token }}',
+                        dataType: 'json',
+                        success: function(json) {
+                            let array = $.map(json, function(item) {
+                                return {
+                                    label: item['name'],
+                                    value: item['category_id'],
+                                }
+                            })
+
+                            for (let item in array) {
+                                if(array.hasOwnProperty(item)) {
+                                    $('#data-management-category7' + array[item]['value']).remove();
+                                    $('#data-management-category7').append('<div id="data-management-category7' + array[item]['value'] + '"><i class="fa fa-minus-circle"></i> ' + array[item]['label'] + '<input type="hidden" name="category[]" value="' + array[item]['value'] + '" /></div>');
+                                }
+                            }
+                        }
+                    });
                 }
 
                 let array = $.map(json, function(item) {
                     return {
-                        label: item['name'],
-                        value: item['product_id'],
-                        category_id: item['category_id']
+                        label:          item['name'],
+                        value:          item['product_id'],
+                        categories_id:  item['categories_id'],
+                        category_id:    item['category_id']
                     }
                 })
                 for (let item in array) {
                     if(array.hasOwnProperty(item)) {
                         $('#data-management-product7' + array[item]['value']).remove();
-                        $('#data-management-product7').append('<div id="data-management-product7' + array[item]['value'] + '" data-category-id="' + array[item]['category_id'] + '"><i class="fa fa-minus-circle"></i> ' + array[item]['label'] + '<input type="hidden" name="product[]" value="' + array[item]['value'] + '" /></div>');
+                        let product_el = '<div id="data-management-product7' + array[item]['value'] + '" data-category-id="[';
+
+                        if(array[item]['category_id'] === '') {
+                            for (let i = 0; i < array[item]['categories_id'].length; i++) {
+                                if (i < array[item]['categories_id'].length - 1) {
+                                    product_el += array[item]['categories_id'][i] + ','
+                                } else {
+                                    product_el += array[item]['categories_id'][i]
+                                }
+                            }
+                        } else {
+                            product_el += array[item]['category_id']
+                        }
+
+                        product_el += ']"><i class="fa fa-minus-circle"></i> ' + array[item]['label'] + '<input type="hidden" name="product[]" value="' + array[item]['value'] + '" /></div>';
+                        $('#data-management-product7').append(product_el);
                     }
                 }
             }
         });
     })
 
-    $('.products-clear-btn7').on('click', function () {
-        clearProductsList7()
-    })
     function clearProductsList7() {
         $('#data-management-category7 div').each(function (i, item) {
             $(item).remove()
-        })
+        });
         $('#data-management-product7 div').each(function (i, item) {
             $(item).remove()
-        })
+        });
         $('#select-products-categories7 option:first').prop('selected', true);
     }
+    $('.products-clear-btn7').on('click', function () {
+        clearProductsList7()
+    })
 </script>
 <script>
     $('input[name=\'product_name8\']').autocomplete({
@@ -2345,7 +2722,22 @@
 
     $('#data-management-category8').delegate('.fa-minus-circle', 'click', function() {
         let categoryId = $(this).next().val()
-        $('#data-management-product8').find('div[data-category-id="' + categoryId + '"]').remove()
+
+        let products_elems = $('#data-management-product8').find('div')
+
+        for (let i = 0; i < products_elems.length; i++) {
+            let el_data = $(products_elems[i]).data('categoryId')
+            let index = el_data.indexOf(parseInt(categoryId));
+            if (index > -1) {
+                el_data.splice(index, 1);
+            }
+            if (el_data.length === 0) {
+                $(products_elems[i]).remove()
+            } else {
+                $(products_elems[i]).attr('data-category-id', '[' + el_data + ']')
+            }
+        }
+
         $(this).parent().remove();
     });
 
@@ -2363,37 +2755,73 @@
                 if(categoryId !== '0') {
                     $('#data-management-category8' + categoryId).remove();
                     $('#data-management-category8').append('<div id="data-management-category8' + categoryId + '"><i class="fa fa-minus-circle"></i> ' + categoryName + '<input type="hidden" name="category[]" value="' + categoryId + '" /></div>');
+                } else {
+                    $.ajax({
+                        url: 'index.php?route=extension/module/massive_data_management_nik/getAllCategories&user_token={{ user_token }}',
+                        dataType: 'json',
+                        success: function(json) {
+                            let array = $.map(json, function(item) {
+                                return {
+                                    label: item['name'],
+                                    value: item['category_id'],
+                                }
+                            })
+
+                            for (let item in array) {
+                                if(array.hasOwnProperty(item)) {
+                                    $('#data-management-category8' + array[item]['value']).remove();
+                                    $('#data-management-category8').append('<div id="data-management-category8' + array[item]['value'] + '"><i class="fa fa-minus-circle"></i> ' + array[item]['label'] + '<input type="hidden" name="category[]" value="' + array[item]['value'] + '" /></div>');
+                                }
+                            }
+                        }
+                    });
                 }
 
                 let array = $.map(json, function(item) {
                     return {
-                        label: item['name'],
-                        value: item['product_id'],
-                        category_id: item['category_id']
+                        label:          item['name'],
+                        value:          item['product_id'],
+                        categories_id:  item['categories_id'],
+                        category_id:    item['category_id']
                     }
                 })
                 for (let item in array) {
                     if(array.hasOwnProperty(item)) {
                         $('#data-management-product8' + array[item]['value']).remove();
-                        $('#data-management-product8').append('<div id="data-management-product8' + array[item]['value'] + '" data-category-id="' + array[item]['category_id'] + '"><i class="fa fa-minus-circle"></i> ' + array[item]['label'] + '<input type="hidden" name="product[]" value="' + array[item]['value'] + '" /></div>');
+                        let product_el = '<div id="data-management-product8' + array[item]['value'] + '" data-category-id="[';
+
+                        if(array[item]['category_id'] === '') {
+                            for (let i = 0; i < array[item]['categories_id'].length; i++) {
+                                if (i < array[item]['categories_id'].length - 1) {
+                                    product_el += array[item]['categories_id'][i] + ','
+                                } else {
+                                    product_el += array[item]['categories_id'][i]
+                                }
+                            }
+                        } else {
+                            product_el += array[item]['category_id']
+                        }
+
+                        product_el += ']"><i class="fa fa-minus-circle"></i> ' + array[item]['label'] + '<input type="hidden" name="product[]" value="' + array[item]['value'] + '" /></div>';
+                        $('#data-management-product8').append(product_el);
                     }
                 }
             }
         });
     })
 
-    $('.products-clear-btn8').on('click', function () {
-        clearProductsList8()
-    })
     function clearProductsList8() {
         $('#data-management-category8 div').each(function (i, item) {
             $(item).remove()
-        })
+        });
         $('#data-management-product8 div').each(function (i, item) {
             $(item).remove()
-        })
+        });
         $('#select-products-categories8 option:first').prop('selected', true);
     }
+    $('.products-clear-btn8').on('click', function () {
+        clearProductsList8()
+    })
 </script>
 <script>
     $('input[name=\'product_name9\']').autocomplete({
@@ -2422,7 +2850,22 @@
 
     $('#data-management-category9').delegate('.fa-minus-circle', 'click', function() {
         let categoryId = $(this).next().val()
-        $('#data-management-product9').find('div[data-category-id="' + categoryId + '"]').remove()
+
+        let products_elems = $('#data-management-product9').find('div')
+
+        for (let i = 0; i < products_elems.length; i++) {
+            let el_data = $(products_elems[i]).data('categoryId')
+            let index = el_data.indexOf(parseInt(categoryId));
+            if (index > -1) {
+                el_data.splice(index, 1);
+            }
+            if (el_data.length === 0) {
+                $(products_elems[i]).remove()
+            } else {
+                $(products_elems[i]).attr('data-category-id', '[' + el_data + ']')
+            }
+        }
+
         $(this).parent().remove();
     });
 
@@ -2440,37 +2883,73 @@
                 if(categoryId !== '0') {
                     $('#data-management-category9' + categoryId).remove();
                     $('#data-management-category9').append('<div id="data-management-category9' + categoryId + '"><i class="fa fa-minus-circle"></i> ' + categoryName + '<input type="hidden" name="category[]" value="' + categoryId + '" /></div>');
+                } else {
+                    $.ajax({
+                        url: 'index.php?route=extension/module/massive_data_management_nik/getAllCategories&user_token={{ user_token }}',
+                        dataType: 'json',
+                        success: function(json) {
+                            let array = $.map(json, function(item) {
+                                return {
+                                    label: item['name'],
+                                    value: item['category_id'],
+                                }
+                            })
+
+                            for (let item in array) {
+                                if(array.hasOwnProperty(item)) {
+                                    $('#data-management-category9' + array[item]['value']).remove();
+                                    $('#data-management-category9').append('<div id="data-management-category9' + array[item]['value'] + '"><i class="fa fa-minus-circle"></i> ' + array[item]['label'] + '<input type="hidden" name="category[]" value="' + array[item]['value'] + '" /></div>');
+                                }
+                            }
+                        }
+                    });
                 }
 
                 let array = $.map(json, function(item) {
                     return {
-                        label: item['name'],
-                        value: item['product_id'],
-                        category_id: item['category_id']
+                        label:          item['name'],
+                        value:          item['product_id'],
+                        categories_id:  item['categories_id'],
+                        category_id:    item['category_id']
                     }
                 })
                 for (let item in array) {
                     if(array.hasOwnProperty(item)) {
                         $('#data-management-product9' + array[item]['value']).remove();
-                        $('#data-management-product9').append('<div id="data-management-product9' + array[item]['value'] + '" data-category-id="' + array[item]['category_id'] + '"><i class="fa fa-minus-circle"></i> ' + array[item]['label'] + '<input type="hidden" name="product[]" value="' + array[item]['value'] + '" /></div>');
+                        let product_el = '<div id="data-management-product9' + array[item]['value'] + '" data-category-id="[';
+
+                        if(array[item]['category_id'] === '') {
+                            for (let i = 0; i < array[item]['categories_id'].length; i++) {
+                                if (i < array[item]['categories_id'].length - 1) {
+                                    product_el += array[item]['categories_id'][i] + ','
+                                } else {
+                                    product_el += array[item]['categories_id'][i]
+                                }
+                            }
+                        } else {
+                            product_el += array[item]['category_id']
+                        }
+
+                        product_el += ']"><i class="fa fa-minus-circle"></i> ' + array[item]['label'] + '<input type="hidden" name="product[]" value="' + array[item]['value'] + '" /></div>';
+                        $('#data-management-product9').append(product_el);
                     }
                 }
             }
         });
     })
 
-    $('.products-clear-btn9').on('click', function () {
-        clearProductsList9()
-    })
     function clearProductsList9() {
         $('#data-management-category9 div').each(function (i, item) {
             $(item).remove()
-        })
+        });
         $('#data-management-product9 div').each(function (i, item) {
             $(item).remove()
-        })
+        });
         $('#select-products-categories9 option:first').prop('selected', true);
     }
+    $('.products-clear-btn9').on('click', function () {
+        clearProductsList9()
+    })
 </script>
 
 <script type="text/javascript"><!--
@@ -2501,7 +2980,7 @@
     });
 //--></script>
 <script type="text/javascript"><!--
-    $('input[name=\'filter\']').autocomplete({
+    $('#input-category-filter').autocomplete({
         'source': function(request, response) {
             $.ajax({
                 url: 'index.php?route=catalog/filter/autocomplete&user_token={{ user_token }}&filter_name=' +  encodeURIComponent(request),
@@ -2517,7 +2996,7 @@
             });
         },
         'select': function(item) {
-            $('input[name=\'filter\']').val('');
+            $('#input-category-filter').val('');
 
             $('#category-filter' + item['value']).remove();
 
