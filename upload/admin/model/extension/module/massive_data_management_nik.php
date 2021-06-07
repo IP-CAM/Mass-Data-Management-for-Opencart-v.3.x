@@ -362,6 +362,14 @@ class ModelExtensionModuleMassiveDataManagementNik extends Model {
         }
     }
 
+    public function getProductsWithCategories($data = array()) {
+        $sql = "SELECT p.product_id, pd.name FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY pd.name ASC";
+
+        $query = $this->db->query($sql);
+
+        return $query->rows;
+    }
+
     public function getProductPrice($product_id) {
         $query = $this->db->query("SELECT `price` FROM " . DB_PREFIX ."product WHERE `product_id` = '" . $product_id . "'");
 

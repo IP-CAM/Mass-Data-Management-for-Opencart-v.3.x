@@ -26,6 +26,24 @@ class ControllerExtensionModuleMassiveDataManagementNik extends Controller {
 			$data['error_warning'] = '';
 		}
 
+        if (isset($this->error['empty_products'])) {
+            $data['error_empty_products'] = $this->error['empty_products'];
+        } else {
+            $data['error_empty_products'] = '';
+        }
+
+        if (isset($this->error['empty_categories'])) {
+            $data['error_empty_categories'] = $this->error['empty_categories'];
+        } else {
+            $data['error_empty_categories'] = '';
+        }
+
+        if (isset($this->error['empty_information'])) {
+            $data['error_empty_information'] = $this->error['empty_information'];
+        } else {
+            $data['error_empty_information'] = '';
+        }
+
         if (isset($this->session->data['success'])) {
             $data['success'] = $this->session->data['success'];
 
@@ -110,6 +128,14 @@ class ControllerExtensionModuleMassiveDataManagementNik extends Controller {
             }
         }
 
+        $sort_order = array();
+
+        foreach ($data['categories'] as $key => $value) {
+            $sort_order[$key] = $value['name'];
+        }
+
+        array_multisort($sort_order, SORT_ASC, $data['categories']);
+
         $this->load->model('setting/store');
 
         $data['stores'] = array();
@@ -187,19 +213,22 @@ class ControllerExtensionModuleMassiveDataManagementNik extends Controller {
 
         if (isset($this->request->get['category_id'])) {
             $this->load->model('catalog/product');
+            $this->load->model('extension/module/massive_data_management_nik');
+
             if ($this->request->get['category_id']) {
                 // get by id
                 $results = $this->model_catalog_product->getProductsByCategoryId($this->request->get['category_id']);
             } else {
                 // get all
-                $results = $this->model_catalog_product->getProducts();
+                $results = $this->model_extension_module_massive_data_management_nik->getProductsWithCategories();
             }
-
             foreach ($results as $result) {
+                $products_categories = $this->model_catalog_product->getProductCategories($result['product_id']);
                 $json[] = array(
-                    'product_id' => $result['product_id'],
-                    'name'       => $result['name'],
-                    'category_id'=> isset($result['category_id']) ? $result['category_id'] : ''
+                    'product_id'    => $result['product_id'],
+                    'name'          => $result['name'],
+                    'categories_id' => isset($products_categories) ? $products_categories : array(),
+                    'category_id'   => $this->request->get['category_id'] ? $this->request->get['category_id'] : '',
                 );
             }
         }
@@ -237,6 +266,33 @@ class ControllerExtensionModuleMassiveDataManagementNik extends Controller {
                     'name'       => $result['name'],
                 );
             }
+        }
+
+        $sort_order = array();
+
+        foreach ($json as $key => $value) {
+            $sort_order[$key] = $value['name'];
+        }
+
+        array_multisort($sort_order, SORT_ASC, $json);
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+    public function getAllCategories() {
+        $json = array();
+        $results = array();
+
+        $this->load->model('extension/module/massive_data_management_nik');
+
+        $results = $this->model_extension_module_massive_data_management_nik->getCategories();
+
+        foreach ($results as $result) {
+            $json[] = array(
+                'category_id'=> $result['category_id'],
+                'name'       => $result['name'],
+            );
         }
 
         $sort_order = array();
@@ -323,7 +379,7 @@ class ControllerExtensionModuleMassiveDataManagementNik extends Controller {
             $url .= '&type=' . $type;
         }
 
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate() && $this->validateProducts()) {
             // process product data
             $post = $this->request->post;
             $products_id = isset($post['product']) ? $post['product'] : array();
@@ -377,6 +433,8 @@ class ControllerExtensionModuleMassiveDataManagementNik extends Controller {
 
             $this->response->redirect($this->url->link('extension/module/massive_data_management_nik', 'user_token=' . $this->session->data['user_token'] . $url, true));
         }
+
+        $this->index();
     }
 
     public function productsLinks() {
@@ -395,7 +453,7 @@ class ControllerExtensionModuleMassiveDataManagementNik extends Controller {
             $url .= '&type=' . $type;
         }
 
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate() && $this->validateProducts()) {
             // process product links
             $post = $this->request->post;
 
@@ -418,6 +476,8 @@ class ControllerExtensionModuleMassiveDataManagementNik extends Controller {
 
             $this->response->redirect($this->url->link('extension/module/massive_data_management_nik', 'user_token=' . $this->session->data['user_token'] . $url, true));
         }
+
+        $this->index();
     }
 
     public function productsAttribute() {
@@ -436,7 +496,7 @@ class ControllerExtensionModuleMassiveDataManagementNik extends Controller {
             $url .= '&type=' . $type;
         }
 
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate() && $this->validateProducts()) {
             // process product links
             $post = $this->request->post;
 
@@ -459,6 +519,8 @@ class ControllerExtensionModuleMassiveDataManagementNik extends Controller {
 
             $this->response->redirect($this->url->link('extension/module/massive_data_management_nik', 'user_token=' . $this->session->data['user_token'] . $url, true));
         }
+
+         $this->index();
     }
 
     public function productsOption() {
@@ -477,7 +539,7 @@ class ControllerExtensionModuleMassiveDataManagementNik extends Controller {
             $url .= '&type=' . $type;
         }
 
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate() && $this->validateProducts()) {
             // process product links
             $post = $this->request->post;
 
@@ -500,6 +562,8 @@ class ControllerExtensionModuleMassiveDataManagementNik extends Controller {
 
             $this->response->redirect($this->url->link('extension/module/massive_data_management_nik', 'user_token=' . $this->session->data['user_token'] . $url, true));
         }
+
+        $this->index();
     }
 
     public function productsDiscount() {
@@ -518,7 +582,7 @@ class ControllerExtensionModuleMassiveDataManagementNik extends Controller {
             $url .= '&type=' . $type;
         }
 
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate() && $this->validateProducts()) {
             // process product links
             $post = $this->request->post;
 
@@ -541,6 +605,8 @@ class ControllerExtensionModuleMassiveDataManagementNik extends Controller {
 
             $this->response->redirect($this->url->link('extension/module/massive_data_management_nik', 'user_token=' . $this->session->data['user_token'] . $url, true));
         }
+
+        $this->index();
     }
 
     public function productsSpecial() {
@@ -559,7 +625,7 @@ class ControllerExtensionModuleMassiveDataManagementNik extends Controller {
             $url .= '&type=' . $type;
         }
 
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate() && $this->validateProducts()) {
             // process product links
             $post = $this->request->post;
 
@@ -582,6 +648,51 @@ class ControllerExtensionModuleMassiveDataManagementNik extends Controller {
 
             $this->response->redirect($this->url->link('extension/module/massive_data_management_nik', 'user_token=' . $this->session->data['user_token'] . $url, true));
         }
+
+        $this->index();
+    }
+
+    public function productsReward() {
+        $this->load->language('extension/module/massive_data_management_nik');
+        $this->load->model('extension/module/massive_data_management_nik');
+
+        if (isset($this->request->get['type'])) {
+            $type = $this->request->get['type'];
+        } else {
+            $type = 'categories';
+        }
+
+        $url = '';
+
+        if (isset($this->request->get['type'])) {
+            $url .= '&type=' . $type;
+        }
+
+        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate() && $this->validateProducts()) {
+            // process product links
+            $post = $this->request->post;
+
+            $products = isset($post['product']) ? $post['product'] : array();
+
+            $emptyCounter = 0;
+            foreach ($post as $item) {
+                if (!empty($item) && $item != '-1') {
+                    $emptyCounter++;
+                }
+            }
+
+            if ($emptyCounter) {
+                foreach ($products as $product_id) {
+                    $this->model_extension_module_massive_data_management_nik->editProductReward($product_id, $post);
+                }
+            }
+
+            $this->session->data['success'] = $this->language->get('text_apply_success');
+
+            $this->response->redirect($this->url->link('extension/module/massive_data_management_nik', 'user_token=' . $this->session->data['user_token'] . $url, true));
+        }
+
+        $this->index();
     }
 
     public function productsSeo() {
@@ -600,7 +711,7 @@ class ControllerExtensionModuleMassiveDataManagementNik extends Controller {
             $url .= '&type=' . $type;
         }
 
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate() && $this->validateProducts()) {
             // process product links
             $post = $this->request->post;
 
@@ -620,6 +731,8 @@ class ControllerExtensionModuleMassiveDataManagementNik extends Controller {
 
             $this->response->redirect($this->url->link('extension/module/massive_data_management_nik', 'user_token=' . $this->session->data['user_token'] . $url, true));
         }
+
+        $this->index();
     }
 
     public function productsDesign() {
@@ -638,7 +751,7 @@ class ControllerExtensionModuleMassiveDataManagementNik extends Controller {
             $url .= '&type=' . $type;
         }
 
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate() && $this->validateProducts()) {
             // process product links
             $post = $this->request->post;
 
@@ -661,6 +774,8 @@ class ControllerExtensionModuleMassiveDataManagementNik extends Controller {
 
             $this->response->redirect($this->url->link('extension/module/massive_data_management_nik', 'user_token=' . $this->session->data['user_token'] . $url, true));
         }
+
+        $this->index();
     }
 
     public function categoriesData() {
@@ -679,7 +794,7 @@ class ControllerExtensionModuleMassiveDataManagementNik extends Controller {
             $url .= '&type=' . $type;
         }
 
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate() && $this->validateCategories()) {
             $post = $this->request->post;
 
             $categories = isset($post['category']) ? $post['category'] : array();
@@ -701,6 +816,8 @@ class ControllerExtensionModuleMassiveDataManagementNik extends Controller {
 
             $this->response->redirect($this->url->link('extension/module/massive_data_management_nik', 'user_token=' . $this->session->data['user_token'] . $url, true));
         }
+
+        $this->index();
     }
 
     public function categoriesSeo() {
@@ -719,7 +836,7 @@ class ControllerExtensionModuleMassiveDataManagementNik extends Controller {
             $url .= '&type=' . $type;
         }
 
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate() && $this->validateCategories()) {
             // process product links
             $post = $this->request->post;
 
@@ -739,6 +856,8 @@ class ControllerExtensionModuleMassiveDataManagementNik extends Controller {
 
             $this->response->redirect($this->url->link('extension/module/massive_data_management_nik', 'user_token=' . $this->session->data['user_token'] . $url, true));
         }
+
+        $this->index();
     }
 
     public function categoriesDesign() {
@@ -757,7 +876,7 @@ class ControllerExtensionModuleMassiveDataManagementNik extends Controller {
             $url .= '&type=' . $type;
         }
 
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate() && $this->validateCategories()) {
             $post = $this->request->post;
 
             $categories = isset($post['category']) ? $post['category'] : array();
@@ -779,6 +898,8 @@ class ControllerExtensionModuleMassiveDataManagementNik extends Controller {
 
             $this->response->redirect($this->url->link('extension/module/massive_data_management_nik', 'user_token=' . $this->session->data['user_token'] . $url, true));
         }
+
+        $this->index();
     }
 
     public function informationData() {
@@ -797,14 +918,10 @@ class ControllerExtensionModuleMassiveDataManagementNik extends Controller {
             $url .= '&type=' . $type;
         }
 
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate() && $this->validateInformation()) {
             $post = $this->request->post;
 
             $information = isset($post['information']) ? $post['information'] : array();
-
-//            echo "<pre>";
-//            print_r($post);
-//            echo "</pre>";
 
             $emptyCounter = 0;
             foreach ($post as $item) {
@@ -823,6 +940,8 @@ class ControllerExtensionModuleMassiveDataManagementNik extends Controller {
 
             $this->response->redirect($this->url->link('extension/module/massive_data_management_nik', 'user_token=' . $this->session->data['user_token'] . $url, true));
         }
+
+        $this->index();
     }
 
     public function informationSeo() {
@@ -841,7 +960,7 @@ class ControllerExtensionModuleMassiveDataManagementNik extends Controller {
             $url .= '&type=' . $type;
         }
 
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate() && $this->validateInformation()) {
             // process product links
             $post = $this->request->post;
 
@@ -861,6 +980,8 @@ class ControllerExtensionModuleMassiveDataManagementNik extends Controller {
 
             $this->response->redirect($this->url->link('extension/module/massive_data_management_nik', 'user_token=' . $this->session->data['user_token'] . $url, true));
         }
+
+        $this->index();
     }
 
     public function informationDesign() {
@@ -879,7 +1000,7 @@ class ControllerExtensionModuleMassiveDataManagementNik extends Controller {
             $url .= '&type=' . $type;
         }
 
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate() && $this->validateInformation()) {
             $post = $this->request->post;
 
             $information = isset($post['information']) ? $post['information'] : array();
@@ -901,6 +1022,8 @@ class ControllerExtensionModuleMassiveDataManagementNik extends Controller {
 
             $this->response->redirect($this->url->link('extension/module/massive_data_management_nik', 'user_token=' . $this->session->data['user_token'] . $url, true));
         }
+
+        $this->index();
     }
 
 	protected function validate() {
@@ -910,4 +1033,28 @@ class ControllerExtensionModuleMassiveDataManagementNik extends Controller {
 
 		return !$this->error;
 	}
+
+    protected function validateProducts() {
+        if (empty($this->request->post['product'])) {
+            $this->error['empty_products'] = $this->language->get('error_empty_products');
+        }
+
+        return !$this->error;
+    }
+
+    protected function validateCategories() {
+        if (empty($this->request->post['category'])) {
+            $this->error['empty_categories'] = $this->language->get('error_empty_categories');
+        }
+
+        return !$this->error;
+    }
+
+    protected function validateInformation() {
+        if (empty($this->request->post['information'])) {
+            $this->error['empty_information'] = $this->language->get('error_empty_information');
+        }
+
+        return !$this->error;
+    }
 }
