@@ -119,11 +119,15 @@ class ControllerExtensionModuleMassiveDataManagementNik extends Controller {
 
         $categories = $this->model_catalog_category->getCategories();
 
+        $this->load->model('extension/module/massive_data_management_nik');
+
         foreach ($categories as $category) {
             if ($category) {
+                $total_products = $this->model_extension_module_massive_data_management_nik->getTotalProductsByCategoryId($category['category_id']);
                 $data['categories'][] = array(
-                    'category_id' => $category['category_id'],
-                    'name'       => $category['name']
+                    'category_id'   => $category['category_id'],
+                    'name'          => $category['name'],
+                    'total_products'=> sprintf($this->language->get('text_total_products'), $total_products)
                 );
             }
         }
@@ -196,6 +200,27 @@ class ControllerExtensionModuleMassiveDataManagementNik extends Controller {
         $data['thumb'] = $this->model_tool_image->resize('no_image.png', 100, 100);
 
         $data['placeholder'] = $this->model_tool_image->resize('no_image.png', 100, 100);
+
+        $this->load->model('catalog/information');
+
+        $informations = $this->model_extension_module_massive_data_management_nik->getAllInformationsDescription();
+
+        foreach ($informations as $information) {
+            if ($information) {
+                $data['information'][] = array(
+                    'information_id'   => $information['information_id'],
+                    'title'         => $information['title'],
+                );
+            }
+        }
+
+        $sort_order = array();
+
+        foreach ($data['information'] as $key => $value) {
+            $sort_order[$key] = $value['title'];
+        }
+
+        array_multisort($sort_order, SORT_ASC, $data['information']);
 
         $this->load->model('design/layout');
 
@@ -339,7 +364,50 @@ class ControllerExtensionModuleMassiveDataManagementNik extends Controller {
                     'title'          => strip_tags(html_entity_decode($result['title'], ENT_QUOTES, 'UTF-8')),
                 );
             }
+
+            $sort_order = array();
+
+            foreach ($json as $key => $value) {
+                $sort_order[$key] = $value['title'];
+            }
+
+            array_multisort($sort_order, SORT_ASC, $json);
         }
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+    public function getInformationByInformation() {
+        $json = array();
+        $results = array();
+
+        if (isset($this->request->get['information_id'])) {
+            $this->load->model('catalog/information');
+            $this->load->model('extension/module/massive_data_management_nik');
+            if ($this->request->get['information_id']) {
+                // get by id
+                $results[] = $this->model_extension_module_massive_data_management_nik->getInformationDescription($this->request->get['information_id']);
+            } else {
+                // get all
+                $results = $this->model_extension_module_massive_data_management_nik->getAllInformationsDescription();
+            }
+
+            foreach ($results as $result) {
+                $json[] = array(
+                    'information_id' => $result['information_id'],
+                    'title'          => $result['title'],
+                );
+            }
+        }
+
+        $sort_order = array();
+
+        foreach ($json as $key => $value) {
+            $sort_order[$key] = $value['title'];
+        }
+
+        array_multisort($sort_order, SORT_ASC, $json);
 
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
