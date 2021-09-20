@@ -79,14 +79,14 @@
                 <div class="form-group" id="categories-row">
                   <label class="col-sm-2 control-label" for="select-categories">{{ entry_category_list }}</label>
                   <div class="col-sm-10">
-                    <select name="products_categories" id="select-categories" class="form-control">
+                    <select name="products_categories" id="select-categories" class="form-control select-categories">
                       <option selected="selected" disabled="disabled">{{ text_categories }}</option>
                       <option value="0">{{ text_all }}</option>
                       {% for category in categories %}
                         <option value="{{ category.category_id }}">{{ category.name }}</option>
                       {% endfor %}
                     </select>
-                    <div id="data-management-category" class="well well-sm" style="height: 150px; overflow: auto;">
+                    <div id="data-management-category" class="well well-sm data-management-category" style="height: 150px; overflow: auto;">
 
                     </div>
                     <button class="btn btn-danger category-clear-btn" type="button">{{ button_clear }}</button>
@@ -178,19 +178,19 @@
             <div class="tab-pane" id="tab-seo">
               <form action="{{ actionCategorySeo }}" method="post" enctype="multipart/form-data" id="form-category-seo" class="form-horizontal">
                 <div class="form-group" id="categories-row">
-                  <label class="col-sm-2 control-label" for="select-categories3">{{ entry_category_list }}</label>
+                  <label class="col-sm-2 control-label" for="select-categories">{{ entry_category_list }}</label>
                   <div class="col-sm-10">
-                    <select name="products_categories" id="select-categories3" class="form-control">
+                    <select name="products_categories" id="select-categories" class="form-control select-categories">
                       <option selected="selected" disabled="disabled">{{ text_categories }}</option>
                       <option value="0">{{ text_all }}</option>
                       {% for category in categories %}
                         <option value="{{ category.category_id }}">{{ category.name }}</option>
                       {% endfor %}
                     </select>
-                    <div id="data-management-category3" class="well well-sm" style="height: 150px; overflow: auto;">
+                    <div id="data-management-category" class="well well-sm data-management-category" style="height: 150px; overflow: auto;">
 
                     </div>
-                    <button class="btn btn-danger category-clear-btn3" type="button">{{ button_clear }}</button>
+                    <button class="btn btn-danger category-clear-btn" type="button">{{ button_clear }}</button>
                   </div>
                 </div>
                 <div class="form-group" id="categories-row">
@@ -210,19 +210,19 @@
             <div class="tab-pane" id="tab-design">
               <form action="{{ actionCategoryDesign }}" method="post" enctype="multipart/form-data" id="form-category-design" class="form-horizontal">
                 <div class="form-group" id="categories-row">
-                  <label class="col-sm-2 control-label" for="select-categories2">{{ entry_category_list }}</label>
+                  <label class="col-sm-2 control-label" for="select-categories">{{ entry_category_list }}</label>
                   <div class="col-sm-10">
-                    <select name="products_categories" id="select-categories2" class="form-control">
+                    <select name="products_categories" id="select-categories" class="form-control select-categories">
                       <option selected="selected" disabled="disabled">{{ text_categories }}</option>
                       <option value="0">{{ text_all }}</option>
                       {% for category in categories %}
                         <option value="{{ category.category_id }}">{{ category.name }}</option>
                       {% endfor %}
                     </select>
-                    <div id="data-management-category2" class="well well-sm" style="height: 150px; overflow: auto;">
+                    <div id="data-management-category" class="well well-sm data-management-category" style="height: 150px; overflow: auto;">
 
                     </div>
-                    <button class="btn btn-danger category-clear-btn2" type="button">{{ button_clear }}</button>
+                    <button class="btn btn-danger category-clear-btn" type="button">{{ button_clear }}</button>
                   </div>
                 </div>
                 <div class="table-responsive">
@@ -279,19 +279,19 @@
                 <div class="form-group" id="categories-row">
                   <label class="col-sm-2 control-label" for="select-products-categories">{{ entry_products_list }}</label>
                   <div class="col-sm-10">
-                    <select name="products_categories" id="select-products-categories" class="form-control">
+                    <select name="products_categories" id="select-products-categories" class="form-control select-products-categories">
                       <option selected="selected" disabled="disabled">{{ text_categories }}</option>
                       <option value="0">{{ text_all }}</option>
                       {% for category in categories %}
-                        <option value="{{ category.category_id }}">{{ category.name }}</option>
+                        <option value="{{ category.category_id }}">{{ category.name }} {{ category.total_products }}</option>
                       {% endfor %}
                     </select>
-                    <div id="data-management-category" class="well well-sm" style="height: 150px; overflow: auto;">
+                    <div id="data-management-category" class="well well-sm data-management-category" style="height: 150px; overflow: auto;">
 
                     </div>
                     <br>
                     <input type="text" name="product_name" value="" placeholder="{{ entry_products_list }}" id="input-product" class="form-control" />
-                    <div id="data-management-product" class="well well-sm" style="height: 150px; overflow: auto;">
+                    <div id="data-management-product" class="well well-sm data-management-product" style="height: 150px; overflow: auto;">
 
                     </div>
                     <button class="btn btn-danger products-clear-btn" type="button">{{ button_clear }}</button>
@@ -468,22 +468,22 @@
                 <div class="form-group" id="categories-row">
                   <label class="col-sm-2 control-label" for="select-products-categories">{{ entry_products_list }}</label>
                   <div class="col-sm-10">
-                    <select name="products_categories" id="select-products-categories2" class="form-control">
+                    <select name="products_categories" id="select-products-categories" class="form-control select-products-categories">
                       <option selected="selected" disabled="disabled">{{ text_categories }}</option>
                       <option value="0">{{ text_all }}</option>
                       {% for category in categories %}
-                        <option value="{{ category.category_id }}">{{ category.name }}</option>
+                        <option value="{{ category.category_id }}">{{ category.name }} {{ category.total_products }}</option>
                       {% endfor %}
                     </select>
-                    <div id="data-management-category2" class="well well-sm" style="height: 150px; overflow: auto;">
+                    <div id="data-management-category" class="well well-sm data-management-category" style="height: 150px; overflow: auto;">
 
                     </div>
                     <br>
-                    <input type="text" name="product_name2" value="" placeholder="{{ entry_products_list }}" id="input-product" class="form-control" />
-                    <div id="data-management-product2" class="well well-sm" style="height: 150px; overflow: auto;">
+                    <input type="text" name="product_name" value="" placeholder="{{ entry_products_list }}" id="input-product" class="form-control" />
+                    <div id="data-management-product" class="well well-sm data-management-product" style="height: 150px; overflow: auto;">
 
                     </div>
-                    <button class="btn btn-danger products-clear-btn2" type="button">{{ button_clear }}</button>
+                    <button class="btn btn-danger products-clear-btn" type="button">{{ button_clear }}</button>
                   </div>
                 </div>
                 <div class="form-group">
@@ -551,22 +551,22 @@
                 <div class="form-group" id="categories-row">
                   <label class="col-sm-2 control-label" for="select-products-categories">{{ entry_products_list }}</label>
                   <div class="col-sm-10">
-                    <select name="products_categories" id="select-products-categories3" class="form-control">
+                    <select name="products_categories" id="select-products-categories" class="form-control select-products-categories">
                       <option selected="selected" disabled="disabled">{{ text_categories }}</option>
                       <option value="0">{{ text_all }}</option>
                       {% for category in categories %}
-                        <option value="{{ category.category_id }}">{{ category.name }}</option>
+                        <option value="{{ category.category_id }}">{{ category.name }} {{ category.total_products }}</option>
                       {% endfor %}
                     </select>
-                    <div id="data-management-category3" class="well well-sm" style="height: 150px; overflow: auto;">
+                    <div id="data-management-category" class="well well-sm data-management-category" style="height: 150px; overflow: auto;">
 
                     </div>
                     <br>
-                    <input type="text" name="product_name3" value="" placeholder="{{ entry_products_list }}" id="input-product" class="form-control" />
-                    <div id="data-management-product3" class="well well-sm" style="height: 150px; overflow: auto;">
+                    <input type="text" name="product_name" value="" placeholder="{{ entry_products_list }}" id="input-product" class="form-control" />
+                    <div id="data-management-product" class="well well-sm data-management-product" style="height: 150px; overflow: auto;">
 
                     </div>
-                    <button class="btn btn-danger products-clear-btn3" type="button">{{ button_clear }}</button>
+                    <button class="btn btn-danger products-clear-btn" type="button">{{ button_clear }}</button>
                   </div>
                 </div>
                 <div class="table-responsive">
@@ -612,22 +612,22 @@
                 <div class="form-group" id="categories-row">
                   <label class="col-sm-2 control-label" for="select-products-categories">{{ entry_products_list }}</label>
                   <div class="col-sm-10">
-                    <select name="products_categories" id="select-products-categories4" class="form-control">
+                    <select name="products_categories" id="select-products-categories" class="form-control select-products-categories">
                       <option selected="selected" disabled="disabled">{{ text_categories }}</option>
                       <option value="0">{{ text_all }}</option>
                       {% for category in categories %}
-                        <option value="{{ category.category_id }}">{{ category.name }}</option>
+                        <option value="{{ category.category_id }}">{{ category.name }} {{ category.total_products }}</option>
                       {% endfor %}
                     </select>
-                    <div id="data-management-category4" class="well well-sm" style="height: 150px; overflow: auto;">
+                    <div id="data-management-category" class="well well-sm data-management-category" style="height: 150px; overflow: auto;">
 
                     </div>
                     <br>
-                    <input type="text" name="product_name4" value="" placeholder="{{ entry_products_list }}" id="input-product" class="form-control" />
-                    <div id="data-management-product4" class="well well-sm" style="height: 150px; overflow: auto;">
+                    <input type="text" name="product_name" value="" placeholder="{{ entry_products_list }}" id="input-product" class="form-control" />
+                    <div id="data-management-product" class="well well-sm data-management-product" style="height: 150px; overflow: auto;">
 
                     </div>
-                    <button class="btn btn-danger products-clear-btn4" type="button">{{ button_clear }}</button>
+                    <button class="btn btn-danger products-clear-btn" type="button">{{ button_clear }}</button>
                   </div>
                 </div>
                 <div class="row">
@@ -885,22 +885,22 @@
                 <div class="form-group" id="categories-row">
                   <label class="col-sm-2 control-label" for="select-products-categories">{{ entry_products_list }}</label>
                   <div class="col-sm-10">
-                    <select name="products_categories" id="select-products-categories5" class="form-control">
+                    <select name="products_categories" id="select-products-categories" class="form-control select-products-categories">
                       <option selected="selected" disabled="disabled">{{ text_categories }}</option>
                       <option value="0">{{ text_all }}</option>
                       {% for category in categories %}
-                        <option value="{{ category.category_id }}">{{ category.name }}</option>
+                        <option value="{{ category.category_id }}">{{ category.name }} {{ category.total_products }}</option>
                       {% endfor %}
                     </select>
-                    <div id="data-management-category5" class="well well-sm" style="height: 150px; overflow: auto;">
+                    <div id="data-management-category" class="well well-sm data-management-category" style="height: 150px; overflow: auto;">
 
                     </div>
                     <br>
-                    <input type="text" name="product_name5" value="" placeholder="{{ entry_products_list }}" id="input-product" class="form-control" />
-                    <div id="data-management-product5" class="well well-sm" style="height: 150px; overflow: auto;">
+                    <input type="text" name="product_name" value="" placeholder="{{ entry_products_list }}" id="input-product" class="form-control" />
+                    <div id="data-management-product" class="well well-sm data-management-product" style="height: 150px; overflow: auto;">
 
                     </div>
-                    <button class="btn btn-danger products-clear-btn5" type="button">{{ button_clear }}</button>
+                    <button class="btn btn-danger products-clear-btn" type="button">{{ button_clear }}</button>
                   </div>
                 </div>
                 <div class="table-responsive">
@@ -969,22 +969,22 @@
                 <div class="form-group" id="categories-row">
                   <label class="col-sm-2 control-label" for="select-products-categories">{{ entry_products_list }}</label>
                   <div class="col-sm-10">
-                    <select name="products_categories" id="select-products-categories6" class="form-control">
+                    <select name="products_categories" id="select-products-categories" class="form-control select-products-categories">
                       <option selected="selected" disabled="disabled">{{ text_categories }}</option>
                       <option value="0">{{ text_all }}</option>
                       {% for category in categories %}
-                        <option value="{{ category.category_id }}">{{ category.name }}</option>
+                        <option value="{{ category.category_id }}">{{ category.name }} {{ category.total_products }}</option>
                       {% endfor %}
                     </select>
-                    <div id="data-management-category6" class="well well-sm" style="height: 150px; overflow: auto;">
+                    <div id="data-management-category" class="well well-sm data-management-category" style="height: 150px; overflow: auto;">
 
                     </div>
                     <br>
-                    <input type="text" name="product_name6" value="" placeholder="{{ entry_products_list }}" id="input-product" class="form-control" />
-                    <div id="data-management-product6" class="well well-sm" style="height: 150px; overflow: auto;">
+                    <input type="text" name="product_name" value="" placeholder="{{ entry_products_list }}" id="input-product" class="form-control" />
+                    <div id="data-management-product" class="well well-sm data-management-product" style="height: 150px; overflow: auto;">
 
                     </div>
-                    <button class="btn btn-danger products-clear-btn6" type="button">{{ button_clear }}</button>
+                    <button class="btn btn-danger products-clear-btn" type="button">{{ button_clear }}</button>
                   </div>
                 </div>
                 <div class="table-responsive">
@@ -1057,22 +1057,22 @@
                 <div class="form-group" id="categories-row">
                   <label class="col-sm-2 control-label" for="select-products-categories">{{ entry_products_list }}</label>
                   <div class="col-sm-10">
-                    <select name="products_categories" id="select-products-categories7" class="form-control">
+                    <select name="products_categories" id="select-products-categories" class="form-control select-products-categories">
                       <option selected="selected" disabled="disabled">{{ text_categories }}</option>
                       <option value="0">{{ text_all }}</option>
                       {% for category in categories %}
-                        <option value="{{ category.category_id }}">{{ category.name }}</option>
+                        <option value="{{ category.category_id }}">{{ category.name }} {{ category.total_products }}</option>
                       {% endfor %}
                     </select>
-                    <div id="data-management-category7" class="well well-sm" style="height: 150px; overflow: auto;">
+                    <div id="data-management-category" class="well well-sm data-management-category" style="height: 150px; overflow: auto;">
 
                     </div>
                     <br>
-                    <input type="text" name="product_name7" value="" placeholder="{{ entry_products_list }}" id="input-product" class="form-control" />
-                    <div id="data-management-product7" class="well well-sm" style="height: 150px; overflow: auto;">
+                    <input type="text" name="product_name" value="" placeholder="{{ entry_products_list }}" id="input-product" class="form-control" />
+                    <div id="data-management-product" class="well well-sm data-management-product" style="height: 150px; overflow: auto;">
 
                     </div>
-                    <button class="btn btn-danger products-clear-btn7" type="button">{{ button_clear }}</button>
+                    <button class="btn btn-danger products-clear-btn" type="button">{{ button_clear }}</button>
                   </div>
                 </div>
                 <div class="form-group">
@@ -1111,22 +1111,22 @@
                 <div class="form-group" id="categories-row">
                   <label class="col-sm-2 control-label" for="select-products-categories">{{ entry_products_list }}</label>
                   <div class="col-sm-10">
-                    <select name="products_categories" id="select-products-categories9" class="form-control">
+                    <select name="products_categories" id="select-products-categories" class="form-control select-products-categories">
                       <option selected="selected" disabled="disabled">{{ text_categories }}</option>
                       <option value="0">{{ text_all }}</option>
                       {% for category in categories %}
-                        <option value="{{ category.category_id }}">{{ category.name }}</option>
+                        <option value="{{ category.category_id }}">{{ category.name }} {{ category.total_products }}</option>
                       {% endfor %}
                     </select>
-                    <div id="data-management-category9" class="well well-sm" style="height: 150px; overflow: auto;">
+                    <div id="data-management-category" class="well well-sm data-management-category" style="height: 150px; overflow: auto;">
 
                     </div>
                     <br>
-                    <input type="text" name="product_name9" value="" placeholder="{{ entry_products_list }}" id="input-product" class="form-control" />
-                    <div id="data-management-product9" class="well well-sm" style="height: 150px; overflow: auto;">
+                    <input type="text" name="product_name" value="" placeholder="{{ entry_products_list }}" id="input-product" class="form-control" />
+                    <div id="data-management-product" class="well well-sm data-management-product" style="height: 150px; overflow: auto;">
 
                     </div>
-                    <button class="btn btn-danger products-clear-btn9" type="button">{{ button_clear }}</button>
+                    <button class="btn btn-danger products-clear-btn" type="button">{{ button_clear }}</button>
                   </div>
                 </div>
                 <div class="form-group" id="categories-row">
@@ -1148,22 +1148,22 @@
                 <div class="form-group" id="categories-row">
                   <label class="col-sm-2 control-label" for="select-products-categories">{{ entry_products_list }}</label>
                   <div class="col-sm-10">
-                    <select name="products_categories" id="select-products-categories8" class="form-control">
+                    <select name="products_categories" id="select-products-categories" class="form-control select-products-categories">
                       <option selected="selected" disabled="disabled">{{ text_categories }}</option>
                       <option value="0">{{ text_all }}</option>
                       {% for category in categories %}
-                        <option value="{{ category.category_id }}">{{ category.name }}</option>
+                        <option value="{{ category.category_id }}">{{ category.name }} {{ category.total_products }}</option>
                       {% endfor %}
                     </select>
-                    <div id="data-management-category8" class="well well-sm" style="height: 150px; overflow: auto;">
+                    <div id="data-management-category" class="well well-sm data-management-category" style="height: 150px; overflow: auto;">
 
                     </div>
                     <br>
-                    <input type="text" name="product_name8" value="" placeholder="{{ entry_products_list }}" id="input-product" class="form-control" />
-                    <div id="data-management-product8" class="well well-sm" style="height: 150px; overflow: auto;">
+                    <input type="text" name="product_name" value="" placeholder="{{ entry_products_list }}" id="input-product" class="form-control" />
+                    <div id="data-management-product" class="well well-sm data-management-product" style="height: 150px; overflow: auto;">
 
                     </div>
-                    <button class="btn btn-danger products-clear-btn8" type="button">{{ button_clear }}</button>
+                    <button class="btn btn-danger products-clear-btn" type="button">{{ button_clear }}</button>
                   </div>
                 </div>
                 <div class="table-responsive">
@@ -1218,11 +1218,16 @@
                 <div class="form-group" id="information-row">
                   <label class="col-sm-2 control-label" for="input-information">{{ entry_information_list }}</label>
                   <div class="col-sm-10">
-                    <input type="text" name="information_name" value="" placeholder="{{ entry_information_list }}" id="input-information" class="form-control" />
-                    <div id="data-management-information" class="well well-sm" style="height: 150px; overflow: auto;">
+                    <select name="information_list" id="select-information" class="form-control select-information">
+                      <option selected="selected" disabled="disabled">{{ entry_information_list }}</option>
+                      <option value="0">{{ text_all }}</option>
+                      {% for information in information %}
+                        <option value="{{ information.information_id }}">{{ information.title }}</option>
+                      {% endfor %}
+                    </select>
+                    <div id="data-management-information" class="well well-sm data-management-information" style="height: 150px; overflow: auto;">
 
                     </div>
-                    <button class="btn btn-success information-add-all-btn" type="button">{{ button_add_all }}</button>
                     <button class="btn btn-danger information-clear-btn" type="button">{{ button_clear }}</button>
                   </div>
                 </div>
@@ -1271,12 +1276,17 @@
                 <div class="form-group" id="information-row">
                   <label class="col-sm-2 control-label" for="input-information">{{ entry_information_list }}</label>
                   <div class="col-sm-10">
-                    <input type="text" name="information_name2" value="" placeholder="{{ entry_information_list }}" id="input-information" class="form-control" />
-                    <div id="data-management-information2" class="well well-sm" style="height: 150px; overflow: auto;">
+                    <select name="information_list" id="select-information" class="form-control select-information">
+                      <option selected="selected" disabled="disabled">{{ entry_information_list }}</option>
+                      <option value="0">{{ text_all }}</option>
+                      {% for information in information %}
+                        <option value="{{ information.information_id }}">{{ information.title }}</option>
+                      {% endfor %}
+                    </select>
+                    <div id="data-management-information" class="well well-sm data-management-information" style="height: 150px; overflow: auto;">
 
                     </div>
-                    <button class="btn btn-success information-add-all-btn2" type="button">{{ button_add_all }}</button>
-                    <button class="btn btn-danger information-clear-btn2" type="button">{{ button_clear }}</button>
+                    <button class="btn btn-danger information-clear-btn" type="button">{{ button_clear }}</button>
                   </div>
                 </div>
                 <div class="form-group" id="information-row">
@@ -1298,12 +1308,17 @@
                 <div class="form-group" id="information-row">
                   <label class="col-sm-2 control-label" for="input-information">{{ entry_information_list }}</label>
                   <div class="col-sm-10">
-                    <input type="text" name="information_name3" value="" placeholder="{{ entry_information_list }}" id="input-information" class="form-control" />
-                    <div id="data-management-information3" class="well well-sm" style="height: 150px; overflow: auto;">
+                    <select name="information_list" id="select-information" class="form-control select-information">
+                      <option selected="selected" disabled="disabled">{{ entry_information_list }}</option>
+                      <option value="0">{{ text_all }}</option>
+                      {% for information in information %}
+                        <option value="{{ information.information_id }}">{{ information.title }}</option>
+                      {% endfor %}
+                    </select>
+                    <div id="data-management-information" class="well well-sm data-management-information" style="height: 150px; overflow: auto;">
 
                     </div>
-                    <button class="btn btn-success information-add-all-btn3" type="button">{{ button_add_all }}</button>
-                    <button class="btn btn-danger information-clear-btn3" type="button">{{ button_clear }}</button>
+                    <button class="btn btn-danger information-clear-btn" type="button">{{ button_clear }}</button>
                   </div>
                 </div>
                 <div class="table-responsive">
@@ -1820,14 +1835,14 @@
 
             $('#data-management-product' + item['value']).remove();
 
-            $('#data-management-product').append('<div id="data-management-product' + item['value'] + '"><i class="fa fa-minus-circle"></i> ' + item['label'] + '<input type="hidden" name="product[]" value="' + item['value'] + '" /></div>');
+            $('.data-management-product').append('<div id="data-management-product' + item['value'] + '"><i class="fa fa-minus-circle"></i> ' + item['label'] + '<input type="hidden" name="product[]" value="' + item['value'] + '" /></div>');
         }
     });
 
-    $('#data-management-category').delegate('.fa-minus-circle', 'click', function() {
-        let categoryId = $(this).next().val()
+    $('.data-management-category').delegate('.fa-minus-circle', 'click', function() {
+        let categoryId = $(this).parent().find('input[type="hidden"]').val()
 
-        let products_elems = $('#data-management-product').find('div')
+        let products_elems = $('.data-management-product').find('div')
 
         for (let i = 0; i < products_elems.length; i++) {
             let el_data = $(products_elems[i]).data('categoryId')
@@ -1842,14 +1857,20 @@
             }
         }
 
+        $('.data-management-category #data-management-category' + categoryId).remove()
+
         $(this).parent().remove();
     });
 
-    $('#data-management-product').delegate('.fa-minus-circle', 'click', function() {
+    $('.data-management-product').delegate('.fa-minus-circle', 'click', function() {
+        let productId = $(this).parent().find('input[type="hidden"]').val()
+
+        $('.data-management-product #data-management-product' + productId).remove()
+
         $(this).parent().remove();
     });
 
-    $('#select-products-categories').on('change', function() {
+    $('.select-products-categories').on('change', function() {
         let categoryName = $(this).find('option:selected').text()
         let categoryId   = $(this).val()
         $.ajax({
@@ -1858,7 +1879,7 @@
             success: function(json) {
                 if(categoryId !== '0') {
                     $('#data-management-category' + categoryId).remove();
-                    $('#data-management-category').append('<div id="data-management-category' + categoryId + '"><i class="fa fa-minus-circle"></i> ' + categoryName + '<input type="hidden" name="category[]" value="' + categoryId + '" /></div>');
+                    $('.data-management-category').append('<div id="data-management-category' + categoryId + '"><i class="fa fa-minus-circle"></i> ' + categoryName + '<input type="hidden" name="category[]" value="' + categoryId + '" /></div>');
                 } else {
                     $.ajax({
                         url: 'index.php?route=extension/module/massive_data_management_nik/getAllCategories&user_token={{ user_token }}',
@@ -1874,7 +1895,7 @@
                             for (let item in array) {
                                 if(array.hasOwnProperty(item)) {
                                     $('#data-management-category' + array[item]['value']).remove();
-                                    $('#data-management-category').append('<div id="data-management-category' + array[item]['value'] + '"><i class="fa fa-minus-circle"></i> ' + array[item]['label'] + '<input type="hidden" name="category[]" value="' + array[item]['value'] + '" /></div>');
+                                    $('.data-management-category').append('<div id="data-management-category' + array[item]['value'] + '"><i class="fa fa-minus-circle"></i> ' + array[item]['label'] + '<input type="hidden" name="category[]" value="' + array[item]['value'] + '" /></div>');
                                 }
                             }
                         }
@@ -1907,7 +1928,7 @@
                         }
 
                             product_el += ']"><i class="fa fa-minus-circle"></i> ' + array[item]['label'] + '<input type="hidden" name="product[]" value="' + array[item]['value'] + '" /></div>';
-                        $('#data-management-product').append(product_el);
+                        $('.data-management-product').append(product_el);
                     }
                 }
             }
@@ -1915,1043 +1936,18 @@
     })
 
     function clearProductsList() {
-        $('#data-management-category div').each(function (i, item) {
+        $('.data-management-category div').each(function (i, item) {
             $(item).remove()
         });
-        $('#data-management-product div').each(function (i, item) {
+        $('.data-management-product div').each(function (i, item) {
             $(item).remove()
         });
-        $('#select-products-categories option:first').prop('selected', true);
+        $('.select-products-categories option:first').prop('selected', true);
     }
     $('.products-clear-btn').on('click', function () {
         clearProductsList()
     })
 </script>
-<script>
-    $('input[name=\'product_name2\']').autocomplete({
-        source: function(request, response) {
-            $.ajax({
-                url: 'index.php?route=catalog/product/autocomplete&user_token={{ user_token }}&filter_name=' +  encodeURIComponent(request),
-                dataType: 'json',
-                success: function(json) {
-                    response($.map(json, function(item) {
-                        return {
-                            label: item['name'],
-                            value: item['product_id']
-                        }
-                    }));
-                }
-            });
-        },
-        select: function(item) {
-            $('input[name=\'product_name2\']').val('');
-
-            $('#data-management-product2' + item['value']).remove();
-
-            $('#data-management-product2').append('<div id="data-management-product2' + item['value'] + '"><i class="fa fa-minus-circle"></i> ' + item['label'] + '<input type="hidden" name="product[]" value="' + item['value'] + '" /></div>');
-        }
-    });
-
-    $('#data-management-category2').delegate('.fa-minus-circle', 'click', function() {
-        let categoryId = $(this).next().val()
-
-        let products_elems = $('#data-management-product2').find('div')
-
-        for (let i = 0; i < products_elems.length; i++) {
-            let el_data = $(products_elems[i]).data('categoryId')
-            let index = el_data.indexOf(parseInt(categoryId));
-            if (index > -1) {
-                el_data.splice(index, 1);
-            }
-            if (el_data.length === 0) {
-                $(products_elems[i]).remove()
-            } else {
-                $(products_elems[i]).attr('data-category-id', '[' + el_data + ']')
-            }
-        }
-
-        $(this).parent().remove();
-    });
-
-    $('#data-management-product2').delegate('.fa-minus-circle', 'click', function() {
-        $(this).parent().remove();
-    });
-
-    $('#select-products-categories2').on('change', function() {
-        let categoryName = $(this).find('option:selected').text()
-        let categoryId   = $(this).val()
-        $.ajax({
-            url: 'index.php?route=extension/module/massive_data_management_nik/getProductsByCategory&user_token={{ user_token }}&category_id=' +  $(this).val(),
-            dataType: 'json',
-            success: function(json) {
-                if(categoryId !== '0') {
-                    $('#data-management-category2' + categoryId).remove();
-                    $('#data-management-category2').append('<div id="data-management-category' + categoryId + '"><i class="fa fa-minus-circle"></i> ' + categoryName + '<input type="hidden" name="category[]" value="' + categoryId + '" /></div>');
-                } else {
-                    $.ajax({
-                        url: 'index.php?route=extension/module/massive_data_management_nik/getAllCategories&user_token={{ user_token }}',
-                        dataType: 'json',
-                        success: function(json) {
-                            let array = $.map(json, function(item) {
-                                return {
-                                    label: item['name'],
-                                    value: item['category_id'],
-                                }
-                            })
-
-                            for (let item in array) {
-                                if(array.hasOwnProperty(item)) {
-                                    $('#data-management-category2' + array[item]['value']).remove();
-                                    $('#data-management-category2').append('<div id="data-management-category2' + array[item]['value'] + '"><i class="fa fa-minus-circle"></i> ' + array[item]['label'] + '<input type="hidden" name="category[]" value="' + array[item]['value'] + '" /></div>');
-                                }
-                            }
-                        }
-                    });
-                }
-
-                let array = $.map(json, function(item) {
-                    return {
-                        label:          item['name'],
-                        value:          item['product_id'],
-                        categories_id:  item['categories_id'],
-                        category_id:    item['category_id']
-                    }
-                })
-                for (let item in array) {
-                    if(array.hasOwnProperty(item)) {
-                        $('#data-management-product2' + array[item]['value']).remove();
-                        let product_el = '<div id="data-management-product2' + array[item]['value'] + '" data-category-id="[';
-
-                        if(array[item]['category_id'] === '') {
-                            for (let i = 0; i < array[item]['categories_id'].length; i++) {
-                                if (i < array[item]['categories_id'].length - 1) {
-                                    product_el += array[item]['categories_id'][i] + ','
-                                } else {
-                                    product_el += array[item]['categories_id'][i]
-                                }
-                            }
-                        } else {
-                            product_el += array[item]['category_id']
-                        }
-
-                        product_el += ']"><i class="fa fa-minus-circle"></i> ' + array[item]['label'] + '<input type="hidden" name="product[]" value="' + array[item]['value'] + '" /></div>';
-                        $('#data-management-product2').append(product_el);
-                    }
-                }
-            }
-        });
-    })
-
-    function clearProductsList2() {
-        $('#data-management-category2 div').each(function (i, item) {
-            $(item).remove()
-        });
-        $('#data-management-product2 div').each(function (i, item) {
-            $(item).remove()
-        });
-        $('#select-products-categories2 option:first').prop('selected', true);
-    }
-    $('.products-clear-btn2').on('click', function () {
-        clearProductsList2()
-    })
-</script>
-<script>
-    $('input[name=\'product_name3\']').autocomplete({
-        source: function(request, response) {
-            $.ajax({
-                url: 'index.php?route=catalog/product/autocomplete&user_token={{ user_token }}&filter_name=' +  encodeURIComponent(request),
-                dataType: 'json',
-                success: function(json) {
-                    response($.map(json, function(item) {
-                        return {
-                            label: item['name'],
-                            value: item['product_id']
-                        }
-                    }));
-                }
-            });
-        },
-        select: function(item) {
-            $('input[name=\'product_name3\']').val('');
-
-            $('#data-management-product3' + item['value']).remove();
-
-            $('#data-management-product3').append('<div id="data-management-product3' + item['value'] + '"><i class="fa fa-minus-circle"></i> ' + item['label'] + '<input type="hidden" name="product[]" value="' + item['value'] + '" /></div>');
-        }
-    });
-
-    $('#data-management-category3').delegate('.fa-minus-circle', 'click', function() {
-        let categoryId = $(this).next().val()
-
-        let products_elems = $('#data-management-product3').find('div')
-
-        for (let i = 0; i < products_elems.length; i++) {
-            let el_data = $(products_elems[i]).data('categoryId')
-            let index = el_data.indexOf(parseInt(categoryId));
-            if (index > -1) {
-                el_data.splice(index, 1);
-            }
-            if (el_data.length === 0) {
-                $(products_elems[i]).remove()
-            } else {
-                $(products_elems[i]).attr('data-category-id', '[' + el_data + ']')
-            }
-        }
-
-        $(this).parent().remove();
-    });
-
-    $('#data-management-product3').delegate('.fa-minus-circle', 'click', function() {
-        $(this).parent().remove();
-    });
-
-    $('#select-products-categories3').on('change', function() {
-        let categoryName = $(this).find('option:selected').text()
-        let categoryId   = $(this).val()
-        $.ajax({
-            url: 'index.php?route=extension/module/massive_data_management_nik/getProductsByCategory&user_token={{ user_token }}&category_id=' +  $(this).val(),
-            dataType: 'json',
-            success: function(json) {
-                if(categoryId !== '0') {
-                    $('#data-management-category3' + categoryId).remove();
-                    $('#data-management-category3').append('<div id="data-management-category3' + categoryId + '"><i class="fa fa-minus-circle"></i> ' + categoryName + '<input type="hidden" name="category[]" value="' + categoryId + '" /></div>');
-                } else {
-                    $.ajax({
-                        url: 'index.php?route=extension/module/massive_data_management_nik/getAllCategories&user_token={{ user_token }}',
-                        dataType: 'json',
-                        success: function(json) {
-                            let array = $.map(json, function(item) {
-                                return {
-                                    label: item['name'],
-                                    value: item['category_id'],
-                                }
-                            })
-
-                            for (let item in array) {
-                                if(array.hasOwnProperty(item)) {
-                                    $('#data-management-category3' + array[item]['value']).remove();
-                                    $('#data-management-category3').append('<div id="data-management-category3' + array[item]['value'] + '"><i class="fa fa-minus-circle"></i> ' + array[item]['label'] + '<input type="hidden" name="category[]" value="' + array[item]['value'] + '" /></div>');
-                                }
-                            }
-                        }
-                    });
-                }
-
-                let array = $.map(json, function(item) {
-                    return {
-                        label:          item['name'],
-                        value:          item['product_id'],
-                        categories_id:  item['categories_id'],
-                        category_id:    item['category_id']
-                    }
-                })
-                for (let item in array) {
-                    if(array.hasOwnProperty(item)) {
-                        $('#data-management-product3' + array[item]['value']).remove();
-                        let product_el = '<div id="data-management-product3' + array[item]['value'] + '" data-category-id="[';
-
-                        if(array[item]['category_id'] === '') {
-                            for (let i = 0; i < array[item]['categories_id'].length; i++) {
-                                if (i < array[item]['categories_id'].length - 1) {
-                                    product_el += array[item]['categories_id'][i] + ','
-                                } else {
-                                    product_el += array[item]['categories_id'][i]
-                                }
-                            }
-                        } else {
-                            product_el += array[item]['category_id']
-                        }
-
-                        product_el += ']"><i class="fa fa-minus-circle"></i> ' + array[item]['label'] + '<input type="hidden" name="product[]" value="' + array[item]['value'] + '" /></div>';
-                        $('#data-management-product3').append(product_el);
-                    }
-                }
-            }
-        });
-    })
-
-    function clearProductsList3() {
-        $('#data-management-category3 div').each(function (i, item) {
-            $(item).remove()
-        });
-        $('#data-management-product3 div').each(function (i, item) {
-            $(item).remove()
-        });
-        $('#select-products-categories3 option:first').prop('selected', true);
-    }
-    $('.products-clear-btn3').on('click', function () {
-        clearProductsList3()
-    })
-</script>
-<script>
-    $('input[name=\'product_name4\']').autocomplete({
-        source: function(request, response) {
-            $.ajax({
-                url: 'index.php?route=catalog/product/autocomplete&user_token={{ user_token }}&filter_name=' +  encodeURIComponent(request),
-                dataType: 'json',
-                success: function(json) {
-                    response($.map(json, function(item) {
-                        return {
-                            label: item['name'],
-                            value: item['product_id']
-                        }
-                    }));
-                }
-            });
-        },
-        select: function(item) {
-            $('input[name=\'product_name4\']').val('');
-
-            $('#data-management-product4' + item['value']).remove();
-
-            $('#data-management-product4').append('<div id="data-management-product4' + item['value'] + '"><i class="fa fa-minus-circle"></i> ' + item['label'] + '<input type="hidden" name="product[]" value="' + item['value'] + '" /></div>');
-        }
-    });
-
-    $('#data-management-category4').delegate('.fa-minus-circle', 'click', function() {
-        let categoryId = $(this).next().val()
-
-        let products_elems = $('#data-management-product4').find('div')
-
-        for (let i = 0; i < products_elems.length; i++) {
-            let el_data = $(products_elems[i]).data('categoryId')
-            let index = el_data.indexOf(parseInt(categoryId));
-            if (index > -1) {
-                el_data.splice(index, 1);
-            }
-            if (el_data.length === 0) {
-                $(products_elems[i]).remove()
-            } else {
-                $(products_elems[i]).attr('data-category-id', '[' + el_data + ']')
-            }
-        }
-
-        $(this).parent().remove();
-    });
-
-    $('#data-management-product4').delegate('.fa-minus-circle', 'click', function() {
-        $(this).parent().remove();
-    });
-
-    $('#select-products-categories4').on('change', function() {
-        let categoryName = $(this).find('option:selected').text()
-        let categoryId   = $(this).val()
-        $.ajax({
-            url: 'index.php?route=extension/module/massive_data_management_nik/getProductsByCategory&user_token={{ user_token }}&category_id=' +  $(this).val(),
-            dataType: 'json',
-            success: function(json) {
-                if(categoryId !== '0') {
-                    $('#data-management-category4' + categoryId).remove();
-                    $('#data-management-category4').append('<div id="data-management-category4' + categoryId + '"><i class="fa fa-minus-circle"></i> ' + categoryName + '<input type="hidden" name="category[]" value="' + categoryId + '" /></div>');
-                } else {
-                    $.ajax({
-                        url: 'index.php?route=extension/module/massive_data_management_nik/getAllCategories&user_token={{ user_token }}',
-                        dataType: 'json',
-                        success: function(json) {
-                            let array = $.map(json, function(item) {
-                                return {
-                                    label: item['name'],
-                                    value: item['category_id'],
-                                }
-                            })
-
-                            for (let item in array) {
-                                if(array.hasOwnProperty(item)) {
-                                    $('#data-management-category4' + array[item]['value']).remove();
-                                    $('#data-management-category4').append('<div id="data-management-category4' + array[item]['value'] + '"><i class="fa fa-minus-circle"></i> ' + array[item]['label'] + '<input type="hidden" name="category[]" value="' + array[item]['value'] + '" /></div>');
-                                }
-                            }
-                        }
-                    });
-                }
-
-                let array = $.map(json, function(item) {
-                    return {
-                        label:          item['name'],
-                        value:          item['product_id'],
-                        categories_id:  item['categories_id'],
-                        category_id:    item['category_id']
-                    }
-                })
-                for (let item in array) {
-                    if(array.hasOwnProperty(item)) {
-                        $('#data-management-product4' + array[item]['value']).remove();
-                        let product_el = '<div id="data-management-product4' + array[item]['value'] + '" data-category-id="[';
-
-                        if(array[item]['category_id'] === '') {
-                            for (let i = 0; i < array[item]['categories_id'].length; i++) {
-                                if (i < array[item]['categories_id'].length - 1) {
-                                    product_el += array[item]['categories_id'][i] + ','
-                                } else {
-                                    product_el += array[item]['categories_id'][i]
-                                }
-                            }
-                        } else {
-                            product_el += array[item]['category_id']
-                        }
-
-                        product_el += ']"><i class="fa fa-minus-circle"></i> ' + array[item]['label'] + '<input type="hidden" name="product[]" value="' + array[item]['value'] + '" /></div>';
-                        $('#data-management-product4').append(product_el);
-                    }
-                }
-            }
-        });
-    })
-
-    function clearProductsList4() {
-        $('#data-management-category4 div').each(function (i, item) {
-            $(item).remove()
-        });
-        $('#data-management-product4 div').each(function (i, item) {
-            $(item).remove()
-        });
-        $('#select-products-categories4 option:first').prop('selected', true);
-    }
-    $('.products-clear-btn4').on('click', function () {
-        clearProductsList4()
-    })
-</script>
-<script>
-    $('input[name=\'product_name5\']').autocomplete({
-        source: function(request, response) {
-            $.ajax({
-                url: 'index.php?route=catalog/product/autocomplete&user_token={{ user_token }}&filter_name=' +  encodeURIComponent(request),
-                dataType: 'json',
-                success: function(json) {
-                    response($.map(json, function(item) {
-                        return {
-                            label: item['name'],
-                            value: item['product_id']
-                        }
-                    }));
-                }
-            });
-        },
-        select: function(item) {
-            $('input[name=\'product_name5\']').val('');
-
-            $('#data-management-product5' + item['value']).remove();
-
-            $('#data-management-product5').append('<div id="data-management-product5' + item['value'] + '"><i class="fa fa-minus-circle"></i> ' + item['label'] + '<input type="hidden" name="product[]" value="' + item['value'] + '" /></div>');
-        }
-    });
-
-    $('#data-management-category5').delegate('.fa-minus-circle', 'click', function() {
-        let categoryId = $(this).next().val()
-
-        let products_elems = $('#data-management-product5').find('div')
-
-        for (let i = 0; i < products_elems.length; i++) {
-            let el_data = $(products_elems[i]).data('categoryId')
-            let index = el_data.indexOf(parseInt(categoryId));
-            if (index > -1) {
-                el_data.splice(index, 1);
-            }
-            if (el_data.length === 0) {
-                $(products_elems[i]).remove()
-            } else {
-                $(products_elems[i]).attr('data-category-id', '[' + el_data + ']')
-            }
-        }
-
-        $(this).parent().remove();
-    });
-
-    $('#data-management-product5').delegate('.fa-minus-circle', 'click', function() {
-        $(this).parent().remove();
-    });
-
-    $('#select-products-categories5').on('change', function() {
-        let categoryName = $(this).find('option:selected').text()
-        let categoryId   = $(this).val()
-        $.ajax({
-            url: 'index.php?route=extension/module/massive_data_management_nik/getProductsByCategory&user_token={{ user_token }}&category_id=' +  $(this).val(),
-            dataType: 'json',
-            success: function(json) {
-                if(categoryId !== '0') {
-                    $('#data-management-category5' + categoryId).remove();
-                    $('#data-management-category5').append('<div id="data-management-category5' + categoryId + '"><i class="fa fa-minus-circle"></i> ' + categoryName + '<input type="hidden" name="category[]" value="' + categoryId + '" /></div>');
-                } else {
-                    $.ajax({
-                        url: 'index.php?route=extension/module/massive_data_management_nik/getAllCategories&user_token={{ user_token }}',
-                        dataType: 'json',
-                        success: function(json) {
-                            let array = $.map(json, function(item) {
-                                return {
-                                    label: item['name'],
-                                    value: item['category_id'],
-                                }
-                            })
-
-                            for (let item in array) {
-                                if(array.hasOwnProperty(item)) {
-                                    $('#data-management-category5' + array[item]['value']).remove();
-                                    $('#data-management-category5').append('<div id="data-management-category5' + array[item]['value'] + '"><i class="fa fa-minus-circle"></i> ' + array[item]['label'] + '<input type="hidden" name="category[]" value="' + array[item]['value'] + '" /></div>');
-                                }
-                            }
-                        }
-                    });
-                }
-
-                let array = $.map(json, function(item) {
-                    return {
-                        label:          item['name'],
-                        value:          item['product_id'],
-                        categories_id:  item['categories_id'],
-                        category_id:    item['category_id']
-                    }
-                })
-                for (let item in array) {
-                    if(array.hasOwnProperty(item)) {
-                        $('#data-management-product5' + array[item]['value']).remove();
-                        let product_el = '<div id="data-management-product5' + array[item]['value'] + '" data-category-id="[';
-
-                        if(array[item]['category_id'] === '') {
-                            for (let i = 0; i < array[item]['categories_id'].length; i++) {
-                                if (i < array[item]['categories_id'].length - 1) {
-                                    product_el += array[item]['categories_id'][i] + ','
-                                } else {
-                                    product_el += array[item]['categories_id'][i]
-                                }
-                            }
-                        } else {
-                            product_el += array[item]['category_id']
-                        }
-
-                        product_el += ']"><i class="fa fa-minus-circle"></i> ' + array[item]['label'] + '<input type="hidden" name="product[]" value="' + array[item]['value'] + '" /></div>';
-                        $('#data-management-product5').append(product_el);
-                    }
-                }
-            }
-        });
-    })
-
-    function clearProductsList5() {
-        $('#data-management-category5 div').each(function (i, item) {
-            $(item).remove()
-        });
-        $('#data-management-product5 div').each(function (i, item) {
-            $(item).remove()
-        });
-        $('#select-products-categories5 option:first').prop('selected', true);
-    }
-    $('.products-clear-btn5').on('click', function () {
-        clearProductsList5()
-    })
-</script>
-<script>
-    $('input[name=\'product_name6\']').autocomplete({
-        source: function(request, response) {
-            $.ajax({
-                url: 'index.php?route=catalog/product/autocomplete&user_token={{ user_token }}&filter_name=' +  encodeURIComponent(request),
-                dataType: 'json',
-                success: function(json) {
-                    response($.map(json, function(item) {
-                        return {
-                            label: item['name'],
-                            value: item['product_id']
-                        }
-                    }));
-                }
-            });
-        },
-        select: function(item) {
-            $('input[name=\'product_name6\']').val('');
-
-            $('#data-management-product6' + item['value']).remove();
-
-            $('#data-management-product6').append('<div id="data-management-product6' + item['value'] + '"><i class="fa fa-minus-circle"></i> ' + item['label'] + '<input type="hidden" name="product[]" value="' + item['value'] + '" /></div>');
-        }
-    });
-
-    $('#data-management-category6').delegate('.fa-minus-circle', 'click', function() {
-        let categoryId = $(this).next().val()
-
-        let products_elems = $('#data-management-product6').find('div')
-
-        for (let i = 0; i < products_elems.length; i++) {
-            let el_data = $(products_elems[i]).data('categoryId')
-            let index = el_data.indexOf(parseInt(categoryId));
-            if (index > -1) {
-                el_data.splice(index, 1);
-            }
-            if (el_data.length === 0) {
-                $(products_elems[i]).remove()
-            } else {
-                $(products_elems[i]).attr('data-category-id', '[' + el_data + ']')
-            }
-        }
-
-        $(this).parent().remove();
-    });
-
-    $('#data-management-product6').delegate('.fa-minus-circle', 'click', function() {
-        $(this).parent().remove();
-    });
-
-    $('#select-products-categories6').on('change', function() {
-        let categoryName = $(this).find('option:selected').text()
-        let categoryId   = $(this).val()
-        $.ajax({
-            url: 'index.php?route=extension/module/massive_data_management_nik/getProductsByCategory&user_token={{ user_token }}&category_id=' +  $(this).val(),
-            dataType: 'json',
-            success: function(json) {
-                if(categoryId !== '0') {
-                    $('#data-management-category6' + categoryId).remove();
-                    $('#data-management-category6').append('<div id="data-management-category6' + categoryId + '"><i class="fa fa-minus-circle"></i> ' + categoryName + '<input type="hidden" name="category[]" value="' + categoryId + '" /></div>');
-                } else {
-                    $.ajax({
-                        url: 'index.php?route=extension/module/massive_data_management_nik/getAllCategories&user_token={{ user_token }}',
-                        dataType: 'json',
-                        success: function(json) {
-                            let array = $.map(json, function(item) {
-                                return {
-                                    label: item['name'],
-                                    value: item['category_id'],
-                                }
-                            })
-
-                            for (let item in array) {
-                                if(array.hasOwnProperty(item)) {
-                                    $('#data-management-category6' + array[item]['value']).remove();
-                                    $('#data-management-category6').append('<div id="data-management-category6' + array[item]['value'] + '"><i class="fa fa-minus-circle"></i> ' + array[item]['label'] + '<input type="hidden" name="category[]" value="' + array[item]['value'] + '" /></div>');
-                                }
-                            }
-                        }
-                    });
-                }
-
-                let array = $.map(json, function(item) {
-                    return {
-                        label:          item['name'],
-                        value:          item['product_id'],
-                        categories_id:  item['categories_id'],
-                        category_id:    item['category_id']
-                    }
-                })
-                for (let item in array) {
-                    if(array.hasOwnProperty(item)) {
-                        $('#data-management-product6' + array[item]['value']).remove();
-                        let product_el = '<div id="data-management-product6' + array[item]['value'] + '" data-category-id="[';
-
-                        if(array[item]['category_id'] === '') {
-                            for (let i = 0; i < array[item]['categories_id'].length; i++) {
-                                if (i < array[item]['categories_id'].length - 1) {
-                                    product_el += array[item]['categories_id'][i] + ','
-                                } else {
-                                    product_el += array[item]['categories_id'][i]
-                                }
-                            }
-                        } else {
-                            product_el += array[item]['category_id']
-                        }
-
-                        product_el += ']"><i class="fa fa-minus-circle"></i> ' + array[item]['label'] + '<input type="hidden" name="product[]" value="' + array[item]['value'] + '" /></div>';
-                        $('#data-management-product6').append(product_el);
-                    }
-                }
-            }
-        });
-    })
-
-    function clearProductsList6() {
-        $('#data-management-category6 div').each(function (i, item) {
-            $(item).remove()
-        });
-        $('#data-management-product6 div').each(function (i, item) {
-            $(item).remove()
-        });
-        $('#select-products-categories6 option:first').prop('selected', true);
-    }
-    $('.products-clear-btn6').on('click', function () {
-        clearProductsList6()
-    })
-</script>
-<script>
-    $('input[name=\'product_name7\']').autocomplete({
-        source: function(request, response) {
-            $.ajax({
-                url: 'index.php?route=catalog/product/autocomplete&user_token={{ user_token }}&filter_name=' +  encodeURIComponent(request),
-                dataType: 'json',
-                success: function(json) {
-                    response($.map(json, function(item) {
-                        return {
-                            label: item['name'],
-                            value: item['product_id']
-                        }
-                    }));
-                }
-            });
-        },
-        select: function(item) {
-            $('input[name=\'product_name7\']').val('');
-
-            $('#data-management-product7' + item['value']).remove();
-
-            $('#data-management-product7').append('<div id="data-management-product7' + item['value'] + '"><i class="fa fa-minus-circle"></i> ' + item['label'] + '<input type="hidden" name="product[]" value="' + item['value'] + '" /></div>');
-        }
-    });
-
-    $('#data-management-category7').delegate('.fa-minus-circle', 'click', function() {
-        let categoryId = $(this).next().val()
-
-        let products_elems = $('#data-management-product7').find('div')
-
-        for (let i = 0; i < products_elems.length; i++) {
-            let el_data = $(products_elems[i]).data('categoryId')
-            let index = el_data.indexOf(parseInt(categoryId));
-            if (index > -1) {
-                el_data.splice(index, 1);
-            }
-            if (el_data.length === 0) {
-                $(products_elems[i]).remove()
-            } else {
-                $(products_elems[i]).attr('data-category-id', '[' + el_data + ']')
-            }
-        }
-
-        $(this).parent().remove();
-    });
-
-    $('#data-management-product7').delegate('.fa-minus-circle', 'click', function() {
-        $(this).parent().remove();
-    });
-
-    $('#select-products-categories7').on('change', function() {
-        let categoryName = $(this).find('option:selected').text()
-        let categoryId   = $(this).val()
-        $.ajax({
-            url: 'index.php?route=extension/module/massive_data_management_nik/getProductsByCategory&user_token={{ user_token }}&category_id=' +  $(this).val(),
-            dataType: 'json',
-            success: function(json) {
-                if(categoryId !== '0') {
-                    $('#data-management-category7' + categoryId).remove();
-                    $('#data-management-category7').append('<div id="data-management-category7' + categoryId + '"><i class="fa fa-minus-circle"></i> ' + categoryName + '<input type="hidden" name="category[]" value="' + categoryId + '" /></div>');
-                } else {
-                    $.ajax({
-                        url: 'index.php?route=extension/module/massive_data_management_nik/getAllCategories&user_token={{ user_token }}',
-                        dataType: 'json',
-                        success: function(json) {
-                            let array = $.map(json, function(item) {
-                                return {
-                                    label: item['name'],
-                                    value: item['category_id'],
-                                }
-                            })
-
-                            for (let item in array) {
-                                if(array.hasOwnProperty(item)) {
-                                    $('#data-management-category7' + array[item]['value']).remove();
-                                    $('#data-management-category7').append('<div id="data-management-category7' + array[item]['value'] + '"><i class="fa fa-minus-circle"></i> ' + array[item]['label'] + '<input type="hidden" name="category[]" value="' + array[item]['value'] + '" /></div>');
-                                }
-                            }
-                        }
-                    });
-                }
-
-                let array = $.map(json, function(item) {
-                    return {
-                        label:          item['name'],
-                        value:          item['product_id'],
-                        categories_id:  item['categories_id'],
-                        category_id:    item['category_id']
-                    }
-                })
-                for (let item in array) {
-                    if(array.hasOwnProperty(item)) {
-                        $('#data-management-product7' + array[item]['value']).remove();
-                        let product_el = '<div id="data-management-product7' + array[item]['value'] + '" data-category-id="[';
-
-                        if(array[item]['category_id'] === '') {
-                            for (let i = 0; i < array[item]['categories_id'].length; i++) {
-                                if (i < array[item]['categories_id'].length - 1) {
-                                    product_el += array[item]['categories_id'][i] + ','
-                                } else {
-                                    product_el += array[item]['categories_id'][i]
-                                }
-                            }
-                        } else {
-                            product_el += array[item]['category_id']
-                        }
-
-                        product_el += ']"><i class="fa fa-minus-circle"></i> ' + array[item]['label'] + '<input type="hidden" name="product[]" value="' + array[item]['value'] + '" /></div>';
-                        $('#data-management-product7').append(product_el);
-                    }
-                }
-            }
-        });
-    })
-
-    function clearProductsList7() {
-        $('#data-management-category7 div').each(function (i, item) {
-            $(item).remove()
-        });
-        $('#data-management-product7 div').each(function (i, item) {
-            $(item).remove()
-        });
-        $('#select-products-categories7 option:first').prop('selected', true);
-    }
-    $('.products-clear-btn7').on('click', function () {
-        clearProductsList7()
-    })
-</script>
-<script>
-    $('input[name=\'product_name8\']').autocomplete({
-        source: function(request, response) {
-            $.ajax({
-                url: 'index.php?route=catalog/product/autocomplete&user_token={{ user_token }}&filter_name=' +  encodeURIComponent(request),
-                dataType: 'json',
-                success: function(json) {
-                    response($.map(json, function(item) {
-                        return {
-                            label: item['name'],
-                            value: item['product_id']
-                        }
-                    }));
-                }
-            });
-        },
-        select: function(item) {
-            $('input[name=\'product_name8\']').val('');
-
-            $('#data-management-product8' + item['value']).remove();
-
-            $('#data-management-product8').append('<div id="data-management-product8' + item['value'] + '"><i class="fa fa-minus-circle"></i> ' + item['label'] + '<input type="hidden" name="product[]" value="' + item['value'] + '" /></div>');
-        }
-    });
-
-    $('#data-management-category8').delegate('.fa-minus-circle', 'click', function() {
-        let categoryId = $(this).next().val()
-
-        let products_elems = $('#data-management-product8').find('div')
-
-        for (let i = 0; i < products_elems.length; i++) {
-            let el_data = $(products_elems[i]).data('categoryId')
-            let index = el_data.indexOf(parseInt(categoryId));
-            if (index > -1) {
-                el_data.splice(index, 1);
-            }
-            if (el_data.length === 0) {
-                $(products_elems[i]).remove()
-            } else {
-                $(products_elems[i]).attr('data-category-id', '[' + el_data + ']')
-            }
-        }
-
-        $(this).parent().remove();
-    });
-
-    $('#data-management-product8').delegate('.fa-minus-circle', 'click', function() {
-        $(this).parent().remove();
-    });
-
-    $('#select-products-categories8').on('change', function() {
-        let categoryName = $(this).find('option:selected').text()
-        let categoryId   = $(this).val()
-        $.ajax({
-            url: 'index.php?route=extension/module/massive_data_management_nik/getProductsByCategory&user_token={{ user_token }}&category_id=' +  $(this).val(),
-            dataType: 'json',
-            success: function(json) {
-                if(categoryId !== '0') {
-                    $('#data-management-category8' + categoryId).remove();
-                    $('#data-management-category8').append('<div id="data-management-category8' + categoryId + '"><i class="fa fa-minus-circle"></i> ' + categoryName + '<input type="hidden" name="category[]" value="' + categoryId + '" /></div>');
-                } else {
-                    $.ajax({
-                        url: 'index.php?route=extension/module/massive_data_management_nik/getAllCategories&user_token={{ user_token }}',
-                        dataType: 'json',
-                        success: function(json) {
-                            let array = $.map(json, function(item) {
-                                return {
-                                    label: item['name'],
-                                    value: item['category_id'],
-                                }
-                            })
-
-                            for (let item in array) {
-                                if(array.hasOwnProperty(item)) {
-                                    $('#data-management-category8' + array[item]['value']).remove();
-                                    $('#data-management-category8').append('<div id="data-management-category8' + array[item]['value'] + '"><i class="fa fa-minus-circle"></i> ' + array[item]['label'] + '<input type="hidden" name="category[]" value="' + array[item]['value'] + '" /></div>');
-                                }
-                            }
-                        }
-                    });
-                }
-
-                let array = $.map(json, function(item) {
-                    return {
-                        label:          item['name'],
-                        value:          item['product_id'],
-                        categories_id:  item['categories_id'],
-                        category_id:    item['category_id']
-                    }
-                })
-                for (let item in array) {
-                    if(array.hasOwnProperty(item)) {
-                        $('#data-management-product8' + array[item]['value']).remove();
-                        let product_el = '<div id="data-management-product8' + array[item]['value'] + '" data-category-id="[';
-
-                        if(array[item]['category_id'] === '') {
-                            for (let i = 0; i < array[item]['categories_id'].length; i++) {
-                                if (i < array[item]['categories_id'].length - 1) {
-                                    product_el += array[item]['categories_id'][i] + ','
-                                } else {
-                                    product_el += array[item]['categories_id'][i]
-                                }
-                            }
-                        } else {
-                            product_el += array[item]['category_id']
-                        }
-
-                        product_el += ']"><i class="fa fa-minus-circle"></i> ' + array[item]['label'] + '<input type="hidden" name="product[]" value="' + array[item]['value'] + '" /></div>';
-                        $('#data-management-product8').append(product_el);
-                    }
-                }
-            }
-        });
-    })
-
-    function clearProductsList8() {
-        $('#data-management-category8 div').each(function (i, item) {
-            $(item).remove()
-        });
-        $('#data-management-product8 div').each(function (i, item) {
-            $(item).remove()
-        });
-        $('#select-products-categories8 option:first').prop('selected', true);
-    }
-    $('.products-clear-btn8').on('click', function () {
-        clearProductsList8()
-    })
-</script>
-<script>
-    $('input[name=\'product_name9\']').autocomplete({
-        source: function(request, response) {
-            $.ajax({
-                url: 'index.php?route=catalog/product/autocomplete&user_token={{ user_token }}&filter_name=' +  encodeURIComponent(request),
-                dataType: 'json',
-                success: function(json) {
-                    response($.map(json, function(item) {
-                        return {
-                            label: item['name'],
-                            value: item['product_id']
-                        }
-                    }));
-                }
-            });
-        },
-        select: function(item) {
-            $('input[name=\'product_name9\']').val('');
-
-            $('#data-management-product9' + item['value']).remove();
-
-            $('#data-management-product9').append('<div id="data-management-product9' + item['value'] + '"><i class="fa fa-minus-circle"></i> ' + item['label'] + '<input type="hidden" name="product[]" value="' + item['value'] + '" /></div>');
-        }
-    });
-
-    $('#data-management-category9').delegate('.fa-minus-circle', 'click', function() {
-        let categoryId = $(this).next().val()
-
-        let products_elems = $('#data-management-product9').find('div')
-
-        for (let i = 0; i < products_elems.length; i++) {
-            let el_data = $(products_elems[i]).data('categoryId')
-            let index = el_data.indexOf(parseInt(categoryId));
-            if (index > -1) {
-                el_data.splice(index, 1);
-            }
-            if (el_data.length === 0) {
-                $(products_elems[i]).remove()
-            } else {
-                $(products_elems[i]).attr('data-category-id', '[' + el_data + ']')
-            }
-        }
-
-        $(this).parent().remove();
-    });
-
-    $('#data-management-product9').delegate('.fa-minus-circle', 'click', function() {
-        $(this).parent().remove();
-    });
-
-    $('#select-products-categories9').on('change', function() {
-        let categoryName = $(this).find('option:selected').text()
-        let categoryId   = $(this).val()
-        $.ajax({
-            url: 'index.php?route=extension/module/massive_data_management_nik/getProductsByCategory&user_token={{ user_token }}&category_id=' +  $(this).val(),
-            dataType: 'json',
-            success: function(json) {
-                if(categoryId !== '0') {
-                    $('#data-management-category9' + categoryId).remove();
-                    $('#data-management-category9').append('<div id="data-management-category9' + categoryId + '"><i class="fa fa-minus-circle"></i> ' + categoryName + '<input type="hidden" name="category[]" value="' + categoryId + '" /></div>');
-                } else {
-                    $.ajax({
-                        url: 'index.php?route=extension/module/massive_data_management_nik/getAllCategories&user_token={{ user_token }}',
-                        dataType: 'json',
-                        success: function(json) {
-                            let array = $.map(json, function(item) {
-                                return {
-                                    label: item['name'],
-                                    value: item['category_id'],
-                                }
-                            })
-
-                            for (let item in array) {
-                                if(array.hasOwnProperty(item)) {
-                                    $('#data-management-category9' + array[item]['value']).remove();
-                                    $('#data-management-category9').append('<div id="data-management-category9' + array[item]['value'] + '"><i class="fa fa-minus-circle"></i> ' + array[item]['label'] + '<input type="hidden" name="category[]" value="' + array[item]['value'] + '" /></div>');
-                                }
-                            }
-                        }
-                    });
-                }
-
-                let array = $.map(json, function(item) {
-                    return {
-                        label:          item['name'],
-                        value:          item['product_id'],
-                        categories_id:  item['categories_id'],
-                        category_id:    item['category_id']
-                    }
-                })
-                for (let item in array) {
-                    if(array.hasOwnProperty(item)) {
-                        $('#data-management-product9' + array[item]['value']).remove();
-                        let product_el = '<div id="data-management-product9' + array[item]['value'] + '" data-category-id="[';
-
-                        if(array[item]['category_id'] === '') {
-                            for (let i = 0; i < array[item]['categories_id'].length; i++) {
-                                if (i < array[item]['categories_id'].length - 1) {
-                                    product_el += array[item]['categories_id'][i] + ','
-                                } else {
-                                    product_el += array[item]['categories_id'][i]
-                                }
-                            }
-                        } else {
-                            product_el += array[item]['category_id']
-                        }
-
-                        product_el += ']"><i class="fa fa-minus-circle"></i> ' + array[item]['label'] + '<input type="hidden" name="product[]" value="' + array[item]['value'] + '" /></div>';
-                        $('#data-management-product9').append(product_el);
-                    }
-                }
-            }
-        });
-    })
-
-    function clearProductsList9() {
-        $('#data-management-category9 div').each(function (i, item) {
-            $(item).remove()
-        });
-        $('#data-management-product9 div').each(function (i, item) {
-            $(item).remove()
-        });
-        $('#select-products-categories9 option:first').prop('selected', true);
-    }
-    $('.products-clear-btn9').on('click', function () {
-        clearProductsList9()
-    })
-</script>
-
 <script type="text/javascript"><!--
     $('input[name=\'path\']').autocomplete({
         'source': function(request, response) {
@@ -3009,20 +2005,22 @@
     });
 //--></script>
 <script>
-    $('#data-management-category').delegate('.fa-minus-circle', 'click', function() {
-        let categoryId = $(this).next().val()
-        $('#data-management-product').find('div[data-category-id="' + categoryId + '"]').remove()
+    $('.data-management-category').delegate('.fa-minus-circle', 'click', function() {
+        let categoryId = $(this).parent().find('input[type="hidden"]').val()
+
+        $('.data-management-product').find('div[data-category-id="' + categoryId + '"]').remove()
+
         $(this).parent().remove();
     });
 
-    $('#select-categories').on('change', function() {
+    $('.select-categories').on('change', function() {
         let categoryName = $(this).find('option:selected').text()
         let categoryId   = $(this).val()
+
         $.ajax({
             url: 'index.php?route=extension/module/massive_data_management_nik/getCategoryByCategory&user_token={{ user_token }}&category_id=' +  $(this).val(),
             dataType: 'json',
             success: function(json) {
-                console.log(json)
                 let array = $.map(json, function(item) {
                     return {
                         label: item['name'],
@@ -3032,7 +2030,7 @@
                 for (let item in array) {
                     if(array.hasOwnProperty(item)) {
                         $('#data-management-category' + array[item]['value']).remove();
-                        $('#data-management-category').append('<div id="data-management-category' + array[item]['value'] + '"><i class="fa fa-minus-circle"></i> ' + array[item]['label'] + '<input type="hidden" name="category[]" value="' + array[item]['value'] + '" /></div>');
+                        $('.data-management-category').append('<div id="data-management-category' + array[item]['value'] + '"><i class="fa fa-minus-circle"></i> ' + array[item]['label'] + '<input type="hidden" name="category[]" value="' + array[item]['value'] + '" /></div>');
                     }
                 }
             }
@@ -3043,121 +2041,39 @@
         clearCategoryList()
     })
     function clearCategoryList() {
-        $('#data-management-category div').each(function (i, item) {
+        $('.data-management-category div').each(function (i, item) {
             $(item).remove()
         })
-        $('#select-categories option:first').prop('selected', true);
+        $('.select-categories option:first').prop('selected', true);
     }
 </script>
 <script>
-    $('#data-management-category2').delegate('.fa-minus-circle', 'click', function() {
-        let categoryId = $(this).next().val()
-        $('#data-management-product2').find('div[data-category-id="' + categoryId + '"]').remove()
-        $(this).parent().remove();
-    });
-
-    $('#select-categories2').on('change', function() {
-        let categoryName = $(this).find('option:selected').text()
-        let categoryId   = $(this).val()
+    $('.select-information').on('change', function() {
         $.ajax({
-            url: 'index.php?route=extension/module/massive_data_management_nik/getCategoryByCategory&user_token={{ user_token }}&category_id=' +  $(this).val(),
+            url: 'index.php?route=extension/module/massive_data_management_nik/getInformationByInformation&user_token={{ user_token }}&information_id=' +  $(this).val(),
             dataType: 'json',
             success: function(json) {
-                console.log(json)
                 let array = $.map(json, function(item) {
                     return {
-                        label: item['name'],
-                        value: item['category_id']
+                        label: item['title'],
+                        value: item['information_id']
                     }
                 })
                 for (let item in array) {
                     if(array.hasOwnProperty(item)) {
-                        $('#data-management-category2' + array[item]['value']).remove();
-                        $('#data-management-category2').append('<div id="data-management-category2' + array[item]['value'] + '"><i class="fa fa-minus-circle"></i> ' + array[item]['label'] + '<input type="hidden" name="category[]" value="' + array[item]['value'] + '" /></div>');
+                        $('.data-management-information #data-management-information' + array[item]['value']).remove();
+                        $('.data-management-information').append('<div id="data-management-information' + array[item]['value'] + '"><i class="fa fa-minus-circle"></i> ' + array[item]['label'] + '<input type="hidden" name="information[]" value="' + array[item]['value'] + '" /></div>');
                     }
                 }
             }
         });
     })
 
-    $('.category-clear-btn2').on('click', function () {
-        clearCategoryList2()
-    })
-    function clearCategoryList2() {
-        $('#data-management-category2 div').each(function (i, item) {
-            $(item).remove()
-        })
-        $('#select-categories2 option:first').prop('selected', true);
-    }
-</script>
-<script>
-    $('#data-management-category3').delegate('.fa-minus-circle', 'click', function() {
-        let categoryId = $(this).next().val()
-        $('#data-management-product3').find('div[data-category-id="' + categoryId + '"]').remove()
-        $(this).parent().remove();
-    });
+    $('.data-management-information').delegate('.fa-minus-circle', 'click', function() {
+        let categoryId = $(this).parent().find('input[type="hidden"]').val()
 
-    $('#select-categories3').on('change', function() {
-        let categoryName = $(this).find('option:selected').text()
-        let categoryId   = $(this).val()
-        $.ajax({
-            url: 'index.php?route=extension/module/massive_data_management_nik/getCategoryByCategory&user_token={{ user_token }}&category_id=' +  $(this).val(),
-            dataType: 'json',
-            success: function(json) {
-                console.log(json)
-                let array = $.map(json, function(item) {
-                    return {
-                        label: item['name'],
-                        value: item['category_id']
-                    }
-                })
-                for (let item in array) {
-                    if(array.hasOwnProperty(item)) {
-                        $('#data-management-category3' + array[item]['value']).remove();
-                        $('#data-management-category3').append('<div id="data-management-category3' + array[item]['value'] + '"><i class="fa fa-minus-circle"></i> ' + array[item]['label'] + '<input type="hidden" name="category[]" value="' + array[item]['value'] + '" /></div>');
-                    }
-                }
-            }
-        });
-    })
+        $('.data-management-information').find('#data-management-information' + categoryId).remove()
 
-    $('.category-clear-btn3').on('click', function () {
-        clearCategoryList3()
-    })
-    function clearCategoryList3() {
-        $('#data-management-category3 div').each(function (i, item) {
-            $(item).remove()
-        })
-        $('#select-categories3 option:first').prop('selected', true);
-    }
-</script>
-
-<script>
-    $('input[name=\'information_name\']').autocomplete({
-        source: function(request, response) {
-            $.ajax({
-                url: 'index.php?route=extension/module/massive_data_management_nik/autocompleteInformation&user_token={{ user_token }}&filter_name=' +  encodeURIComponent(request),
-                dataType: 'json',
-                success: function(json) {
-                    response($.map(json, function(item) {
-                        return {
-                            label: item['title'],
-                            value: item['information_id']
-                        }
-                    }));
-                }
-            });
-        },
-        select: function(item) {
-            $('input[name=\'information_name\']').val('');
-
-            $('#data-management-information' + item['value']).remove();
-
-            $('#data-management-information').append('<div id="data-management-information' + item['value'] + '"><i class="fa fa-minus-circle"></i> ' + item['label'] + '<input type="hidden" name="information[]" value="' + item['value'] + '" /></div>');
-        }
-    });
-
-    $('#data-management-information').delegate('.fa-minus-circle', 'click', function() {
         $(this).parent().remove();
     });
 
@@ -3178,108 +2094,6 @@
                     $('#data-management-information' + item['information_id']).remove();
 
                     $('#data-management-information').append('<div id="data-management-information' + item['information_id'] + '"><i class="fa fa-minus-circle"></i> ' + item['title'] + '<input type="hidden" name="information[]" value="' + item['information_id'] + '" /></div>');
-                });
-            }
-        });
-    })
-</script>
-<script>
-    $('input[name=\'information_name2\']').autocomplete({
-        source: function(request, response) {
-            $.ajax({
-                url: 'index.php?route=extension/module/massive_data_management_nik/autocompleteInformation&user_token={{ user_token }}&filter_name=' +  encodeURIComponent(request),
-                dataType: 'json',
-                success: function(json) {
-                    response($.map(json, function(item) {
-                        return {
-                            label: item['title'],
-                            value: item['information_id']
-                        }
-                    }));
-                }
-            });
-        },
-        select: function(item) {
-            $('input[name=\'information_name2\']').val('');
-
-            $('#data-management-information2' + item['value']).remove();
-
-            $('#data-management-information2').append('<div id="data-management-information2' + item['value'] + '"><i class="fa fa-minus-circle"></i> ' + item['label'] + '<input type="hidden" name="information[]" value="' + item['value'] + '" /></div>');
-        }
-    });
-
-    $('#data-management-information2').delegate('.fa-minus-circle', 'click', function() {
-        $(this).parent().remove();
-    });
-
-    $('.information-clear-btn2').on('click', function () {
-        $('#data-management-information2 div').each(function (i, item) {
-            $(item).remove()
-        })
-    })
-
-    $('.information-add-all-btn2').on('click', function () {
-        $.ajax({
-            url: 'index.php?route=extension/module/massive_data_management_nik/getAllInformation&user_token={{ user_token }}',
-            dataType: 'json',
-            success: function(json) {
-                $.map(json, function(item) {
-                    $('input[name=\'information_name2\']').val('');
-
-                    $('#data-management-information2' + item['information_id']).remove();
-
-                    $('#data-management-information2').append('<div id="data-management-information2' + item['information_id'] + '"><i class="fa fa-minus-circle"></i> ' + item['title'] + '<input type="hidden" name="information[]" value="' + item['information_id'] + '" /></div>');
-                });
-            }
-        });
-    })
-</script>
-<script>
-    $('input[name=\'information_name3\']').autocomplete({
-        source: function(request, response) {
-            $.ajax({
-                url: 'index.php?route=extension/module/massive_data_management_nik/autocompleteInformation&user_token={{ user_token }}&filter_name=' +  encodeURIComponent(request),
-                dataType: 'json',
-                success: function(json) {
-                    response($.map(json, function(item) {
-                        return {
-                            label: item['title'],
-                            value: item['information_id']
-                        }
-                    }));
-                }
-            });
-        },
-        select: function(item) {
-            $('input[name=\'information_name3\']').val('');
-
-            $('#data-management-information3' + item['value']).remove();
-
-            $('#data-management-information3').append('<div id="data-management-information3' + item['value'] + '"><i class="fa fa-minus-circle"></i> ' + item['label'] + '<input type="hidden" name="information[]" value="' + item['value'] + '" /></div>');
-        }
-    });
-
-    $('#data-management-information3').delegate('.fa-minus-circle', 'click', function() {
-        $(this).parent().remove();
-    });
-
-    $('.information-clear-btn3').on('click', function () {
-        $('#data-management-information3 div').each(function (i, item) {
-            $(item).remove()
-        })
-    })
-
-    $('.information-add-all-btn3').on('click', function () {
-        $.ajax({
-            url: 'index.php?route=extension/module/massive_data_management_nik/getAllInformation&user_token={{ user_token }}',
-            dataType: 'json',
-            success: function(json) {
-                $.map(json, function(item) {
-                    $('input[name=\'information_name3\']').val('');
-
-                    $('#data-management-information3' + item['information_id']).remove();
-
-                    $('#data-management-information3').append('<div id="data-management-information3' + item['information_id'] + '"><i class="fa fa-minus-circle"></i> ' + item['title'] + '<input type="hidden" name="information[]" value="' + item['information_id'] + '" /></div>');
                 });
             }
         });

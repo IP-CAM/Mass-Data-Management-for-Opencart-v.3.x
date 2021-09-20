@@ -19,6 +19,7 @@ $_['text_equal']       = '=';
 $_['text_to_all']      = 'Всем';
 $_['text_to_unfilled'] = 'Незаполненным';
 $_['text_apply_success'] = 'Настройки применены успешно!';
+$_['text_total_products'] = '(%s)';
 
 // Entry
 $_['entry_category_list']= 'Список категорий';
